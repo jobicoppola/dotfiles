@@ -1,12 +1,15 @@
 #!/bin/bash
-# connect to existing tmux session or start fresh
-# TODO: this should all be possible using just the conf file...
-# someone should totally do something about that
+# connect to existing tmux session, or start fresh
+# TODO: move functionality provided here into tmux.conf, as this should all be
+# possible just with appropriate config settings there, so, like, someone
+# should totally do something about that
 
 # main session
 session=0
 
 # user vars
+# TODO: remove this, as it is likely unnecessary; don't even remember
+# why it was needed in the first place...
 [ -z "$USER" ] && USER=jcopp
 if [ -z "$HOME" ]; then
     if [[ "$(uname)" == Darwin ]]; then
@@ -16,7 +19,20 @@ if [ -z "$HOME" ]; then
     fi
 fi
 
-# if there is a session already then attach
+# os/host-specific settings
+if [[ $(uname) == Linux ]]; then
+    # workee work
+    if [[ $(hostname) == jobot ]]; then
+        W8=zen
+        C8='ssh -A -X root@monitor-main.sn.internal'
+    fi
+else
+    # mac
+    W8=jbot
+    C8='ssh jcopp@jobot'
+fi
+
+# if there is a session already, attach to it and exit
 tmux has-session -t $session
 if [ $? -eq 0 ]; then
     echo "Session $session already exists so let's attach to it..."
@@ -25,13 +41,14 @@ if [ $? -eq 0 ]; then
     exit 0;
 fi
 
-# create new session then detach
+# if there are no existing sessions,
+# let's create a new session, then detach
 tmux new-session -d -s $session
 
 # make sure ssh auth sock gets set
 tmux setenv -t $session SSH_AUTH_SOCK /tmp/ssh-agent-$(hostname)
 
-# open some windows
+# open some default windows
 tmux neww -t $session:0 -n root
 tmux neww -t $session:1 -n home
 tmux neww -t $session:2 -n bin
@@ -39,24 +56,24 @@ tmux neww -t $session:3 -n b.py
 tmux neww -t $session:4 -n dls
 tmux neww -t $session:5 -n git
 tmux neww -t $session:6 -n dbox
-tmux neww -t $session:7 -n lino
-tmux neww -t $session:8 -n jbot
+tmux neww -t $session:7 -n chef
+tmux neww -t $session:8 -n $W8
 tmux neww -t $session:9 -n misc
 
 # tell windows what to do
 tmux send-keys -t $session:0 "sudo su -" C-m
 tmux send-keys -t $session:1 "cd $HOME/" C-m
 tmux send-keys -t $session:2 "cd $HOME/bin" C-m
-tmux send-keys -t $session:3 "bpython" C-m
+tmux send-keys -t $session:3 "$HOME/bin/bpython_start" C-m
 tmux send-keys -t $session:4 "cd $HOME/Downloads" C-m
 tmux send-keys -t $session:5 "cd $HOME/git" C-m
 tmux send-keys -t $session:6 "cd $HOME/Dropbox" C-m
-tmux send-keys -t $session:7 "ssh jcopp@74.207.230.61" C-m
-tmux send-keys -t $session:8 "ssh jcopp@jobot" C-m
+tmux send-keys -t $session:7 "ssh jcopp@jcopp.net" C-m
+tmux send-keys -t $session:8 "$C8" C-m
 tmux send-keys -t $session:9 "cd $HOME/" C-m
 
 # set default selected win
 tmux select-window -t $session:1
 
-# attach to new session
+# attached to new session
 tmux attach -t $session
