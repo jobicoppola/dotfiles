@@ -1,0 +1,117 @@
+#!/bin/bash
+# ssh-agent null test/fix
+# gratuitous comments warning <<
+
+set -e
+
+# set vars
+SOCK="$SSH_AUTH_SOCK"
+JSOCK=/tmp/ssh-agent-`hostname`
+MSG="SSH_AUTH_SOCK => $SOCK"
+MSG_ZPB="Exists / size > ZER0 bytes"
+MSG_EXISTS="File exists"
+MSG_IS_SOCK="Exists and is a socket"
+
+# fifty equal signs
+LEN=$(printf "%50s")
+LINE=${LEN// /=}
+
+# usage msg
+usage="Usage: $0 [now]"
+
+# print. the. dots.
+printdots()
+{
+    N=$1; T=$((43-N)); L=$(printf "%${T}s"); D=${L// /.}
+    echo "$D"
+}
+
+# cleverly named
+runtest()
+{
+    echo -e "\n$MSG"
+    echo "$LINE"
+    echo "$MSG_EXISTS $(printdots ${#MSG_EXISTS}) $(file_exists)"
+    echo "$MSG_ZPB $(printdots ${#MSG_ZPB}) $(file_exists_zero_plus_bytes)"
+    echo "$MSG_IS_SOCK $(printdots ${#MSG_IS_SOCK}) $(exists_and_is_socket)"
+}
+
+# next three functions are basically redundant, but they
+# helped me figure out how this script needed to work,
+# so i shall remain loyal and keep them employed
+file_exists_zero_plus_bytes()
+{
+    if [ -s "$SOCK" ]; then
+        echo 'TRUE'
+    else
+      echo 'FALSE'
+    fi
+}
+file_exists()
+{
+    if [ -e "$SOCK" ]; then
+        echo 'TRUE'
+    else
+        echo 'FALSE'
+    fi
+}
+exists_and_is_socket()
+{
+    if [ -S "$SOCK" ]; then
+        echo 'TRUE'
+    else
+        echo 'FALSE'
+    fi
+}
+
+# more clever naming
+listkeys()
+{
+    echo "$(/usr/bin/ssh-add -l)"
+}
+countkeys()
+{
+    echo "$(listkeys |wc -l)"
+}
+
+# on fire with these names
+startssh()
+{
+    # infoz
+    runtest
+    echo -e "$(listkeys) \n"
+    # keycounts
+    KC=$(countkeys)
+    DC=$(listkeys |grep -c "ssh/id_dsa")
+    RC=$(listkeys |grep -c "ssh/id_rsa")
+    # sort out agent and authsock
+    if [[ "$SOCK" != "$JSOCK" ]]; then
+        test $SOCK && ln -sf "$SOCK" "$JSOCK"
+    else
+        eval `ssh-agent -a $SOCK -s`
+    fi
+    # make sure agent has all keys
+    if [[ "$KC" -lt 5 ]]; then
+        echo "Keycount: ${KC} < 5"
+        if [[ "$DC" -lt 1 ]] || [[ "$RC" -lt 1 ]]; then
+            echo "No DSA|RSA keys in agent; adding them now."
+            `ssh-add`
+        else
+            echo "SN and/or github keys missing; adding now."
+            `ssh-add ~/.ssh/id_rsa_github`
+            `ssh-add ~/.ssh/id_rsa_sn`
+        fi
+    else
+        echo -e "\nAll identities appear to have been added.\n"
+    fi
+}
+
+# start agent and add keys if requested
+# otherwise just print the test info
+if [[ "$1" == 'now' ]]; then
+    startssh
+    listkeys
+else
+    runtest
+    echo -e "$(listkeys) \n"
+fi
