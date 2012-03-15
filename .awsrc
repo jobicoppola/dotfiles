@@ -1,0 +1,25 @@
+# ~/.awsrc :: jcopp.cfxd.net
+#
+# aws
+export JAVA_HOME=/Library/Java/Home
+export S3_URL=https://s3.amazonaws.com:443
+export S3_BUCKET=sn-ami-storage
+export EC2_URL=https://ec2.amazonaws.com
+export EC2_HOME=~/ec2/api
+export EC2_AMITOOL_HOME=~/ec2/ami
+export EC2_PRIVATE_KEY=~/.ec2/
+export EC2_KEYPAIR=~/.ec2/
+export EC2_KEYPAIR_NAME=
+export EC2_CERT=~/.ec2/
+export AWS_CLOUDWATCH_HOME=~/ec2/cw
+export AWS_AUTO_SCALING_HOME=~/ec2/as
+export AWS_ELB_HOME=~/ec2/elb
+export SN_HOME=~/ec2/sn
+export ACCESS_KEY=
+export SECRET_KEY=
+export AWS_CREDENTIAL_FILE=~/.ec2/
+export AWS_IAM_HOME=/usr/local/Cellar/aws-iam-tools/HEAD/jars
+export AWS_IAM_ACCT_ID=
+export PATH=$PATH:$SN_HOME/bin:$EC2_HOME/bin:$EC2_AMITOOL_HOME/bin
+export PATH=$PATH:$AWS_CLOUDWATCH_HOME/bin:$AWS_AUTO_SCALING_HOME/bin
+export PATH=$PATH:$AWS_ELB_HOME/bin:$AWS_IAM_HOME/bin
