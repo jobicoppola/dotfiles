@@ -33,8 +33,13 @@ autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
 
 " use ctrl-space for autocompletion
-set omnifunc=pythoncomplete#Complete
 inoremap <Nul> <C-x><C-o>
+
+" autocompletion
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 " tab settings
 set tabstop=4
