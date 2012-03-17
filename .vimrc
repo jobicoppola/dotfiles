@@ -1,5 +1,11 @@
 " ~/.vimrc :: jcopp.cfxd.net
 
+" get pathogen going
+runtime bundle/pathogen/autoload/pathogen.vim
+filetype off
+call pathogen#infect()
+filetype plugin indent on
+
 " disable arrow keys etc
 map <up> <nop>
 map <down> <nop>
@@ -17,12 +23,6 @@ inoremap jj <ESC>
 " remap j/k to scroll by visual lines
 nnoremap j gj
 nnoremap k gk
-
-" get pathogen going
-filetype off
-call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
-filetype plugin indent on
 
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
