@@ -54,8 +54,14 @@ set modelines=0
 " remap leader key, default is \
 let mapleader = ","
 
+" nerdtree to where you are now
+map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
+
+" ack shortcut
+nnoremap <leader>a :Ack
 
 " use same symbols as tm for tabstops/eols
 set listchars=tab:▸\ ,eol:¬
