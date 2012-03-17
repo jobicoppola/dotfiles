@@ -54,7 +54,7 @@ set modelines=0
 " remap leader key, default is \
 let mapleader = ","
 
-" nerdtree to where you are now
+" toggle nerdtree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " shortcut to rapidly toggle `set list`
@@ -103,8 +103,22 @@ set visualbell
 set ttyfast
 set ruler
 set backspace=indent,eol,start
-set laststatus=2
 set relativenumber
+
+" always show the status line
+set laststatus=2
+
+" status line
+set statusline=
+set statusline+=%f\                             " path to file
+set statusline+=%h%m%r%w                        " status flags
+set statusline+=\[%{strlen(&ft)?&ft:'none'}]    " file type
+set statusline+=\[%{(&fenc==\"\"?&enc:&fenc)}]  " encoding
+set statusline+=\%{fugitive#statusline()}       " fugitive
+set statusline+=%=                              " right align the rest
+set statusline+=0x%-8B                          " character code under cursor
+set statusline+=%-14(%l,%c%V%)                  " line, character
+set statusline+=%<%P                            " file position as percent
 
 " backups
 " set undofile
