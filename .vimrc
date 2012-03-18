@@ -24,6 +24,12 @@ inoremap jj <ESC>
 nnoremap j gj
 nnoremap k gk
 
+" use tm/st2 style cmd key indenting
+nmap <D-[> <<
+nmap <D-]> >>
+vmap <D-[> <gv
+vmap <D-]> >gv
+
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
 autocmd BufEnter * NERDTreeMirror
@@ -32,50 +38,50 @@ autocmd BufEnter * NERDTreeMirror
 autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
 
-" use ctrl-space for autocompletion
-inoremap <Nul> <C-x><C-o>
-
 " autocompletion
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
-" tab settings
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-
-" disable old vim compat, stop exploits
-set nocompatible
-set modelines=0
-
-" remap leader key, default is \
-let mapleader = ","
-
-" toggle nerdtree
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
-
-" shortcut to rapidly toggle `set list`
-nmap <leader>l :set list!<CR>
-
-" ack shortcut
-nnoremap <leader>a :Ack
-
-" use same symbols as tm for tabstops/eols
-set listchars=tab:▸\ ,eol:¬
-
-" highlighting etc
-syntax on
-set pastetoggle=<F2>
-
-" put anything yanked onto system clipboard
-set clipboard=unnamed
-
 " colors
-set t_Co=256
-color molokai_jobot
+syntax on                               " syntax highlighting
+color molokai_jobot                     " color scheme
+
+" tab settings
+set tabstop=4                           " how many spaces a tab counts for
+set shiftwidth=4                        " spaces to use per indent step
+set softtabstop=4                       " when editing, num spaces in a tab
+set expandtab                           " use spaces to insert a tab
+set nocompatible                        " disable old vim compat
+set modelines=0                         " stop exploits
+set listchars=tab:▸\ ,eol:¬             " use tm symbols for tabstops/eols
+set pastetoggle=<F2>                    " put vim into paste mode
+set clipboard=unnamed                   " put yanks onto system clipboard
+set t_Co=256                            " max terminal colors
+
+" misc settings
+set encoding=utf-8                      " default encoding type
+set scrolloff=4                         " some breathing room at the bottom
+set autoindent
+set showmode
+set showcmd
+set hidden
+set wildmenu
+set wildmode=list:longest
+set visualbell
+set ttyfast
+set ruler
+set backspace=indent,eol,start
+set relativenumber                      " show line nums relative to cur pos
+set nofoldenable                        " no code folding
+set backupdir=~/tmp,/tmp                " backups (~)
+set directory=~/tmp,/tmp                " swap files
+set backup                              " enable backups
+set wrap                                " handle long lines proper-like
+set textwidth=79
+set formatoptions=qrn1
+set colorcolumn=80                      " new in 7.3
 
 " search options
 nnoremap / /\v
@@ -87,29 +93,9 @@ set incsearch
 set showmatch
 set hlsearch
 
-" clear highlighting from search
-nnoremap <leader><space> :noh<cr>
-
-" misc settings
-set encoding=utf-8
-set scrolloff=4
-set autoindent
-set showmode
-set showcmd
-set hidden
-set wildmenu
-set wildmode=list:longest
-set visualbell
-set ttyfast
-set ruler
-set backspace=indent,eol,start
-set relativenumber
-
-" always show the status line
-set laststatus=2
-
 " status line
-set statusline=
+set laststatus=2                                " always show the status line
+set statusline=                                 " initialize status string
 set statusline+=%f\                             " path to file
 set statusline+=%h%m%r%w                        " status flags
 set statusline+=\[%{strlen(&ft)?&ft:'none'}]    " file type
@@ -120,28 +106,29 @@ set statusline+=0x%-8B                          " character code under cursor
 set statusline+=%-14(%l,%c%V%)                  " line, character
 set statusline+=%<%P                            " file position as percent
 
-" backups
-" set undofile
-set backupdir=~/tmp,/tmp " backups (~)
-set directory=~/tmp,/tmp " swap files
-set backup
+" make fullscreen, hide toolbar, remove scrollbars
+" set fu
+set go-=T
+set guioptions-=r
+set guioptions-=L
 
-" use tab key to match bracket pairs
-nnoremap <tab> %
-vnoremap <tab> %
+" don't let pymode override relativenumber
+let g:pymode_options_other = 0
 
-" handle long lines proper-like
-set wrap
-set textwidth=80
-set formatoptions=qrn1
-set colorcolumn=81 " new in 7.3
+" remap leader key, default is \
+let mapleader = ","
 
-" save when focus is lost
-au FocusLost * :wa
+" toggle nerdtree
+map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
-" highlight end of line whitespace
-highlight WhitespaceEOL ctermbg=red guibg=red
-match WhitespaceEOL /\s\+$/
+" shortcut to rapidly toggle `set list`
+nmap <leader>l :set list!<CR>
+
+" ack shortcut
+nnoremap <leader>a :Ack<CR>
+
+" clear highlighting from search
+nnoremap <leader><space> :noh<cr>
 
 " use ,W to strip all trailing whitespace in current file
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -152,11 +139,9 @@ nnoremap <leader>q gqip
 " reselect just pasted text so we can e.g. indent it
 nnoremap <leader>v V`]
 
-" make fullscreen, hide toolbar, remove scrollbars
-" set fu
-set go-=T
-set guioptions-=r
-set guioptions-=L
+" highlight end of line whitespace
+highlight WhitespaceEOL ctermbg=red guibg=red
+match WhitespaceEOL /\s\+$/
 
 " python love
 if !exists("autocommands_loaded")
@@ -167,5 +152,5 @@ endif
 " returns to where you were the last time you edited the file
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
-" move focus to file instead of nerdtree upon file opening
-" autocmd VimEnter * wincmd l
+" save when focus is lost
+au FocusLost * :wa
