@@ -32,7 +32,6 @@ vmap <D-]> >gv
 
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
-autocmd BufEnter * NERDTreeMirror
 
 " disable relativenumber for nerdtree, taglist filetypes
 autocmd FileType nerdtree setlocal norelativenumber
@@ -43,6 +42,7 @@ autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 
 " colors
 syntax on                               " syntax highlighting
@@ -53,7 +53,7 @@ set tabstop=4                           " how many spaces a tab counts for
 set shiftwidth=4                        " spaces to use per indent step
 set softtabstop=4                       " when editing, num spaces in a tab
 set expandtab                           " use spaces to insert a tab
-set nocompatible                        " disable old vim compat
+set nocompatible                        " doesn't work well with ft detect
 set modelines=0                         " stop exploits
 set listchars=tab:▸\ ,eol:¬             " use tm symbols for tabstops/eols
 set pastetoggle=<F2>                    " put vim into paste mode
