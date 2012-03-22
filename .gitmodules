@@ -52,3 +52,6 @@
 [submodule ".vim/bundle/vim-php"]
 	path = .vim/bundle/vim-php
 	url = https://github.com/vim-scripts/php.vim--Garvin.git
+[submodule ".vim/bundle/vim-less"]
+	path = .vim/bundle/vim-less
+	url = https://github.com/groenewege/vim-less
