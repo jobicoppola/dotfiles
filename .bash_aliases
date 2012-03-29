@@ -31,7 +31,6 @@ alias dbin="cd  ~/Dropbox/jhome/bin"
 alias mampsql="cd /Applications/MAMP/Library/bin;pwd;./mysql -u root -p"
 alias snbin="cd ~/ec2/sn/bin"
 alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages"
-alias sdev="cd /Volumes/jcopp"
 #
 # vi
 alias vi='vim'
@@ -85,3 +84,11 @@ alias v.add2virtualenv='add2virtualenv'
 alias v.cdsitepackages='cdsitepackages'
 alias v.cd='cdvirtualenv'
 alias v.lssitepackages='lssitepackages'
+#
+# django aliases
+alias mpy='python manage.py'
+alias mpys='python manage.py shell'
+alias mpydbs='python manage.py dbshell'
+alias mpyrs='python manage.py runserver'
+alias mpysm='python manage.py schemamigration'
+alias mpysma='python manage.py schemamigration --auto'
