@@ -73,9 +73,8 @@ tmux send-keys -t $session:8 "$C8" C-m
 tmux send-keys -t $session:9 "cd $HOME/git/snweb && git st" C-m
 
 # split some windows
-tmux splitw -v -t $session:7
 tmux splitw -h -t $session:7
-tmux select-layout -h -t $session:7 main-vertical
+tmux splitw -v -t $session:7
 
 # set default selected win
 tmux select-window -t $session:1
