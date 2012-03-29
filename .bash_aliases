@@ -31,6 +31,7 @@ alias dbin="cd  ~/Dropbox/jhome/bin"
 alias mampsql="cd /Applications/MAMP/Library/bin;pwd;./mysql -u root -p"
 alias snbin="cd ~/ec2/sn/bin"
 alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages"
+alias gitdot='cd ~/git/dotfiles && git st'
 #
 # vi
 alias vi='vim'
@@ -69,8 +70,9 @@ alias gra='git remote add'
 alias grr='git remote rm'
 alias gl='git log'
 alias ga='git add'
+alias gctb='git checkout --track -b'
+alias gctbe="echo 'git checkout --track -b <loc_branch> origin/<rem_branch>'"
 alias gph='git push heroku master'
-alias gitdot='cd ~/git/dotfiles && git st'
 #
 # virtualenv
 # courtesy @doughellman
