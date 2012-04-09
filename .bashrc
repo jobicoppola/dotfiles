@@ -114,7 +114,7 @@ PS1="\n$BGreen\$(get_venv)$Purple\u@\h$BWhite\w$BYellow\$(get_branch)$BGreen\$(g
 [ -f ~/.awsrc ] && . ~/.awsrc
 
 # twilio, sunlight api creds
-[ -f ~/.miscrc] && . ~/.miscrc
+[ -f ~/.miscrc ] && . ~/.miscrc
 
 # source various alias files if they exist
 [ -f ~/.alias ] && . ~/.alias
