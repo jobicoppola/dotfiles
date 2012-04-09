@@ -36,10 +36,10 @@ alias gitdot='cd ~/git/dotfiles && git st'
 # vi
 alias vi='vim'
 alias jcc="vi ~/Dropbox/jhome/jc3"
-alias vbash="vi ~/.bash_profile"
-alias sbash=". ~/.bash_profile"
-alias valias="vi ~/.bash_aliases"
-alias vvim="vi ~/.vimrc"
+alias vbash="vi ~/git/dotfiles/.bashrc"
+alias sbash="cp -p ~/git/dotfiles/.bash* ~/ && . ~/.bashrc"
+alias valias="vi ~/git/dotfiles/.bash_aliases"
+alias vvim="vi ~/git/dotfiles/.vimrc"
 #
 # cmd
 alias Grep="grep"
