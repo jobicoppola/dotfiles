@@ -139,6 +139,9 @@ nnoremap <leader>q gqip
 " reselect just pasted text so we can e.g. indent it
 nnoremap <leader>v V`]
 
+" change existing tab chars to match current tab settings (tabs2whitespace)
+nnoremap <leader>r :retab
+
 " highlight end of line whitespace
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
