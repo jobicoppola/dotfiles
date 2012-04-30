@@ -110,7 +110,6 @@ get_status(){
 # set prompt
 PS1="\n$BGreen\$(get_venv)$Purple\u@\h$BWhite\w$BYellow\$(get_branch)$BGreen\$(get_status)$Ecol"
 PS1="$PS1\n$Blue$ $Ecol"
-#PS1="\[$PS1\]"
 
 # vars and paths for aws tools
 [ -f ~/.awsrc ] && . ~/.awsrc
