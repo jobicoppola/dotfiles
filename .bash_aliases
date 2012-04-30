@@ -37,7 +37,7 @@ alias gitdot='cd ~/git/dotfiles && git st'
 alias vi='vim'
 alias jcc="vi ~/Dropbox/jhome/jc3"
 alias vbash="vi ~/git/dotfiles/.bashrc"
-alias sbash="cp -p ~/git/dotfiles/.bash* ~/ && . ~/.bashrc"
+alias sbash="cp -p ~/git/dotfiles/.bash* ~/git/dotfiles/.awsrc ~/ && . ~/.bashrc"
 alias valias="vi ~/git/dotfiles/.bash_aliases"
 alias vvim="vi ~/git/dotfiles/.vimrc"
 #
@@ -54,6 +54,8 @@ alias diff="colordiff"
 alias fplog="tail -100f /Users/jcopp/Sites/faderpro-k23/application/logs/$(date +'%Y-%m-%d').log.php"
 alias less='less -IR'
 alias mongod='mongod run --config /usr/local/Cellar/mongodb/2.0.2-x86_64/mongod.conf'
+alias linkmysql='ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock'
+alias pipup='pip install --upgrade'
 #
 # git
 alias cdgit='cd ~/git/'
