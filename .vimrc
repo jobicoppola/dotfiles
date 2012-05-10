@@ -125,6 +125,9 @@ let mapleader = ","
 " toggle nerdtree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
+" show current file in tree
+map <leader>f :NERDTreeFind<CR>
+
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
 
