@@ -115,6 +115,10 @@ set guioptions-=L
 " don't let pymode override relativenumber
 let g:pymode_options_other = 0
 
+" set command-t result window size
+let g:CommandTMaxHeight = 20
+let g:CommandTMatchWindowReverse = 1
+
 " remap leader key, default is \
 let mapleader = ","
 
@@ -125,7 +129,7 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 nmap <leader>l :set list!<CR>
 
 " ack shortcut
-nnoremap <leader>a :Ack<CR>
+nnoremap <leader>a :Ack!
 
 " clear highlighting from search
 nnoremap <leader><space> :noh<cr>
