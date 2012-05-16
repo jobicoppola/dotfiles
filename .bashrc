@@ -48,8 +48,11 @@ export EDITOR='~/bin/mate_wait'
 export GIT_EDITOR='~/bin/mate -w11'
 
 # ruby related
+SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
+SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 export RUBYOPT=rubygems
 export GEM_HOME=$HOME/gems
+export GEM_PATH=$GEM_HOME:/Library/Ruby/Gems/1.8/gems:$SYSTEM_GEMS
 export RUBYPATH=$GEM_HOME
 export PATH=$PATH:$HOME/gems/bin
 export PATH=$HOME/.rbenv/bin:$PATH
