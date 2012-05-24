@@ -47,12 +47,15 @@ if [ -s "$SSH_AUTH_SOCK" -o ! -S "$SSH_AUTH_SOCK" ]; then
 fi
 
 # set editor vars to textmate
-export EDITOR='~/bin/mate_wait'
-export GIT_EDITOR='~/bin/mate -w11'
+export EDITOR='vim'
+export GIT_EDITOR='vim'
 
 # ruby related
+SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
+SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 export RUBYOPT=rubygems
 export GEM_HOME=$HOME/gems
+export GEM_PATH=$GEM_HOME:/Library/Ruby/Gems/1.8/gems:$SYSTEM_GEMS
 export RUBYPATH=$GEM_HOME
 export PATH=$PATH:$HOME/gems/bin
 export PATH=$HOME/.rbenv/bin:$PATH
@@ -142,8 +145,9 @@ export SNPRODWS=$(<~/sn/prod-servers-snweb.lst)
 
 # brew completion
 if [[ "$OS" == Darwin ]]; then
-    source `brew --prefix`/Library/Contributions/brew_bash_completion.sh
-    source `brew --prefix grc`/etc/grc.bashrc
+    [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
+    [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
+    [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
 fi
 
 # oracle env vars

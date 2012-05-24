@@ -44,6 +44,9 @@ autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 
+" settings for specific filetypes
+autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
 " colors
 syntax on                               " syntax highlighting
 color molokai_jobot                     " color scheme
@@ -125,8 +128,8 @@ let mapleader = ","
 " toggle nerdtree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
-" show current file in tree
-map <leader>f :NERDTreeFind<CR>
+" show current file in tree; extra cr moves focus back to the file
+map <leader>f :NERDTreeFind<CR><CR>
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
@@ -135,7 +138,7 @@ nmap <leader>l :set list!<CR>
 nnoremap <leader>a :Ack!
 
 " clear highlighting from search
-nnoremap <leader><space> :noh<cr>
+nnoremap <leader><space> :noh<CR>
 
 " use ,W to strip all trailing whitespace in current file
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
