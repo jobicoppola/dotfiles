@@ -3,6 +3,9 @@
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
 
+# determine os
+OS=$(uname)
+
 # ignore duplicates and cmds starting with spaces
 HISTCONTROL=ignoreboth
 
@@ -138,8 +141,10 @@ export SNBLADES=$(<~/sn/bladechassis.lst)
 export SNPRODWS=$(<~/sn/prod-servers-snweb.lst)
 
 # brew completion
-source `brew --prefix`/Library/Contributions/brew_bash_completion.sh
-source `brew --prefix grc`/etc/grc.bashrc
+if [[ "$OS" == Darwin ]]; then
+    source `brew --prefix`/Library/Contributions/brew_bash_completion.sh
+    source `brew --prefix grc`/etc/grc.bashrc
+fi
 
 # oracle env vars
 export ORACLE_HOME=/usr/local/oracle
