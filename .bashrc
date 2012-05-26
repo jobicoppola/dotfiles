@@ -3,6 +3,9 @@
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
 
+# determine os
+OS=$(uname)
+
 # ignore duplicates and cmds starting with spaces
 HISTCONTROL=ignoreboth
 
@@ -131,19 +134,21 @@ export WORKON_HOME=$HOME/venvs
 VWSH=$(which virtualenvwrapper.sh)
 [ -f "$VWSH" ] && . "$VWSH"
 
-# fink
-alias fink="sudo fink"
-test -r /sw/bin/init.sh && . /sw/bin/init.sh
-
 # sportingnews
 export SNELIPS=$(<~/sn/elips.lst)
 export SNBLADES=$(<~/sn/bladechassis.lst)
 export SNPRODWS=$(<~/sn/prod-servers-snweb.lst)
 
-# brew completion
-[ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
-[ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
-[ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
+# mac specific
+if [[ "$OS" == Darwin ]]; then
+    # fink
+    alias fink="sudo fink"
+    test -r /sw/bin/init.sh && . /sw/bin/init.sh
+    # brew completion
+    [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
+    [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
+    [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
+fi
 
 # oracle env vars
 export ORACLE_HOME=/usr/local/oracle
