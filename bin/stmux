@@ -23,13 +23,13 @@ fi
 if [[ $(uname) == Linux ]]; then
     # workee work
     if [[ $(hostname) == jobot ]]; then
-        W8=zen
-        C8='ssh -A -X root@monitor-main.sn.internal'
+        W9=zen
+        C9='ssh -A -X root@monitor-main.sn.internal'
     fi
 else
     # mac
-    W8=sys
-    C8="cd $HOME/git/snsysadmin && git st"
+    W9=snmedia
+    C9="cd $repos/snmedia && git st"
 fi
 
 # if there is a session already, attach to it and exit
@@ -48,33 +48,74 @@ tmux new-session -d -s $session
 # make sure ssh auth sock gets set
 tmux setenv -t $session SSH_AUTH_SOCK /tmp/ssh-agent-$(hostname)
 
+# set some names
+three=repl
+four=venvs
+five=chef-repo
+six=dotfiles
+seven=snweb
+eight=snsysadmin
+nine=$W9
+repos=$HOME/git
+
 # open some default windows
 tmux neww -t $session:0 -n root
 tmux neww -t $session:1 -n home
 tmux neww -t $session:2 -n bin
-tmux neww -t $session:3 -n b.py
-tmux neww -t $session:4 -n venv
-tmux neww -t $session:5 -n git
-tmux neww -t $session:6 -n dot
-tmux neww -t $session:7 -n snweb
-tmux neww -t $session:8 -n $W8
-tmux neww -t $session:9 -n snmedia
+tmux neww -t $session:3 -n $three
+tmux neww -t $session:4 -n $four
+tmux neww -t $session:5 -n $five
+tmux neww -t $session:6 -n $six
+tmux neww -t $session:7 -n $seven
+tmux neww -t $session:8 -n $eight
+tmux neww -t $session:9 -n $nine
 
-# tell windows what to do
+# split some windows into panes, then set those panes up
+for n in {4..9}; do
+    if [ $n -eq 3 ]; then
+        tmux splitw -h $session:$n
+        tmux send -t $session:$n.top "cd $HOME/ && bin/bpython_start" C-m
+        tmux send -t $session:$n.bottom "cd $HOME/ && pry" C-m
+    else
+        tmux splitw -h -t $session:$n
+        tmux splitw -v -t $session:$n
+        if [ $n -eq 4 ]; then
+            tmux send -t $session:$n.+1 "cd $HOME/venvs && workon sninv_venv" C-m
+            tmux send -t $session:$n.+2 "cd $HOME/venvs && workon sndash" C-m
+            tmux send -t $session:$n.+3 "cd $HOME/venvs && workon sn-social-redis" C-m
+        elif [ $n -eq 5 ]; then
+            tmux send -t $session:$n.+1 "cd $repos/$five && git st" C-m
+            tmux send -t $session:$n.+2 "cd $repos/$five" C-m
+            tmux send -t $session:$n.+3 "cd $repos/$five" C-m
+        elif [ $n -eq 6 ]; then
+            tmux send -t $session:$n.+1 "cd $repos/$six && git st" C-m
+            tmux send -t $session:$n.+2 "cd $repos/$six" C-m
+            tmux send -t $session:$n.+3 "cd $repos/$six" C-m
+        elif [ $n -eq 7 ]; then
+            tmux send -t $session:$n.+1 "cd $repos/$seven && git st" C-m
+            tmux send -t $session:$n.+2 "cd $repos/$seven" C-m
+            tmux send -t $session:$n.+3 "cd $repos/$seven" C-m
+        elif [ $n -eq 8 ]; then
+            tmux send -t $session:$n.+1 "cd $repos/$eight && git st" C-m
+            tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
+            tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
+        elif [ $n -eq 9 ]; then
+            tmux send -t $session:$n.+1 "$C9" C-m
+            if [[ "$nine" == snmedia ]]; then
+                tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
+                tmux send -t $session:$n.+3 "cd $repos/$nine" C-m
+            else
+                tmux killp -t $session:$n.+3
+            fi
+        fi
+        tmux select-window -t $session:$n.+1
+    fi
+done
+
+# tell rest of the windows what to do
 tmux send-keys -t $session:0 "sudo su -" C-m
 tmux send-keys -t $session:1 "cd $HOME/" C-m
 tmux send-keys -t $session:2 "cd $HOME/bin" C-m
-tmux send-keys -t $session:3 "$HOME/bin/bpython_start" C-m
-tmux send-keys -t $session:4 "cd $HOME/venvs && workon sninv_venv" C-m
-tmux send-keys -t $session:5 "cd $HOME/git" C-m
-tmux send-keys -t $session:6 "cd $HOME/git/dotfiles && git st" C-m
-tmux send-keys -t $session:7 "cd $HOME/git/snweb && git st" C-m
-tmux send-keys -t $session:8 "$C8" C-m
-tmux send-keys -t $session:9 "cd $HOME/git/snmedia && git st" C-m
-
-# split some windows
-tmux splitw -h -t $session:7
-tmux splitw -v -t $session:7
 
 # set default selected win
 tmux select-window -t $session:1
