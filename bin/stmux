@@ -7,31 +7,6 @@
 # main session
 session=0
 
-# user vars
-# TODO: remove this, as it is likely unnecessary; don't even remember
-# why it was needed in the first place...
-[ -z "$USER" ] && USER=jcopp
-if [ -z "$HOME" ]; then
-    if [[ "$(uname)" == Darwin ]]; then
-        HOME=/Users/$USER
-    else
-        HOME=/home/$USER
-    fi
-fi
-
-# os/host-specific settings
-if [[ $(uname) == Linux ]]; then
-    # workee work
-    if [[ $(hostname) == jobot ]]; then
-        W9=zen
-        C9='ssh -A -X root@monitor-main.sn.internal'
-    fi
-else
-    # mac
-    W9=snmedia
-    C9="cd $repos/snmedia && git st"
-fi
-
 # if there is a session already, attach to it and exit
 tmux has-session -t $session
 if [ $? -eq 0 ]; then
@@ -55,8 +30,8 @@ five=chef-repo
 six=dotfiles
 seven=snweb
 eight=snsysadmin
-nine=$W9
-repos=$HOME/git
+nine=snmedia
+repos=~/git
 
 # open some default windows
 tmux neww -t $session:0 -n root
@@ -71,18 +46,18 @@ tmux neww -t $session:8 -n $eight
 tmux neww -t $session:9 -n $nine
 
 # split some windows into panes, then set those panes up
-for n in {4..9}; do
+for n in {3..9}; do
     if [ $n -eq 3 ]; then
-        tmux splitw -h $session:$n
-        tmux send -t $session:$n.top "cd $HOME/ && bin/bpython_start" C-m
-        tmux send -t $session:$n.bottom "cd $HOME/ && pry" C-m
+        tmux splitw -v -t $session:$n
+        tmux send -t $session:$n.top "~/bin/bpython_start" C-m
+        tmux send -t $session:$n.bottom "cd ~ && pry" C-m
     else
         tmux splitw -h -t $session:$n
         tmux splitw -v -t $session:$n
         if [ $n -eq 4 ]; then
-            tmux send -t $session:$n.+1 "cd $HOME/venvs && workon sninv_venv" C-m
-            tmux send -t $session:$n.+2 "cd $HOME/venvs && workon sndash" C-m
-            tmux send -t $session:$n.+3 "cd $HOME/venvs && workon sn-social-redis" C-m
+            tmux send -t $session:$n.+1 "cd ~/venvs && workon sninv_venv" C-m
+            tmux send -t $session:$n.+2 "cd ~/venvs && workon sndash" C-m
+            tmux send -t $session:$n.+3 "cd ~/venvs && workon sn-social-redis" C-m
         elif [ $n -eq 5 ]; then
             tmux send -t $session:$n.+1 "cd $repos/$five && git st" C-m
             tmux send -t $session:$n.+2 "cd $repos/$five" C-m
@@ -100,22 +75,18 @@ for n in {4..9}; do
             tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
-            tmux send -t $session:$n.+1 "$C9" C-m
-            if [[ "$nine" == snmedia ]]; then
-                tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
-                tmux send -t $session:$n.+3 "cd $repos/$nine" C-m
-            else
-                tmux killp -t $session:$n.+3
-            fi
+            tmux send -t $session:$n.+1 "cd $repos/$nine && git st" C-m
+            tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
+            tmux killp -t $session:$n.+3
         fi
-        tmux select-window -t $session:$n.+1
+    tmux select-pane -t :.+
     fi
 done
 
 # tell rest of the windows what to do
 tmux send-keys -t $session:0 "sudo su -" C-m
-tmux send-keys -t $session:1 "cd $HOME/" C-m
-tmux send-keys -t $session:2 "cd $HOME/bin" C-m
+tmux send-keys -t $session:1 "cd ~" C-m
+tmux send-keys -t $session:2 "cd ~/bin" C-m
 
 # set default selected win
 tmux select-window -t $session:1
