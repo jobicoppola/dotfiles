@@ -152,8 +152,11 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
 fi
 
-# oracle env vars
-export ORACLE_HOME=/usr/local/oracle
+# set db related env vars
+set_db_vars(){
+    # oracle
+    export ORACLE_HOME=/usr/local/oracle
+    # mysql path
+    export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+}
 
-# mysql path
-export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
