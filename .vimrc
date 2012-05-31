@@ -30,6 +30,16 @@ nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
 
+" some mappings for easy capitalizations
+" can also do like 2gcw to capitalize two words
+nmap gcw g~w
+nmap gcW g~W
+nmap gciw g~wi
+nmap gciW g~Wi
+nmap gc$ g~$
+nmap gcgc g~~
+nmap gcc g~~
+
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
 
