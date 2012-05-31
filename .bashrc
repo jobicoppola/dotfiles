@@ -144,6 +144,8 @@ if [[ "$OS" == Darwin ]]; then
     # fink
     alias fink="sudo fink"
     test -r /sw/bin/init.sh && . /sw/bin/init.sh
+    # prepend homebrew location to manpath
+    export MANPATH=/usr/local/Cellar:$MANPATH
     # brew completion
     [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
     [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
