@@ -28,10 +28,16 @@ HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
 
 # set path
-P1=/usr/local/bin:/sw/bin:/sw/sbin:/usr/local/sbin:/usr/local/mysql/bin
-P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
-P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
-export PATH=$P1:$P2:$P3
+if [[ "$OS" == Darwin ]]; then
+    P1=/usr/local/bin:/sw/bin:/sw/sbin:/usr/local/sbin:/usr/local/mysql/bin
+    P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
+    P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
+    export PATH=$P1:$P2:$P3
+else
+    P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
+    P2=$HOME/bin
+    export PATH=$P1:$P2
+fi
 
 # start ssh-agent and set sock var
 if [ -s "$SSH_AUTH_SOCK" -o ! -S "$SSH_AUTH_SOCK" ]; then
@@ -51,13 +57,18 @@ export EDITOR='vim'
 export GIT_EDITOR='vim'
 
 # ruby related
-SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
-SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 export RUBYOPT=rubygems
 export GEM_HOME=$HOME/gems
-export GEM_PATH=$GEM_HOME:/Library/Ruby/Gems/1.8/gems:$SYSTEM_GEMS
 export RUBYPATH=$GEM_HOME
-export PATH=$PATH:$HOME/gems/bin
+export GEM_PATH=$GEM_HOME
+export PATH=$PATH:$GEM_HOME/bin
+if [[ "$OS" == Darwin ]]; then
+    SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
+    SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+    export GEM_PATH=$GEM_HOME:/Library/Ruby/Gems/1.8/gems:$SYSTEM_GEMS
+fi
+
+# use rbenv to manage ruby versions
 export PATH=$HOME/.rbenv/bin:$PATH
 eval "$(rbenv init -)"
 
