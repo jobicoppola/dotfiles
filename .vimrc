@@ -141,15 +141,15 @@ let g:neocomplcache_enable_at_startup = 1           " use neocomplcache
 let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
-let g:NeoComplCache_EnableQuickMatch = 0
-let g:neocomplcache_min_syntax_length = 3           " set minimum syntax keyword length
-let g:neocomplcache_enable_quick_match = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_enable_auto_select = 1
 
 " plugin key-mappings
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
 inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
