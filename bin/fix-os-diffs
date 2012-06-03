@@ -1,0 +1,12 @@
+#!/bin/bash
+
+vrc=~/.vimrc
+tcf=~/.tmux.conf
+
+# using terminal solarized on linux so just disable the vim colorscheme
+sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vrc
+
+# update tmux settings to comment out mac-specific lines
+sed -i 's/^set-option/# auto-disabled on linux\n# set-option/' $tcf
+sed -i "$(grep -nA1 mac $tcf |sed '1d' |awk -F- '{print $1}')"d $tcf
+sed -i "$(grep -nA1 '^# linux' $tcf |sed '1d' |awk -F- '{print $1}')s/# set/set/" $tcf

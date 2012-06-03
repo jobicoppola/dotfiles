@@ -86,9 +86,9 @@ startssh()
     RC=$(listkeys |grep -c "ssh/id_rsa")
     # sort out agent and authsock
     if [[ "$SOCK" != "$JSOCK" ]]; then
-        test $SOCK && ln -sf "$SOCK" "$JSOCK"
+        test "$SOCK" && ln -sf "$SOCK" "$JSOCK"
     else
-        eval `ssh-agent -a $SOCK -s`
+        eval `ssh-agent -a $JSOCK -s`
     fi
     # make sure agent has all keys
     if [[ "$KC" -lt 5 ]]; then

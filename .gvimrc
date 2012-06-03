@@ -7,7 +7,7 @@ colorscheme solarized
 
 " os-specific
 if has('unix')
-    set guifont=Monospace 12
+    set guifont=Monospace\ 10
 elseif has('macunix')
     set guifont=Menlo:h14
     set transparency=7
