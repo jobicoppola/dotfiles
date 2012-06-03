@@ -4,7 +4,7 @@
 cd "$(dirname $0)"
 
 git pull
-git submodule update --init
+git submodule --quiet update --init
 
 read -p "NOTE: This can/will dropkick existing files in $HOME - proceed? (y/n) " yaynay
 
