@@ -20,6 +20,10 @@ if [[ $yaynay == y* ]]; then
         --exclude "macbot.itermcolors" \
         --keep-dirlinks \
         --backup --backup-dir $BACKUPDIR/ -av . ~
+    if [[ "$(uname)" == Linux ]]; then
+        echo -e "\nTuning conf files for linux friendliness"
+        bin/fix-os-diffs
+    fi
 fi
 
 . ~/.bashrc
