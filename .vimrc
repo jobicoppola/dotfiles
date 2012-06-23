@@ -134,7 +134,7 @@ let g:pymode_options_other = 0
 let g:CommandTMaxHeight = 20
 let g:CommandTMatchWindowReverse = 1
 
-" neocomplcache 
+" neocomplcache
 " basic settings
 let g:acp_enableAtStartup = 0                       " disable AutoComplPop
 let g:neocomplcache_enable_at_startup = 1           " use neocomplcache
@@ -220,6 +220,9 @@ endif
 
 " returns to where you were the last time you edited the file
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+
+" always go to top of commit messages
+autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
 
 " save when focus is lost
 au FocusLost * :wa
