@@ -1,0 +1,13 @@
+# ~/.miscrc :: jcopp.cfxd.net
+#
+# rackspace
+export RACKSPACE_API_USER=
+export RACKSPACE_API_KEY=
+#
+# twilio creds
+export TWILIO_ACCOUNT_SID=
+export TWILIO_AUTH_TOKEN=
+#
+# sunlight real time congress api
+export SUNLIGHT_API_KEY=
+#
