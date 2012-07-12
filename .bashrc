@@ -72,6 +72,14 @@ fi
 export PATH=$HOME/.rbenv/bin:$PATH
 eval "$(rbenv init -)"
 
+# use bundler to manage ruby applications
+alias b="bundle"
+alias bi="b install --path vendor"
+alias bil="bi --local"
+alias bu="b update"
+alias be="b exec"
+alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
+
 # node.js
 NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
