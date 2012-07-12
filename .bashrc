@@ -54,7 +54,7 @@ fi
 
 # set editor vars to textmate
 export EDITOR='vim'
-export GIT_EDITOR='vim'
+export GIT_EDITOR='/usr/local/bin/vim'
 
 # ruby related
 export RUBYOPT=rubygems
