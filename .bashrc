@@ -63,9 +63,9 @@ export RUBYPATH=$GEM_HOME
 export GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
 if [[ "$OS" == Darwin ]]; then
+    # fyi only
     SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
     SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
-    export GEM_PATH=$GEM_HOME:/Library/Ruby/Gems/1.8/gems:$SYSTEM_GEMS
 fi
 
 # use rbenv to manage ruby versions
