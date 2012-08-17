@@ -61,7 +61,7 @@ autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " colors
 syntax on                               " syntax highlighting
-color molokai_jobot                     " color scheme
+color molokai_macbot                    " color scheme
 
 " tab settings
 set tabstop=4                           " how many spaces a tab counts for
