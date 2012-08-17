@@ -58,6 +58,7 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
 autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 
 " colors
 syntax on                               " syntax highlighting
