@@ -52,9 +52,9 @@ if [ -s "$SSH_AUTH_SOCK" -o ! -S "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
-# set editor vars to textmate
-export EDITOR='vim'
-export GIT_EDITOR='/usr/local/bin/vim'
+# set editor vars
+export EDITOR=$(which vim)
+export GIT_EDITOR=$(which vim)
 
 # ruby related
 export RUBYOPT=rubygems
