@@ -64,9 +64,9 @@
 [submodule ".vim/bundle/neocomplcache-snippets-complete"]
 	path = .vim/bundle/neocomplcache-snippets-complete
 	url = https://github.com/Shougo/neocomplcache-snippets-complete.git
-[submodule ".vim/bundle/vim-json"]
-	path = .vim/bundle/vim-json
-	url = https://github.com/rogerz/vim-json.git
 [submodule ".vim/bundle/vim-nginx"]
 	path = .vim/bundle/vim-nginx
 	url = https://github.com/dan-bolsun/vim-nginx.git
+[submodule ".vim/bundle/vim-json-bundle"]
+	path = .vim/bundle/vim-json-bundle
+	url = https://github.com/jobicoppola/vim-json-bundle.git
