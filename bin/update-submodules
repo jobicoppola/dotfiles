@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd "$(dirname $0)" && cd ../
+
+read -p "Update all git submodules and commit changes to superproject? " submod
+if [[ "$submod" == y* ]]; then
+    cdup='cd ../../..'
+    git submodule foreach "git pull origin master && git add . || :"
+    git commit -m "Updating git submodules"
+fi
