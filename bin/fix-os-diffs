@@ -3,8 +3,16 @@
 vrc=~/.vimrc
 tcf=~/.tmux.conf
 
-# using terminal solarized on linux so just disable the vim colorscheme
-sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vrc
+disable_colorscheme() {
+    sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vrc
+}
+
+linux_colorscheme() {
+    sed -i 's/molokai_macbot/molokai_jobot/' $vrc
+}
+
+# using terminal solarized on linux at home
+[[ "$(hostname)" == qstor ]] && disable_colorscheme || linux_colorscheme
 
 # update tmux settings to comment out mac-specific lines
 sed -i 's/^set-option/# auto-disabled on linux\n# set-option/' $tcf
