@@ -70,9 +70,6 @@
 [submodule ".vim/bundle/vim-json-bundle"]
 	path = .vim/bundle/vim-json-bundle
 	url = https://github.com/jobicoppola/vim-json-bundle.git
-[submodule ".vim/bundle/vim-nerdtree-tabs"]
-	path = .vim/bundle/vim-nerdtree-tabs
-	url = https://github.com/jistr/vim-nerdtree-tabs.git
 [submodule ".vim/bundle/minibufexpl"]
 	path = .vim/bundle/minibufexpl
 	url = https://github.com/fholgado/minibufexpl.vim.git
