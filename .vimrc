@@ -98,6 +98,7 @@ set wrap                                " handle long lines proper-like
 set textwidth=79
 set formatoptions=qrn1
 set colorcolumn=80                      " new in 7.3
+set switchbuf=useopen                   " keep window layout for existing bffrs
 
 " search options
 nnoremap / /\v
@@ -182,8 +183,9 @@ imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>
 " remap leader key, default is \
 let mapleader = ","
 
-" toggle nerdtree
+" toggles for nerdtree; second toggles nt for all tabs
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+map <leader>n <plug>NERDTreeTabsToggle<CR>
 
 " show current file in tree; extra cr moves focus back to the file
 map <leader>f :NERDTreeFind<CR><CR>
