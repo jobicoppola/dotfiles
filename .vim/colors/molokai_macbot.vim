@@ -2,6 +2,7 @@
 "
 " Author: Tomas Restrepo <tomas@winterdom.com>
 " Modified by: Steve Losh <steve@stevelosh.com>
+" Modified by: Joe Copp <joe@cfxd.net>
 "
 " Note: Based on the monokai theme for textmate
 " by Wimer Hazenberg and its darker variant
@@ -223,12 +224,12 @@ if &t_Co > 255
     hi NonText         ctermfg=240
 
     " MiniBufExpl Colors
-    hi MBEVisibleActive        ctermfg=40        ctermbg=fg
-    hi MBEVisibleChangedActive ctermfg=200       ctermbg=fg
-    hi MBEVisibleChanged       ctermfg=200       ctermbg=fg
-    hi MBEVisibleNormal        ctermfg=39        ctermbg=fg
-    hi MBEChanged              ctermfg=202       ctermbg=fg
-    hi MBENormal               ctermfg=238       ctermbg=fg
+    "hi MBEVisibleActive        ctermfg=80        ctermbg=fg
+    "hi MBEVisibleChangedActive ctermfg=200       ctermbg=fg
+    "hi MBEVisibleChanged       ctermfg=200       ctermbg=fg
+    "hi MBEVisibleNormal        ctermfg=39        ctermbg=fg
+    "hi MBEChanged              ctermfg=202       ctermbg=fg
+    "hi MBENormal               ctermfg=238       ctermbg=fg
 
     " Uncooperational with terminals so commented out
     "hi Normal          ctermfg=252 ctermbg=233
