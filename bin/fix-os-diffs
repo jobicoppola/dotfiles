@@ -11,8 +11,8 @@ linux_colorscheme() {
     sed -i 's/molokai_macbot/molokai_jobot/' $vrc
 }
 
-# using terminal solarized on linux at home
-[[ "$(hostname)" == qstor ]] && disable_colorscheme || linux_colorscheme
+# can disable vim colorscheme if so desired
+[[ "$1" == disablecolorscheme ]] && disable_colorscheme || linux_colorscheme
 
 # update tmux settings to comment out mac-specific lines
 sed -i 's/^set-option/# auto-disabled on linux\n# set-option/' $tcf
