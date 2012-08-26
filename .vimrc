@@ -180,6 +180,10 @@ let g:neocomplcache_snippets_dir = '~/.vim/mysnippets/'
 imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)"
 " end neocomplcache settings
 
+" minibufexplorer settings
+" put new win below or on right
+let g:miniBufExplSplitBelow=1
+
 " remap leader key, default is \
 let mapleader = ","
 
@@ -226,6 +230,9 @@ au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|
 
 " always go to top of commit messages
 autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
+
+" automatically reload vimrc when it's saved
+au BufWritePost .vimrc so ~/.vimrc
 
 " save when focus is lost
 au FocusLost * :wa
