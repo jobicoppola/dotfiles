@@ -8,7 +8,7 @@ disable_colorscheme() {
 }
 
 linux_colorscheme() {
-    sed -i 's/molokai_macbot/molokai_jobot/' $vrc
+    sed -i 's/molokai_macbot/molokai_jobot /' $vrc
 }
 
 # can disable vim colorscheme if so desired
