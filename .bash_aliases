@@ -33,6 +33,7 @@ alias snbin="cd ~/ec2/sn/bin"
 alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages"
 alias gitdot='cd ~/git/dotfiles && git st'
 alias gitchef='cd ~/git/chef-repo'
+alias venvs='cd ~/venvs/'
 #
 # vi
 alias vi='vim'
