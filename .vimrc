@@ -59,6 +59,7 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 " settings for specific filetypes
 autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
+autocmd BufRead,BufNewFile *.wsdl set ft=xml
 
 " colors
 syntax on                               " syntax highlighting
@@ -181,8 +182,7 @@ imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>
 " end neocomplcache settings
 
 " minibufexplorer settings
-" put new win below or on right
-let g:miniBufExplSplitBelow=1
+let g:miniBufExplSplitBelow=0 " put window at top
 
 " remap leader key, default is \
 let mapleader = ","
