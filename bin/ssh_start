@@ -20,15 +20,13 @@ LINE=${LEN// /=}
 usage="Usage: $0 [now]"
 
 # print. the. dots.
-printdots()
-{
+printdots() {
     N=$1; T=$((43-N)); L=$(printf "%${T}s"); D=${L// /.}
     echo "$D"
 }
 
 # cleverly named
-runtest()
-{
+runtest() {
     echo -e "\n$MSG"
     echo "$LINE"
     echo "$MSG_EXISTS $(printdots ${#MSG_EXISTS}) $(file_exists)"
@@ -39,24 +37,21 @@ runtest()
 # next three functions are basically redundant, but they
 # helped me figure out how this script needed to work,
 # so i shall remain loyal and keep them employed
-file_exists_zero_plus_bytes()
-{
+file_exists_zero_plus_bytes() {
     if [ -s "$SOCK" ]; then
         echo 'TRUE'
     else
       echo 'FALSE'
     fi
 }
-file_exists()
-{
+file_exists() {
     if [ -e "$SOCK" ]; then
         echo 'TRUE'
     else
         echo 'FALSE'
     fi
 }
-exists_and_is_socket()
-{
+exists_and_is_socket() {
     if [ -S "$SOCK" ]; then
         echo 'TRUE'
     else
@@ -65,45 +60,76 @@ exists_and_is_socket()
 }
 
 # more clever naming
-listkeys()
-{
+listkeys() {
     echo "$(/usr/bin/ssh-add -l)"
 }
-countkeys()
-{
+countkeys() {
     echo "$(listkeys |wc -l)"
+}
+countuserkeys() {
+    echo "$(ls -1 ~/.ssh/*.pub |wc -l)"
+}
+check_agent() {
+    local ids=$(ssh-add -l)
+    local return=$?
+    [[ "$return" == "2" ]] && echo "Agent down, restarting"; start_agent
+    [[ "$return" == "1" ]] && echo "$ids"
+}
+start_agent() {
+    eval $(ssh-agent -a ${JSOCK} -s)
+}
+identities() {
+    local k=$(listkeys)
+    [[ "$?" == "1" ]] && echo "n" || echo "y"
+}
+contains() {
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++)) {
+        if [ "${!i}" == "${value}" ]; then
+            echo "y"
+            return 0
+        fi
+    }
+    echo "n"
+    return 1
 }
 
 # on fire with these names
-startssh()
-{
+startssh() {
     # infoz
     runtest
-    echo -e "$(listkeys) \n"
-    # keycounts
-    KC=$(countkeys)
-    DC=$(listkeys |grep -c "ssh/id_dsa")
-    RC=$(listkeys |grep -c "ssh/id_rsa")
-    # sort out agent and authsock
+
+    # sort out agent and authsock if necessary
+    echo "AUTHSOCK: $SOCK"
+    echo "JSOCK: $JSOCK"
+
     if [[ "$SOCK" != "$JSOCK" ]]; then
+        echo "Authsocks do not match"
         test "$SOCK" && ln -sf "$SOCK" "$JSOCK"
     else
-        eval `ssh-agent -a $JSOCK -s`
+        echo "Trying new agent..."
+        #eval $(ssh-agent -a ${JSOCK} -s)
+        start_agent
     fi
+    echo -e "$(listkeys) \n"
+
+    # keycounts
+    USER_KEYS=$(ls -1 ~/.ssh/*.pub)
+    RUNNING_KEYS=$(ssh-add -l)
+    UC=$(countuserkeys)
+    KC=$(countkeys)
+
+    echo "$(identities)"
+
     # make sure agent has all keys
-    if [[ "$KC" -lt 5 ]]; then
-        echo "Keycount: ${KC} < 5"
-        if [[ "$DC" -lt 1 ]] || [[ "$RC" -lt 1 ]]; then
-            echo "No DSA|RSA keys in agent; adding them now."
-            `ssh-add`
-        else
-            echo "SN and/or github keys missing; adding now."
-            `ssh-add ~/.ssh/id_rsa_github`
-            `ssh-add ~/.ssh/id_rsa_sn`
+    [[ "$KC" -lt "$UC" ]] && echo "Keycount: ${KC} < ${UC}"
+    [[ "$(identities)" == "n" ]] && echo "Ohnoes! Agent has no identities!"
+    for KEY in ${USER_KEYS[@]}; do
+        if [ $(contains "${RUNNING_KEYS[@]}" "$KEY") == "n" ]; then
+            ssh-add "${KEY%.pub}"
         fi
-    else
-        echo -e "\nAll identities appear to have been added.\n"
-    fi
+    done
 }
 
 # start agent and add keys if requested
