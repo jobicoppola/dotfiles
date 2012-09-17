@@ -137,6 +137,9 @@ let g:pymode_options_other = 0
 let g:CommandTMaxHeight = 20
 let g:CommandTMatchWindowReverse = 1
 
+" set nerdtree window size
+let g:NERDTreeWinSize = 30
+
 " neocomplcache
 " basic settings
 let g:acp_enableAtStartup = 0                       " disable AutoComplPop
@@ -187,9 +190,8 @@ let g:miniBufExplSplitBelow=0 " put window at top
 " remap leader key, default is \
 let mapleader = ","
 
-" toggles for nerdtree; second toggles nt for all tabs
+" toggles nerdtree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
-map <leader>n <plug>NERDTreeTabsToggle<CR>
 
 " show current file in tree; extra cr moves focus back to the file
 map <leader>f :NERDTreeFind<CR><CR>
