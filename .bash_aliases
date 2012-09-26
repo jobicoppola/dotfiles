@@ -60,6 +60,8 @@ alias mongod='mongod run --config /usr/local/Cellar/mongodb/2.0.2-x86_64/mongod.
 alias linkmysql='ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock'
 alias pipup='pip install --upgrade'
 alias fib='echo 0,1,1,2,3,5,8,13,21,34,55,89,144'
+alias rcli='/Users/jcopp/venvs/redmine-py-cli/bin/python /Users/jcopp/venvs/redmine-py-cli/app/redmine.py'
+alias mtr='mtr --curses'
 #
 # git
 alias cdgit='cd ~/git/'
