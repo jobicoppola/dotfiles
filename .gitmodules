@@ -46,9 +46,6 @@
 [submodule ".vim/bundle/python-mode"]
 	path = .vim/bundle/python-mode
 	url = https://github.com/klen/python-mode.git
-[submodule ".vim/bundle/command-t"]
-	path = .vim/bundle/command-t
-	url = https://github.com/wincent/Command-T.git
 [submodule ".vim/bundle/vim-php"]
 	path = .vim/bundle/vim-php
 	url = https://github.com/vim-scripts/php.vim--Garvin.git
