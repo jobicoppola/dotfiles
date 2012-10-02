@@ -10,7 +10,7 @@ if has('unix')
     set guifont=Monospace\ 10
 elseif has('macunix')
     set guifont=Menlo:h14
-    set transparency=7
+    set transparency=5
 endif
 
 " set window size to be as tall as possible
