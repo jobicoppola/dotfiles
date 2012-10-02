@@ -11,6 +11,7 @@ MSG="SSH_AUTH_SOCK => $SOCK"
 MSG_ZPB="Exists / size > ZER0 bytes"
 MSG_EXISTS="File exists"
 MSG_IS_SOCK="Exists and is a socket"
+MSG_MISMATCH="Environment vars do not match"
 
 # fifty equal signs
 LEN=$(printf "%50s")
@@ -101,15 +102,11 @@ startssh() {
     runtest
 
     # sort out agent and authsock if necessary
-    echo "AUTHSOCK: $SOCK"
-    echo "JSOCK: $JSOCK"
-
     if [[ "$SOCK" != "$JSOCK" ]]; then
-        echo "Authsocks do not match"
+        echo -e "\nINFO: $MSG_MISMATCH $SOCK $JSOCK\n"
         test "$SOCK" && ln -sf "$SOCK" "$JSOCK"
     else
         echo "Trying new agent..."
-        #eval $(ssh-agent -a ${JSOCK} -s)
         start_agent
     fi
     echo -e "$(listkeys) \n"
@@ -120,10 +117,8 @@ startssh() {
     UC=$(countuserkeys)
     KC=$(countkeys)
 
-    echo "$(identities)"
-
     # make sure agent has all keys
-    [[ "$KC" -lt "$UC" ]] && echo "Keycount: ${KC} < ${UC}"
+    [[ "$KC" -lt "$UC" ]] && echo -e "Keycount: ${KC} < ${UC}\n"
     [[ "$(identities)" == "n" ]] && echo "Ohnoes! Agent has no identities!"
     for KEY in ${USER_KEYS[@]}; do
         if [ $(contains "${RUNNING_KEYS[@]}" "$KEY") == "n" ]; then
