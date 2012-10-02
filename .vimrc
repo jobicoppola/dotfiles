@@ -133,10 +133,6 @@ set guioptions-=L
 " don't let pymode override relativenumber
 let g:pymode_options_other = 0
 
-" set command-t result window size
-let g:CommandTMaxHeight = 20
-let g:CommandTMatchWindowReverse = 1
-
 " set nerdtree window size
 let g:NERDTreeWinSize = 30
 
@@ -185,7 +181,10 @@ imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>
 " end neocomplcache settings
 
 " minibufexplorer settings
-let g:miniBufExplSplitBelow=0 " put window at top
+let g:miniBufExplSplitBelow = 0  " put window at top
+
+" ctrlp settings
+let g:ctrlp_working_path_mode = 0  " don't manage working directory
 
 " remap leader key, default is \
 let mapleader = ","
@@ -201,6 +200,9 @@ nmap <leader>l :set list!<CR>
 
 " ack shortcut
 nnoremap <leader>a :Ack!
+
+" bring up ctrlp
+map <leader>p :CtrlPMixed<CR>
 
 " clear highlighting from search
 nnoremap <leader><space> :noh<CR>
