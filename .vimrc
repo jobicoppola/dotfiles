@@ -136,6 +136,18 @@ let g:pymode_options_other = 0
 " set nerdtree window size
 let g:NERDTreeWinSize = 30
 
+" surround.vim
+" use v or # to get a variable interpolation (inside of a string)}
+" ysiw#   Wrap the token under the cursor in #{}
+" v...s#  Wrap the selection in #{}
+let g:surround_113 = "#{\r}"   " v
+let g:surround_35  = "#{\r}"   " #
+
+" select text in an ERb file with visual mode and then press s- or s=
+" or yss- to do entire line.
+let g:surround_45 = "<% \r %>"    " -
+let g:surround_61 = "<%= \r %>"   " =
+
 " neocomplcache
 " basic settings
 let g:acp_enableAtStartup = 0                       " disable AutoComplPop
@@ -165,7 +177,7 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 
 " for snippet_complete marker.
