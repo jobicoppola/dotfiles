@@ -172,7 +172,7 @@ if [[ "$OS" == Darwin ]]; then
 fi
 
 # clojure
-export VIMCLOJURE_SERVER_JAR="$HOME/lib/vimclojure/server-2.3.0.jar"
+export VIMCLOJURE_SERVER_JAR="$HOME/lib/vimclojure/server.jar"
 
 # set db related env vars
 set_db_vars(){
