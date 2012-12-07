@@ -193,10 +193,17 @@ imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>
 " end neocomplcache settings
 
 " minibufexplorer settings
-let g:miniBufExplSplitBelow = 0  " put window at top
+let g:miniBufExplSplitBelow = 0         " put window at top
+let g:miniBufExplMapWindowNavVim = 1    " use [hjkl] for window nav
+let g:miniBufExplMapWindowNavArrows = 1 " use Ctrl + Arrows for nav
+let g:miniBufExplMapCTabSwitchBufs = 1  " enable ctrl-tab function mapping
+let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
+
+" bclose settings
+let bclose_multiple = 0 " don't close buffers displayed more than once
 
 " ctrlp settings
-let g:ctrlp_working_path_mode = 0  " don't manage working directory
+let g:ctrlp_working_path_mode = 0 " don't manage working directory
 
 " remap leader key, default is \
 let mapleader = ","
@@ -209,6 +216,9 @@ map <leader>f :NERDTreeFind<CR><CR>
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
+
+" remap :bd to use the superior functionality of :Bclose
+cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
 
 " ack shortcut
 nnoremap <leader>a :Ack!
