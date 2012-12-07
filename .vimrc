@@ -206,6 +206,9 @@ let g:vimclojure#WantNailgun = 1
 let g:vimclojure#SplitPos = "bottom"
 let g:vimclojure#SplitSize = 10
 
+" vim-slime
+let g:slime_target = "tmux"
+
 " bclose settings
 let bclose_multiple = 0 " don't close buffers displayed more than once
 
