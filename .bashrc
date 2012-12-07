@@ -171,6 +171,9 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
 fi
 
+# clojure
+export VIMCLOJURE_SERVER_JAR="$HOME/lib/vimclojure/server-2.3.0.jar"
+
 # set db related env vars
 set_db_vars(){
     # oracle
