@@ -199,6 +199,10 @@ let g:miniBufExplMapWindowNavArrows = 1 " use Ctrl + Arrows for nav
 let g:miniBufExplMapCTabSwitchBufs = 1  " enable ctrl-tab function mapping
 let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 
+" vim clojure settings
+let g:vimclojure#HighlightBuiltins = 1
+let g:vimclojure#ParenRainbow = 1
+
 " bclose settings
 let bclose_multiple = 0 " don't close buffers displayed more than once
 
