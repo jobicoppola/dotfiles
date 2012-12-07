@@ -203,6 +203,8 @@ let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 let g:vimclojure#HighlightBuiltins = 1
 let g:vimclojure#ParenRainbow = 1
 let g:vimclojure#WantNailgun = 1
+let g:vimclojure#SplitPos = "bottom"
+let g:vimclojure#SplitSize = 10
 
 " bclose settings
 let bclose_multiple = 0 " don't close buffers displayed more than once
