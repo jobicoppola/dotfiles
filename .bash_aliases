@@ -47,7 +47,6 @@ alias vvim="vi ~/git/dotfiles/.vimrc"
 # cmd
 alias Grep="grep"
 alias dnsflush='dscacheutil -flushcache'
-alias ns="~/bin/new-script"
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias getip='echo "$(curl -s http://automation.whatismyip.com/n09230945.asp)"'
 alias rdp="$(which rdio) play"
