@@ -45,6 +45,7 @@ alias valias="vi ~/git/dotfiles/.bash_aliases"
 alias vvim="vi ~/git/dotfiles/.vimrc"
 #
 # cmd
+alias grep='grep --color=auto'
 alias Grep="grep"
 alias dnsflush='dscacheutil -flushcache'
 alias updatedb="sudo /usr/libexec/locate.updatedb"
