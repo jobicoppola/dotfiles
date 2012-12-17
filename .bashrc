@@ -145,18 +145,16 @@ PS1="$PS1\n$Blue$ $Ecol"
 # source various alias files if they exist
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.jc_aliases ] && . ~/.jc_aliases
-[ -f ~/.sn_aliases ] && . ~/.sn_aliases
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
+
+# sportingnews
+[ -f ~/.snrc ] && . ~/.snrc
+[ -f ~/.sn_aliases ] && . ~/.sn_aliases
 
 # virtualenv
 export WORKON_HOME=$HOME/venvs
 VWSH=$(which virtualenvwrapper.sh)
 [ -f "$VWSH" ] && . "$VWSH"
-
-# sportingnews
-export SNELIPS=$(<~/sn/elips.lst)
-export SNBLADES=$(<~/sn/bladechassis.lst)
-export SNPRODWS=$(<~/sn/prod-servers-snweb.lst)
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
