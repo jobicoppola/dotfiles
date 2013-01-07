@@ -151,6 +151,9 @@ PS1="$PS1\n$Blue$ $Ecol"
 [ -f ~/.snrc ] && . ~/.snrc
 [ -f ~/.sn_aliases ] && . ~/.sn_aliases
 
+# pythonbrew
+[ -f ~/.pythonbrew/etc/bashrc ] && . ~/.pythonbrew/etc/bashrc
+
 # virtualenv
 export WORKON_HOME=$HOME/venvs
 VWSH=$(which virtualenvwrapper.sh)
