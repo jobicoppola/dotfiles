@@ -50,7 +50,7 @@ alias egrep='egrep --color=auto'
 alias Grep="grep"
 alias dnsflush='dscacheutil -flushcache'
 alias updatedb="sudo /usr/libexec/locate.updatedb"
-alias getip='echo "$(curl -s http://automation.whatismyip.com/n09230945.asp)"'
+alias getip='wget -qO - icanhazip.com'
 alias rdp="$(which rdio) play"
 alias gi="gem install --no-rdoc --no-ri"
 alias tail="grc tail"
