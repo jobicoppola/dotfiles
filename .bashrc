@@ -170,6 +170,7 @@ if [[ "$OS" == Darwin ]]; then
     [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
     [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
     [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
+    [ -f ~/bash_completion.d/berkshelf ] && . ~/bash_completion.d/berkshelf
 fi
 
 # clojure
