@@ -28,7 +28,7 @@ tmux new-session -d -s $session
 # set some names
 three=repl
 four=venvs
-five=chef-repo
+five=snchef
 six=dotfiles
 seven=snweb
 eight=snsysadmin
