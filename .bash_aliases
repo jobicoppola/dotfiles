@@ -53,6 +53,7 @@ alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias getip='wget -qO - icanhazip.com'
 alias rdp="$(which rdio) play"
 alias gi="gem install --no-rdoc --no-ri"
+alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"
 alias diff="colordiff"
 alias fplog="tail -100f /Users/jcopp/Sites/faderpro-k23/application/logs/$(date +'%Y-%m-%d').log.php"
