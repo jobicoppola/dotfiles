@@ -115,9 +115,9 @@ get_branch(){
 
 # find git status
 get_status(){
+    CMSG='nothing to commit'
     TMSG='Changes to be committed'
     SMSG='Changes not staged for commit'
-    CMSG='nothing to commit (working directory clean)'
     UMSG='nothing added to commit but untracked files present'
     GSTAT=$(git status 2> /dev/null) || return
     if [[ $(echo ${GSTAT} |grep -c "$SMSG") > 0 ]]; then
