@@ -55,6 +55,7 @@ fi
 # set editor vars
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
+export GIT_MERGE_AUTOEDIT=no
 
 # ruby related
 export RUBYOPT=rubygems
