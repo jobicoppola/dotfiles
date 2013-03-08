@@ -30,6 +30,7 @@ alias dbox="cd ~/Dropbox"
 alias dbin="cd  ~/Dropbox/jhome/bin"
 alias mampsql="cd /Applications/MAMP/Library/bin;pwd;./mysql -u root -p"
 alias snbin="cd ~/ec2/sn/bin"
+alias sncook="cd ~/git/sporting-news/cookbooks"
 alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages"
 alias gitdot='cd ~/git/dotfiles && git st'
 alias gitchef='cd ~/git/snchef || cd ~/git/chef-repo'
