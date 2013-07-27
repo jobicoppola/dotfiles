@@ -33,6 +33,9 @@ if [[ "$OS" == Darwin ]]; then
     P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
     P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
     export PATH=$P1:$P2:$P3
+    # prepend postgresql
+    export PATH=/Applications/Postgres.app/Contents/MacOS/bin:$PATH
+
 else
     P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
     P2=$HOME/bin
@@ -84,9 +87,6 @@ alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 # node.js
 NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
-
-# postgresql
-export PATH=$PATH:/Applications/Postgres.app/Contents/MacOS/bin
 
 # make compilers behave
 export ARCHFLAGS="-arch x86_64"
