@@ -85,6 +85,9 @@ alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
 
+# postgresql
+export PATH=$PATH:/Applications/Postgres.app/Contents/MacOS/bin
+
 # make compilers behave
 export ARCHFLAGS="-arch x86_64"
 
