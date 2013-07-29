@@ -209,9 +209,6 @@ let g:vimclojure#SplitSize = 10
 " vim-slime
 let g:slime_target = "tmux"
 
-" bclose settings
-let bclose_multiple = 0 " don't close buffers displayed more than once
-
 " ctrlp settings
 let g:ctrlp_working_path_mode = 0 " don't manage working directory
 
@@ -227,8 +224,10 @@ map <leader>f :NERDTreeFind<CR><CR>
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
 
-" remap :bd to use the superior functionality of :Bclose
-cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+" remap :bd to use the superior functionality of bbye's :Bdelete
+cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete' : 'bd')
+nnoremap <Leader>q :Bdelete<CR>
+nnoremap <Leader>qa :bufdo :Bdelete<CR>
 
 " ack shortcut
 nnoremap <leader>a :Ack!
@@ -243,7 +242,7 @@ nnoremap <leader><space> :noh<CR>
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 " a la textmate's ^Q...re-hardwrap text paragraphs
-nnoremap <leader>q gqip
+nnoremap <leader>Q gqip
 
 " reselect just pasted text so we can e.g. indent it
 nnoremap <leader>v V`]
