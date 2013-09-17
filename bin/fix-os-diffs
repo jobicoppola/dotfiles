@@ -12,7 +12,7 @@ linux_colorscheme() {
 
 # remove tmux conf for other operating systems
 remove_os_conf() {
-    local kernel=$(uname)
+    kernel=$(uname)
     for name in Darwin Linux; do
         [ "$name" = Darwin ] && t=osx || t=linux
         [ "$kernel" != "$name" ] && rm -f $HOME/.tmux-${t}.conf
