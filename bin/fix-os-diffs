@@ -10,5 +10,16 @@ linux_colorscheme() {
     sed -i 's/molokai_macbot/molokai_jobot /' $vrc
 }
 
+# remove tmux conf for other operating systems
+remove_os_conf() {
+    local kernel=$(uname)
+    [ "$kernel" = Darwin ] && t=osx || t=linux
+    for name in Darwin Linux; do
+        [ "$kernel" != "$name" ] && rm -f $HOME/.tmux-${t}.conf
+    done
+}
+
 # can disable vim colorscheme if so desired
 [[ "$1" == disablecolorscheme ]] && disable_colorscheme || linux_colorscheme
+
+remove_os_conf
