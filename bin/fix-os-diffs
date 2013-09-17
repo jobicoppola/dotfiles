@@ -1,7 +1,6 @@
 #!/bin/bash
 
 vrc=~/.vimrc
-tcf=~/.tmux.conf
 
 disable_colorscheme() {
     sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vrc
