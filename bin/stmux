@@ -5,9 +5,9 @@
 # should totally do something about that
 
 # check if we need to add identities to ssh-agent before starting
-~/bin/ssh_start
+~/bin/ssh-start
 read -p "Do we need to add identities to ssh-agent? " addids
-[[ "$addids" == y* ]] && ~/bin/ssh_start now
+[[ "$addids" == y* ]] && ~/bin/ssh-start now
 
 # main session
 session=0
