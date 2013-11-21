@@ -140,6 +140,7 @@ let g:pymode_options_other = 0
 " tell pymode not to worry about vim python paths
 let g:pymode_virtualenv = 0
 
+" nerdtree
 " set nerdtree window size
 let g:NERDTreeWinSize = 30
 
