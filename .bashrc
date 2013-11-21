@@ -155,11 +155,6 @@ PS1="$PS1\n$Blue$ $Ecol"
 [ -f ~/.snrc ] && . ~/.snrc
 [ -f ~/.sn_aliases ] && . ~/.sn_aliases
 
-# use pyenv to manage python versions
-export PYENV_ROOT=~/.pyenv
-export PATH=$PYENV_ROOT/bin:$PATH
-eval "$(pyenv init -)"
-
 # virtualenv
 export WORKON_HOME=$HOME/venvs
 VWSH=$(which virtualenvwrapper.sh)
