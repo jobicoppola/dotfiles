@@ -3,7 +3,7 @@
 " get pathogen going
 runtime bundle/pathogen/autoload/pathogen.vim
 filetype off
-call pathogen#infect()
+execute pathogen#infect()
 filetype plugin indent on
 
 " disable arrow keys etc
@@ -130,8 +130,15 @@ set go-=T
 set guioptions-=r
 set guioptions-=L
 
+" python-mode
+" set default pymode options
+let g:pymode_options = 1
+
 " don't let pymode override relativenumber
 let g:pymode_options_other = 0
+
+" tell pymode not to worry about vim python paths
+let g:pymode_virtualenv = 0
 
 " set nerdtree window size
 let g:NERDTreeWinSize = 30
