@@ -192,6 +192,10 @@ let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 " end neocomplete settings
 
+" supertab
+let g:SuperTabMappingForward = '<S-TAB>'
+let g:SuperTabMappingBackward = '<TAB>'
+
 " neosnippet
 " plugin key-mappings
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
