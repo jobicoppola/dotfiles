@@ -42,6 +42,9 @@ nmap gc$ g~$
 nmap gcgc g~~
 nmap gcc g~~
 
+" remap leader key, default is \
+let mapleader = ","
+
 
 "\_____________________________________________________________________________
 " code completion
@@ -328,9 +331,6 @@ autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
 "\_____________________________________________________________________________
 " more keybindings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" remap leader key, default is \
-let mapleader = ","
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
