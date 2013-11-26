@@ -44,6 +44,7 @@ Bundle 'moll/vim-bbye.git'
 Bundle 'jiangmiao/auto-pairs.git'
 Bundle 'ervandew/supertab.git'
 Bundle 'honza/vim-snippets.git'
+Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 
 " shared bundles
