@@ -198,6 +198,12 @@ let g:pymode_options_other = 0
 " tell pymode not to worry about vim python paths
 let g:pymode_virtualenv = 0
 
+" don't load rope plugin
+let g:pymode_rope = 0
+
+" don't show docstring window during completion
+autocmd FileType python setlocal completeopt-=preview
+
 
 "\_____________________________________________________________________________
 " nerdtree
@@ -245,7 +251,6 @@ let g:acp_enableAtStartup = 0                       " disable AutoComplPop
 let g:neocomplete#enable_at_startup = 1             " use neocomplete
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#min_keyword_length = 3
-"let g:neocomplete#enable_auto_select = 1
 
 " define keyword.
 if !exists('g:neocomplete#keyword_patterns')
