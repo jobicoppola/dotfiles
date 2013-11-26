@@ -1,12 +1,54 @@
 " ~/.vimrc :: jcopp.cfxd.net
 
 "\_____________________________________________________________________________
-" pathogen
+" vundle
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-runtime bundle/pathogen/autoload/pathogen.vim
+set nocompatible
 filetype off
-execute pathogen#infect()
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let vundle manage vundle
+Bundle 'gmarik/vundle'
+
+" bundles on github
+Bundle 'mileszs/ack.vim.git'
+Bundle 'scrooloose/nerdtree.git'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'tpope/vim-pathogen.git'
+Bundle 'scrooloose/syntastic.git'
+Bundle 'tpope/vim-surround.git'
+Bundle 'tpope/vim-repeat.git'
+Bundle 'scrooloose/nerdcommenter.git'
+Bundle 'vim-scripts/chef.vim.git'
+Bundle 'tpope/vim-haml.git'
+Bundle 'sickill/vim-pasta.git'
+Bundle 'vim-scripts/Gist.vim.git'
+Bundle 'tpope/vim-endwise.git'
+Bundle 'klen/python-mode.git'
+Bundle 'vim-scripts/php.vim--Garvin.git'
+Bundle 'groenewege/vim-less'
+Bundle 'altercation/vim-colors-solarized.git'
+Bundle 'Shougo/neocomplete.vim.git'
+Bundle 'dan-bolsun/vim-nginx.git'
+Bundle 'jobicoppola/vim-json-bundle.git'
+Bundle 'fholgado/minibufexpl.vim.git'
+Bundle 'kien/ctrlp.vim.git'
+Bundle 'tpope/vim-rails.git'
+Bundle 'vim-scripts/VimClojure.git'
+Bundle 'jpalardy/vim-slime.git'
+Bundle 'Shougo/neosnippet.vim.git'
+Bundle 'moll/vim-bbye.git'
+Bundle 'jiangmiao/auto-pairs.git'
+Bundle 'ervandew/supertab.git'
+Bundle 'honza/vim-snippets.git'
+Bundle 'rizzatti/dash.vim'
+
+" shared bundles
+Bundle 'L9'
+
 filetype plugin indent on
 
 
@@ -82,7 +124,6 @@ set tabstop=4                           " how many spaces a tab counts for
 set shiftwidth=4                        " spaces to use per indent step
 set softtabstop=4                       " when editing, num spaces in a tab
 set expandtab                           " use spaces to insert a tab
-set nocompatible                        " doesn't work well with ft detect
 set modelines=0                         " stop exploits
 set listchars=tab:▸\ ,eol:¬             " use tm symbols for tabstops/eols
 set pastetoggle=<F2>                    " put vim into paste mode
