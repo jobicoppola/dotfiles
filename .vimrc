@@ -362,3 +362,10 @@ au BufWritePost .vimrc so ~/.vimrc
 
 " save when focus is lost
 au FocusLost * :wa
+
+"\_____________________________________________________________________________
+" projects
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
+set secure  " disallows shell and write commands from cwd rc files
