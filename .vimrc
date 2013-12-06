@@ -354,7 +354,7 @@ let g:ctrlp_working_path_mode = 0 " don't manage working directory
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " remap :bd to use the superior functionality of bbye's :Bdelete
-cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete' : 'bd')
+cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete<CR>' : 'bd')
 nnoremap <Leader>q :Bdelete<CR>
 nnoremap <Leader>qa :bufdo :Bdelete<CR>
 
