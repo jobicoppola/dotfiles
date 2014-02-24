@@ -84,6 +84,9 @@ alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 
+# packer
+export PATH=$PATH:$HOME/packer
+
 # node.js
 NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
