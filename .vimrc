@@ -37,6 +37,7 @@ Bundle 'jobicoppola/vim-json-bundle.git'
 Bundle 'fholgado/minibufexpl.vim.git'
 Bundle 'kien/ctrlp.vim.git'
 Bundle 'tpope/vim-rails.git'
+Bundle 'jobicoppola/vim-jinja.git'
 Bundle 'vim-scripts/VimClojure.git'
 Bundle 'jpalardy/vim-slime.git'
 Bundle 'Shougo/neosnippet.vim.git'
@@ -106,6 +107,7 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
+"autocmd BufRead,BufNewFile *.jinja,*.jinja2,*.j2 set ft=jinja
 
 
 "\_____________________________________________________________________________
