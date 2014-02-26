@@ -32,7 +32,7 @@ five=snchef
 six=dotfiles
 seven=snweb
 eight=snsysadmin
-nine=snmedia
+nine=sncore
 repos=~/git
 
 # open some default windows
