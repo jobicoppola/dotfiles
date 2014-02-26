@@ -57,9 +57,9 @@ for n in {3..9}; do
         tmux splitw -h -t $session:$n
         tmux splitw -v -t $session:$n
         if [ $n -eq 4 ]; then
-            tmux send -t $session:$n.+1 "cd ~/venvs && workon sninv_venv" C-m
-            tmux send -t $session:$n.+2 "cd ~/venvs && workon sndash" C-m
-            tmux send -t $session:$n.+3 "cd ~/venvs && workon sn-social-redis" C-m
+            tmux send -t $session:$n.+1 "cd ~/venvs && workon sn-inventory-dev" C-m
+            tmux send -t $session:$n.+2 "cd ~/venvs && workon sn-inventory-dev" C-m
+            tmux send -t $session:$n.+3 "cd ~/venvs && workon sn-inventory-dev" C-m
         elif [ $n -eq 5 ]; then
             tmux send -t $session:$n.+1 "cd $repos/$five && git st" C-m
             tmux send -t $session:$n.+2 "cd $repos/$five" C-m
