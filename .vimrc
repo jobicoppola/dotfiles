@@ -1,10 +1,63 @@
 " ~/.vimrc :: jcopp.cfxd.net
 
-" get pathogen going
-runtime bundle/pathogen/autoload/pathogen.vim
+"\_____________________________________________________________________________
+" vundle
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set nocompatible
 filetype off
-call pathogen#infect()
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let vundle manage vundle
+Bundle 'gmarik/vundle'
+
+" bundles on github
+Bundle 'mileszs/ack.vim.git'
+Bundle 'scrooloose/nerdtree.git'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'tpope/vim-pathogen.git'
+Bundle 'scrooloose/syntastic.git'
+Bundle 'tpope/vim-surround.git'
+Bundle 'tpope/vim-repeat.git'
+Bundle 'scrooloose/nerdcommenter.git'
+Bundle 'vim-scripts/chef.vim.git'
+Bundle 'tpope/vim-haml.git'
+Bundle 'sickill/vim-pasta.git'
+Bundle 'vim-scripts/Gist.vim.git'
+Bundle 'tpope/vim-endwise.git'
+Bundle 'klen/python-mode.git'
+Bundle 'vim-scripts/php.vim--Garvin.git'
+Bundle 'groenewege/vim-less'
+Bundle 'altercation/vim-colors-solarized.git'
+Bundle 'Shougo/neocomplete.vim.git'
+Bundle 'dan-bolsun/vim-nginx.git'
+Bundle 'jobicoppola/vim-json-bundle.git'
+Bundle 'fholgado/minibufexpl.vim.git'
+Bundle 'kien/ctrlp.vim.git'
+Bundle 'tpope/vim-rails.git'
+Bundle 'jobicoppola/vim-jinja.git'
+Bundle 'chase/vim-ansible-yaml'
+Bundle 'vim-scripts/VimClojure.git'
+Bundle 'jpalardy/vim-slime.git'
+Bundle 'Shougo/neosnippet.vim.git'
+Bundle 'moll/vim-bbye.git'
+Bundle 'jiangmiao/auto-pairs.git'
+Bundle 'ervandew/supertab.git'
+Bundle 'honza/vim-snippets.git'
+Bundle 'rizzatti/funcoo.vim'
+Bundle 'rizzatti/dash.vim'
+
+" shared bundles
+Bundle 'L9'
+
 filetype plugin indent on
+
+
+"\_____________________________________________________________________________
+" initial keybindings
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " disable arrow keys etc
 map <up> <nop>
@@ -24,12 +77,6 @@ inoremap jj <ESC>
 nnoremap j gj
 nnoremap k gk
 
-" use tm/st2 style cmd key indenting
-nmap <D-[> <<
-nmap <D-]> >>
-vmap <D-[> <gv
-vmap <D-]> >gv
-
 " some mappings for easy capitalizations
 " can also do like 2gcw to capitalize two words
 nmap gcw g~w
@@ -40,12 +87,13 @@ nmap gc$ g~$
 nmap gcgc g~~
 nmap gcc g~~
 
-" auto-open nerdtree file browser
-autocmd VimEnter * NERDTree
+" remap leader key, default is \
+let mapleader = ","
 
-" disable relativenumber for nerdtree, taglist filetypes
-autocmd FileType nerdtree setlocal norelativenumber
-autocmd FileType taglist setlocal norelativenumber
+
+"\_____________________________________________________________________________
+" code completion
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " autocompletion
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -60,17 +108,26 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
+"autocmd BufRead,BufNewFile *.jinja,*.jinja2,*.j2 set ft=jinja
 
+
+"\_____________________________________________________________________________
 " colors
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 syntax on                               " syntax highlighting
 color molokai_macbot                    " color scheme
+
+
+"\_____________________________________________________________________________
+" settings
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " tab settings
 set tabstop=4                           " how many spaces a tab counts for
 set shiftwidth=4                        " spaces to use per indent step
 set softtabstop=4                       " when editing, num spaces in a tab
 set expandtab                           " use spaces to insert a tab
-set nocompatible                        " doesn't work well with ft detect
 set modelines=0                         " stop exploits
 set listchars=tab:▸\ ,eol:¬             " use tm symbols for tabstops/eols
 set pastetoggle=<F2>                    " put vim into paste mode
@@ -130,13 +187,52 @@ set go-=T
 set guioptions-=r
 set guioptions-=L
 
+
+"\_____________________________________________________________________________
+" python-mode
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" set default pymode options
+let g:pymode_options = 1
+
 " don't let pymode override relativenumber
 let g:pymode_options_other = 0
+
+" tell pymode not to worry about vim python paths
+let g:pymode_virtualenv = 0
+
+" don't load rope plugin
+let g:pymode_rope = 0
+
+" don't show docstring window during completion
+autocmd FileType python setlocal completeopt-=preview
+
+
+"\_____________________________________________________________________________
+" nerdtree
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" auto-open nerdtree file browser
+autocmd VimEnter * NERDTree
+
+" disable relativenumber for nerdtree, taglist filetypes
+autocmd FileType nerdtree setlocal norelativenumber
+autocmd FileType taglist setlocal norelativenumber
 
 " set nerdtree window size
 let g:NERDTreeWinSize = 30
 
+" toggles nerdtree
+map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+
+" show current file in tree; extra cr moves focus back to the file
+map <leader>f :NERDTreeFind<CR><CR>
+
+
+"\_____________________________________________________________________________
 " surround.vim
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " use v or # to get a variable interpolation (inside of a string)}
 " ysiw#   Wrap the token under the cursor in #{}
 " v...s#  Wrap the selection in #{}
@@ -148,93 +244,146 @@ let g:surround_35  = "#{\r}"   " #
 let g:surround_45 = "<% \r %>"    " -
 let g:surround_61 = "<%= \r %>"   " =
 
-" neocomplcache
+
+"\_____________________________________________________________________________
+" neocomplete
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " basic settings
 let g:acp_enableAtStartup = 0                       " disable AutoComplPop
-let g:neocomplcache_enable_at_startup = 1           " use neocomplcache
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_camel_case_completion = 1
-let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_enable_auto_select = 1
+let g:neocomplete#enable_at_startup = 1             " use neocomplete
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#min_keyword_length = 3
+
+" define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 " plugin key-mappings
-imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" <TAB>: completion.
+" <TAB>: completion
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " <C-h>, <BS>: close popup and delete backword char
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
 
 " enable heavy omni completion
-if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
+if !exists('g:neocomplete#omni_patterns')
+    let g:neocomplete#omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 
-" for snippet_complete marker.
+
+
+"\_____________________________________________________________________________
+" neosnippet
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" plugin key-mappings
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" for snippet_complete marker
 if has('conceal')
     set conceallevel=2 concealcursor=i
 endif
 
+" enable snipmate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
 " user defined snippets
-let g:neocomplcache_snippets_dir = '~/.vim/mysnippets/'
+let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)"
-" end neocomplcache settings
 
+"\_____________________________________________________________________________
+" supertab
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" reverse default tabbing direction
+let g:SuperTabMappingForward = '<S-TAB>'
+let g:SuperTabMappingBackward = '<TAB>'
+
+
+
+"\_____________________________________________________________________________
 " minibufexplorer settings
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:miniBufExplSplitBelow = 0         " put window at top
 let g:miniBufExplMapWindowNavVim = 1    " use [hjkl] for window nav
 let g:miniBufExplMapWindowNavArrows = 1 " use Ctrl + Arrows for nav
 let g:miniBufExplMapCTabSwitchBufs = 1  " enable ctrl-tab function mapping
 let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 
+
+"\_____________________________________________________________________________
 " vim clojure settings
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:vimclojure#HighlightBuiltins = 1
 let g:vimclojure#ParenRainbow = 1
 let g:vimclojure#WantNailgun = 1
 let g:vimclojure#SplitPos = "bottom"
 let g:vimclojure#SplitSize = 10
 
+
+"\_____________________________________________________________________________
 " vim-slime
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:slime_target = "tmux"
 
-" bclose settings
-let bclose_multiple = 0 " don't close buffers displayed more than once
 
-" ctrlp settings
+"\_____________________________________________________________________________
+" ctrlp
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" bring up ctrlp
+map <leader>p :CtrlPMixed<CR>
 let g:ctrlp_working_path_mode = 0 " don't manage working directory
 
-" remap leader key, default is \
-let mapleader = ","
 
-" toggles nerdtree
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+"\_____________________________________________________________________________
+" bdelete
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" show current file in tree; extra cr moves focus back to the file
-map <leader>f :NERDTreeFind<CR><CR>
+" remap :bd to use the superior functionality of bbye's :Bdelete
+cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete<CR>' : 'bd')
+nnoremap <Leader>bd :Bdelete<CR>
+nnoremap <Leader>qa :bufdo :Bdelete<CR>
 
-" shortcut to rapidly toggle `set list`
-nmap <leader>l :set list!<CR>
 
-" remap :bd to use the superior functionality of :Bclose
-cnoremap <expr> bd (getcmdtype() == ':' ? 'Bclose' : 'bd')
+"\_____________________________________________________________________________
+" ack
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " ack shortcut
 nnoremap <leader>a :Ack!
 
-" bring up ctrlp
-map <leader>p :CtrlPMixed<CR>
+
+"\_____________________________________________________________________________
+" git
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" always go to top of commit messages
+autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
+
+
+"\_____________________________________________________________________________
+" more keybindings
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" shortcut to rapidly toggle `set list`
+nmap <leader>l :set list!<CR>
 
 " clear highlighting from search
 nnoremap <leader><space> :noh<CR>
@@ -243,7 +392,7 @@ nnoremap <leader><space> :noh<CR>
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 " a la textmate's ^Q...re-hardwrap text paragraphs
-nnoremap <leader>q gqip
+nnoremap <leader>Q gqip
 
 " reselect just pasted text so we can e.g. indent it
 nnoremap <leader>v V`]
@@ -255,20 +404,18 @@ nnoremap <leader>r :retab
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
 
-" python love
-if !exists("autocommands_loaded")
-  let autocommands_loaded = 1
-  autocmd BufRead,BufNewFile,FileReadPost *.py source ~/.vim/python
-endif
-
 " returns to where you were the last time you edited the file
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
-
-" always go to top of commit messages
-autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
 
 " automatically reload vimrc when it's saved
 au BufWritePost .vimrc so ~/.vimrc
 
 " save when focus is lost
 au FocusLost * :wa
+
+"\_____________________________________________________________________________
+" projects
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
+set secure  " disallows shell and write commands from cwd rc files

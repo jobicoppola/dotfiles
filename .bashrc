@@ -33,6 +33,9 @@ if [[ "$OS" == Darwin ]]; then
     P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
     P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
     export PATH=$P1:$P2:$P3
+    # prepend postgresql
+    export PATH=/Applications/Postgres.app/Contents/MacOS/bin:$PATH
+
 else
     P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
     P2=$HOME/bin
@@ -80,6 +83,9 @@ alias bil="bi --local"
 alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
+
+# packer
+export PATH=$PATH:$HOME/packer
 
 # node.js
 NODE_PATH=/usr/local/lib/node
@@ -151,9 +157,6 @@ PS1="$PS1\n$Blue$ $Ecol"
 # sportingnews
 [ -f ~/.snrc ] && . ~/.snrc
 [ -f ~/.sn_aliases ] && . ~/.sn_aliases
-
-# pythonbrew
-[ -f ~/.pythonbrew/etc/bashrc ] && . ~/.pythonbrew/etc/bashrc
 
 # virtualenv
 export WORKON_HOME=$HOME/venvs

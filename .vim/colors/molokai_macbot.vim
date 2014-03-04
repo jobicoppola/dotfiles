@@ -179,9 +179,9 @@ if &t_Co > 255
     hi Operator        ctermfg=161
 
     " complete menu
-    hi Pmenu           ctermfg=81  ctermbg=16
-    hi PmenuSel                    ctermbg=244
-    hi PmenuSbar                   ctermbg=232
+    hi Pmenu           ctermfg=81  ctermbg=235
+    hi PmenuSel                    ctermbg=226
+    hi PmenuSbar                   ctermbg=227
     hi PmenuThumb      ctermfg=81
 
     hi PreCondit       ctermfg=118               cterm=bold
@@ -224,12 +224,12 @@ if &t_Co > 255
     hi NonText         ctermfg=240
 
     " MiniBufExpl Colors
-    "hi MBEVisibleActive        ctermfg=80        ctermbg=fg
-    "hi MBEVisibleChangedActive ctermfg=200       ctermbg=fg
-    "hi MBEVisibleChanged       ctermfg=200       ctermbg=fg
-    "hi MBEVisibleNormal        ctermfg=39        ctermbg=fg
-    "hi MBEChanged              ctermfg=202       ctermbg=fg
-    "hi MBENormal               ctermfg=238       ctermbg=fg
+    hi MBENormal                ctermfg=238
+    hi MBEChanged               ctermfg=202
+    hi MBEVisibleNormal         ctermfg=39
+    hi MBEVisibleChanged        ctermfg=200
+    hi MBEVisibleActiveNormal   ctermfg=15
+    hi MBEVisibleChangedActive  ctermfg=200
 
     " Uncooperational with terminals so commented out
     "hi Normal          ctermfg=252 ctermbg=233

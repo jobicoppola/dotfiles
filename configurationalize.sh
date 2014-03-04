@@ -21,6 +21,10 @@ if [[ $yaynay == y* ]]; then
         --exclude "macbot.itermcolors" \
         --keep-dirlinks \
         --backup --backup-dir $BACKUPDIR/ -av . ~
+
+    echo -e "\nInstalling vundle bundles"
+    vim +BundleInstall +qall
+
     if [[ "$(uname)" == Linux ]]; then
         echo -e "\nTuning conf files for linux friendliness"
         bin/fix-os-diffs

@@ -1,0 +1,29 @@
+# ~/.bashrc :: linux.ubuntu
+
+# apt-get
+alias ag="apt-get"
+alias agi="apt-get install"
+alias agr="apt-get remove"
+alias agu="apt-get update"
+alias agug="apt-get -y upgrade"
+alias agac="apt-get autoclean"
+alias agar="apt-get autoremove"
+
+# apt-cache
+alias ac="apt-cache"
+alias acs="apt-cache search"  # full text search on all available package lists
+                              # for the given <regex>
+
+# apt-file
+alias af="apt-file"
+alias afs="apt-file search"  # search for packages containing <filename>
+
+# dpkg-query
+alias dq="dpkg-query"
+alias dqs="dpkg-query --status"     # displays the given <pkg> entry in the
+                                    # installed pkg status db
+
+alias dqss="dpkg-query --search"    # search for <filename-pattern> only from
+                                    # the list of installed packages
+
+alias dql="dpkg-query --listfiles"  # list files installed by <pkg>
