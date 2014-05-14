@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+[ -n "$1" ] && LINE="$1" || read -p "Line number: " LINE
+
+VI=$(which vim)
+KNOWN_HOSTS=~/.ssh/known_hosts
+
+$VI +${LINE} ${KNOWN_HOSTS} -u NONE
