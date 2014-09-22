@@ -1,0 +1,3 @@
+--ignore-file=ext:csv
+--ignore-file=ext:tsv
+--ignore-file=ext:xml
