@@ -141,8 +141,11 @@ get_status(){
 }
 
 # set prompt
-PS1="\n$BGreen\$(get_venv)$Purple\u@\h$BWhite\w$BYellow\$(get_branch)$BGreen\$(get_status)$Ecol"
-PS1="$PS1\n$Blue$ $Ecol"
+PS1_VENV="\n$BGreen\$(get_venv)$Purple"
+PS1_USER="\u@\h$BWhite\w$BYellow"
+PS1_GIT="\$(get_branch)$BGreen\$(get_status)$Ecol"
+PS1_END="\n$Blue$ $Ecol"
+PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 
 # vars and paths for aws tools
 [ -f ~/.awsrc ] && . ~/.awsrc
@@ -166,6 +169,10 @@ VWSH=$(which virtualenvwrapper.sh)
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
+    # override ugly prompt on perform machines
+    if [[ "$(hostname)" == L0100* ]]; then
+        PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
+    fi
     # prepend homebrew location to manpath
     export MANPATH=/usr/local/Cellar:$MANPATH
     # brew completion
