@@ -166,9 +166,6 @@ VWSH=$(which virtualenvwrapper.sh)
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
-    # fink
-    alias fink="sudo fink"
-    test -r /sw/bin/init.sh && . /sw/bin/init.sh
     # prepend homebrew location to manpath
     export MANPATH=/usr/local/Cellar:$MANPATH
     # brew completion
