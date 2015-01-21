@@ -1,4 +1,4 @@
-# ~/.bashrc :: linux.ubuntu
+# ~/.bash_aliases_ubuntu :: jcopp.cfxd.net
 
 # apt-get
 alias ag="apt-get"
