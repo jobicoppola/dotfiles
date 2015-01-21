@@ -57,13 +57,13 @@ alias gi="gem install --no-rdoc --no-ri"
 alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"
 alias diff="colordiff"
-alias fplog="tail -100f /Users/jcopp/Sites/faderpro-k23/application/logs/$(date +'%Y-%m-%d').log.php"
+alias fplog="tail -100f ~/Sites/faderpro-k23/application/logs/$(date +'%Y-%m-%d').log.php"
 alias less='less -IR'
 alias mongod='mongod run --config /usr/local/Cellar/mongodb/2.0.2-x86_64/mongod.conf'
 alias linkmysql='ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock'
 alias pipup='pip install --upgrade'
 alias fib='echo 0,1,1,2,3,5,8,13,21,34,55,89,144'
-alias rcli='/Users/jcopp/venvs/redmine-py-cli/bin/python /Users/jcopp/venvs/redmine-py-cli/app/redmine.py'
+alias rcli='~/venvs/redmine-py-cli/bin/python ~/venvs/redmine-py-cli/app/redmine.py'
 alias mtr='mtr --curses'
 #
 # git
