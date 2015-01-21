@@ -10,8 +10,6 @@ alias ltr="ll -tr"
 alias latr="ll -atr"
 #
 # cd
-alias sites="cd ~/Sites"
-alias fpro="cd ~/Sites/faderpro-k23/"
 alias dtop="cd ~/Desktop"
 alias dl="cd ~/downloads"
 alias tor="cd ~/downloads/torrents"
@@ -21,19 +19,14 @@ alias wgets="cd ~/wgets"
 alias curls="cd ~/curls"
 alias crash="cd /Library/Logs/CrashReporter"
 alias lbin="cd /usr/local/bin"
-alias apache="cd /Library/Apache2"
-alias tmate="cd ~/Library/Application\ Support/TextMate"
 alias prefs="cd ~/Library/Preferences"
-alias zen="cd /usr/local/zenoss"
 alias notes="cd ~/Files/notes"
 alias dbox="cd ~/Dropbox"
 alias dbin="cd  ~/Dropbox/jhome/bin"
-alias mampsql="cd /Applications/MAMP/Library/bin;pwd;./mysql -u root -p"
 alias snbin="cd ~/ec2/sn/bin"
 alias sncook="cd ~/git/sporting-news/cookbooks"
-alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages"
+alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages"
 alias gitdot='cd ~/git/dotfiles && git st'
-alias gitchef='cd ~/git/snchef || cd ~/git/chef-repo'
 alias venvs='cd ~/venvs/'
 #
 # vi
@@ -57,13 +50,9 @@ alias gi="gem install --no-rdoc --no-ri"
 alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"
 alias diff="colordiff"
-alias fplog="tail -100f ~/Sites/faderpro-k23/application/logs/$(date +'%Y-%m-%d').log.php"
 alias less='less -IR'
-alias mongod='mongod run --config /usr/local/Cellar/mongodb/2.0.2-x86_64/mongod.conf'
-alias linkmysql='ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock'
 alias pipup='pip install --upgrade'
 alias fib='echo 0,1,1,2,3,5,8,13,21,34,55,89,144'
-alias rcli='~/venvs/redmine-py-cli/bin/python ~/venvs/redmine-py-cli/app/redmine.py'
 alias mtr='mtr --curses'
 #
 # git
