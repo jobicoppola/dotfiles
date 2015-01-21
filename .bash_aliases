@@ -10,22 +10,17 @@ alias ltr="ll -tr"
 alias latr="ll -atr"
 #
 # cd
-alias dtop="cd ~/Desktop"
 alias dl="cd ~/downloads"
 alias tor="cd ~/downloads/torrents"
 alias bin="cd ~/bin"
 alias logs="cd ~/logs"
 alias wgets="cd ~/wgets"
 alias curls="cd ~/curls"
-alias crash="cd /Library/Logs/CrashReporter"
 alias lbin="cd /usr/local/bin"
-alias prefs="cd ~/Library/Preferences"
-alias notes="cd ~/Files/notes"
 alias dbox="cd ~/Dropbox"
 alias dbin="cd  ~/Dropbox/jhome/bin"
 alias snbin="cd ~/ec2/sn/bin"
 alias sncook="cd ~/git/sporting-news/cookbooks"
-alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages"
 alias gitdot='cd ~/git/dotfiles && git st'
 alias venvs='cd ~/venvs/'
 #
@@ -42,10 +37,7 @@ alias vvim="vi ~/git/dotfiles/.vimrc"
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias Grep="grep"
-alias dnsflush='dscacheutil -flushcache'
-alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias getip='wget -qO - icanhazip.com'
-alias rdp="$(which rdio) play"
 alias gi="gem install --no-rdoc --no-ri"
 alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"

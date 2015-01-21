@@ -1,0 +1,11 @@
+# ~/.bash_aliases_osx :: jcopp.cfxd.net
+#
+# aliases
+alias dtop="cd ~/Desktop"
+alias crash="cd /Library/Logs/CrashReporter"
+alias prefs="cd ~/Library/Preferences"
+alias notes="cd ~/Files/notes"
+alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages"
+alias dnsflush='dscacheutil -flushcache'
+alias updatedb="sudo /usr/libexec/locate.updatedb"
+alias rdp="$(which rdio) play"
