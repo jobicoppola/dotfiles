@@ -169,6 +169,9 @@ VWSH=$(which virtualenvwrapper.sh)
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
+    # source osx aliases file
+    [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
+
     # override ugly prompt on perform machines
     if [[ "$(hostname)" == L0100* ]]; then
         PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
