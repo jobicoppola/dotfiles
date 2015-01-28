@@ -162,11 +162,6 @@ PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 [ -f ~/.snrc ] && . ~/.snrc
 [ -f ~/.sn_aliases ] && . ~/.sn_aliases
 
-# virtualenv
-export WORKON_HOME=$HOME/venvs
-VWSH=$(which virtualenvwrapper.sh)
-[ -f "$VWSH" ] && . "$VWSH"
-
 # mac specific
 if [[ "$OS" == Darwin ]]; then
     # source osx aliases file
@@ -184,6 +179,11 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/bash_completion.d/knife ] && . ~/bash_completion.d/knife
     [ -f ~/bash_completion.d/berkshelf ] && . ~/bash_completion.d/berkshelf
 fi
+
+# virtualenv
+export WORKON_HOME=$HOME/venvs
+VWSH=$(which virtualenvwrapper.sh)
+[ -f "$VWSH" ] && . "$VWSH"
 
 # clojure
 export VIMCLOJURE_SERVER_JAR="$HOME/lib/vimclojure/server.jar"
