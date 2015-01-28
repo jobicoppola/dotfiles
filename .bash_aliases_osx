@@ -9,3 +9,4 @@ alias stp="cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages"
 alias dnsflush='dscacheutil -flushcache'
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias rdp="$(which rdio) play"
+alias karabiner="/Applications/Karabiner.app/Contents/Library/bin/karabiner"
