@@ -171,8 +171,6 @@ if [[ "$OS" == Darwin ]]; then
     if [[ "$(hostname)" == L0100* ]]; then
         PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
     fi
-    # prepend homebrew location to manpath
-    export MANPATH=/usr/local/Cellar:$MANPATH
     # brew completion
     [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
     [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
