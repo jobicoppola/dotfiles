@@ -349,7 +349,9 @@ let g:slime_target = "tmux"
 
 " bring up ctrlp
 map <leader>p :CtrlPMixed<CR>
-let g:ctrlp_working_path_mode = 0 " don't manage working directory
+let g:ctrlp_working_path_mode = 'rw' " set to nearest ancestor with a .git dir
+let g:ctrlp_show_hidden = 1          " scan for dotfiles and dotdirs
+let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
 
 
 "\_____________________________________________________________________________
