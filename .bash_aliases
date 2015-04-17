@@ -61,6 +61,7 @@ alias gd='git diff --color-words'
 alias gra='git remote add'
 alias grr='git remote rm'
 alias gl='git log'
+alias glf='git log --name-status --oneline'
 alias ga='git add'
 alias gctb='git checkout --track -b'
 alias gctbe="echo 'git checkout --track -b <loc_branch> origin/<rem_branch>'"
