@@ -353,6 +353,9 @@ let g:ctrlp_working_path_mode = 'rw' " set to nearest ancestor with a .git dir
 let g:ctrlp_show_hidden = 1          " scan for dotfiles and dotdirs
 let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
 
+" use ag the silver surfer
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
 
 "\_____________________________________________________________________________
 " bdelete
@@ -369,7 +372,10 @@ nnoremap <Leader>qa :bufdo :Bdelete<CR>
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " ack shortcut
-nnoremap <leader>a :Ack!
+nnoremap <leader>a :Ack!<SPACE>
+
+" use ag the silver surfer
+let g:ackprg = 'ag --nogroup --nocolor --column'
 
 
 "\_____________________________________________________________________________

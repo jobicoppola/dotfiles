@@ -1,0 +1,9 @@
+*.sql
+*.tags*
+*.gemtags*
+*.csv
+*.tsv
+*.tmp*
+*.plist
+*.pdf
+*.xml
