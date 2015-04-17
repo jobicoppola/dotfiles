@@ -356,6 +356,9 @@ let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
 " use ag the silver surfer
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
+" ag fast enough
+let g:ctrlp_use_caching = 0
+
 
 "\_____________________________________________________________________________
 " bdelete
