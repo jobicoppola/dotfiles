@@ -1,0 +1,38 @@
+#\_____________________________________________________________________________
+# ~/.gitconfig
+#
+[user]
+    name = jcopp
+    email = jcopp@sportingnews.com
+[color]
+    ui = auto
+    diff = auto
+    status = auto
+    interactive = auto
+    branch = auto
+[github]
+    user = jobicoppola
+    email = jobicoppola@gmail.com
+    token = <github-token-here>
+    password = !security 2>&1 >/dev/null find-generic-password -gs github.password | ruby -e 'print $1 if STDIN.gets =~ /^password: \\\"(.*)\\\"$/'
+[gist]
+    extension = 'py'
+    browse = no
+[heroku]
+    user = jobicoppola
+    email = jobicoppola@gmail.com
+[push]
+    default = current
+[alias]
+    co = checkout
+    st = status
+    lc = log ORIG_HEAD.. --stat --no-merges
+    lol = log --graph --decorate --oneline
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    lg = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset'
+    ll = log --graph --abbrev-commit --pretty=jobi
+[pretty]
+    jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%cN%Creset %Cgreen%cr%Creset
+[core]
+    excludesfile = ~/.gitignore-global
+    pager = less -IRFX
