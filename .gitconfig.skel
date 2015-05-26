@@ -22,7 +22,7 @@
     user = jobicoppola
     email = jobicoppola@gmail.com
 [push]
-    default = current
+    default = tracking
 [alias]
     co = checkout
     st = status
