@@ -61,19 +61,19 @@ for n in {3..9}; do
             tmux send -t $session:$n.+2 "cd ~/venvs && workon sn-inventory-dev" C-m
             tmux send -t $session:$n.+3 "cd ~/venvs && workon sn-inventory-dev" C-m
         elif [ $n -eq 5 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$five && git st" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$five && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$five" C-m
             tmux send -t $session:$n.+3 "cd $repos/$five" C-m
         elif [ $n -eq 6 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$six && git st" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$six && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$six" C-m
             tmux send -t $session:$n.+3 "cd $repos/$six" C-m
         elif [ $n -eq 7 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$seven && git st" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$seven && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$seven" C-m
             tmux send -t $session:$n.+3 "cd $repos/$seven" C-m
         elif [ $n -eq 8 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$eight && git st" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$eight && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
