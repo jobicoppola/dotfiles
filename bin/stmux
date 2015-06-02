@@ -28,11 +28,11 @@ tmux new-session -d -s $session
 # set some names
 three=repl
 four=venvs
-five=snchef
+five=sncore
 six=dotfiles
 seven=snweb
 eight=snsysadmin
-nine=sncore
+nine=sporting-news
 repos=~/git
 
 # open some default windows
@@ -45,7 +45,7 @@ tmux neww -t $session:5 -n $five
 tmux neww -t $session:6 -n $six
 tmux neww -t $session:7 -n $seven
 tmux neww -t $session:8 -n $eight
-tmux neww -t $session:9 -n $nine
+tmux neww -t $session:9 -n misc
 
 # split some windows into panes, then set those panes up
 for n in {3..9}; do
@@ -77,7 +77,7 @@ for n in {3..9}; do
             tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$nine && git st" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$nine" C-m
             tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
             tmux killp -t $session:$n.+3
         fi
