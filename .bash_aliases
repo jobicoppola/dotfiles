@@ -23,6 +23,7 @@ alias snbin="cd ~/ec2/sn/bin"
 alias sncook="cd ~/git/sporting-news/cookbooks"
 alias gitdot='cd ~/git/dotfiles && git st'
 alias venvs='cd ~/venvs/'
+alias cdperform='cd ~/git/perform'
 #
 # vi
 alias vi='vim'
@@ -90,5 +91,7 @@ alias mpysm='python manage.py schemamigration'
 alias mpysma='python manage.py schemamigration --auto'
 #
 # ansible
-#
 alias ansibleupdate='git pull --rebase && git submodule update --init --recursive'
+#
+# ag aka silver surfer
+alias aga='ag -a --hidden'
