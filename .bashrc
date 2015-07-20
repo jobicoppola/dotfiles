@@ -155,12 +155,12 @@ PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 
 # source various alias files if they exist
 [ -f ~/.alias ] && . ~/.alias
-[ -f ~/.jc_aliases ] && . ~/.jc_aliases
+[ -f ~/.bash_aliases_jc ] && . ~/.bash_aliases_jc
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
 
 # sportingnews
 [ -f ~/.snrc ] && . ~/.snrc
-[ -f ~/.sn_aliases ] && . ~/.sn_aliases
+[ -f ~/.bash_aliases_sn ] && . ~/.bash_aliases_sn
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
