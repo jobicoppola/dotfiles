@@ -32,11 +32,11 @@ five=sncore
 six=dotfiles
 seven=snweb
 eight=snsysadmin
-nine=sporting-news
+nine=perform/pg-prod
 repos=~/git
 
 # open some default windows
-tmux neww -t $session:0 -n root
+tmux neww -t $session:0 -n temp
 tmux neww -t $session:1 -n home
 tmux neww -t $session:2 -n bin
 tmux neww -t $session:3 -n $three
@@ -45,7 +45,11 @@ tmux neww -t $session:5 -n $five
 tmux neww -t $session:6 -n $six
 tmux neww -t $session:7 -n $seven
 tmux neww -t $session:8 -n $eight
-tmux neww -t $session:9 -n misc
+tmux neww -t $session:9 -n syseng
+
+# avoid reattach-to-user-namespace as window title
+tmux kill-window -t $session:0
+tmux neww -t $session:0 -n root
 
 # split some windows into panes, then set those panes up
 for n in {3..9}; do
@@ -77,18 +81,19 @@ for n in {3..9}; do
             tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$nine" C-m
+            tmux send -t $session:$n.+1 "cd $repos/$nine/ansible && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
-            tmux killp -t $session:$n.+3
+            tmux send -t $session:$n.+3 "cd $repos/$nine" C-m
+            #tmux killp -t $session:$n.+3
         fi
     tmux select-pane -t :.+
     fi
 done
 
 # tell rest of the windows what to do
-tmux send-keys -t $session:0 "sudo su -" C-m
 tmux send-keys -t $session:1 "cd ~" C-m
 tmux send-keys -t $session:2 "cd ~/bin" C-m
+tmux send-keys -t $session:0 "sudo su -" C-m
 
 # set default selected win
 tmux select-window -t $session:1
