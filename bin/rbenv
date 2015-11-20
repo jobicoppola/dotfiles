@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+install_rbenv(){
+    git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+}
+
+install_ruby_build(){
+    git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+}
+
+upgrade_rbenv(){
+    cd ~/.rbenv && git pull; cd -
+}
+
+upgrade_ruby_build(){
+    cd ~/.rbenv/plugins/ruby-build && git pull; cd -
+}
+
+[ ! -d ~/.rbenv ] && install_rbenv || upgrade_rbenv
+[ ! -d ~/.rbenv/plugins/ruby-build ] && install_ruby_build || upgrade_ruby_build
