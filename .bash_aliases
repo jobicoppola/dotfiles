@@ -47,6 +47,7 @@ alias less='less -IR'
 alias pipup='pip install --upgrade'
 alias fib='echo 0,1,1,2,3,5,8,13,21,34,55,89,144'
 alias mtr='mtr --curses'
+alias mtail='multitail'
 #
 # git
 alias cdgit='cd ~/git/'
