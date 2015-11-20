@@ -25,10 +25,8 @@ if [[ $yaynay == y* ]]; then
     echo -e "\nInstalling vundle bundles"
     vim +BundleInstall +qall
 
-    if [[ "$(uname)" == Linux ]]; then
-        echo -e "\nTuning conf files for linux friendliness"
-        bin/fix-os-diffs
-    fi
+    echo -e "\nTuning user prefs and conf files for OS friendliness"
+    [[ "$(uname)" == Linux ]] && bin/tune-linux || bin/tune-osx
 fi
 
 . ~/.bashrc
