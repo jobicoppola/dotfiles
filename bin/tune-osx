@@ -48,6 +48,10 @@ defaults write com.apple.dock autohide-time-modifier -float 0.4
 # set size of dock icons to 32 pixels
 defaults write com.apple.dock tilesize -int 32
 
+# turn on dock magnification and set size
+defaults write com.apple.dock magnification -bool true
+defaults write com.apple.dock largesize -int 96
+
 # minimize windows with scale effect
 defaults write com.apple.dock mineffect -string "scale"
 
