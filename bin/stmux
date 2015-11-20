@@ -26,14 +26,17 @@ fi
 tmux new-session -d -s $session
 
 # set some names
+repos=~/git
+perform=$repos/perform
+dotvm=$perform/dotvm
+pansible=$dotvm/ansible
 three=repl
 four=venvs
 five=sncore
 six=dotfiles
 seven=snweb
 eight=snsysadmin
-nine=perform/pg-prod
-repos=~/git
+nine=$dotvm
 
 # open some default windows
 tmux neww -t $session:0 -n temp
@@ -81,9 +84,11 @@ for n in {3..9}; do
             tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$nine/ansible && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $repos/$nine" C-m
-            tmux send -t $session:$n.+3 "cd $repos/$nine" C-m
+            tmux send -t $session:$n.+1 "cd $pansible && git status -sb" C-m
+            tmux send -t $session:$n.+2 "cd $dotvm/projects/pg_infra" C-m
+            tmux send -t $session:$n.+3 "cd $nine" C-m
+            tmux send -t $session:$n.+4 "cd $nine" C-m
+            tmux send -t $session:$n.+5 "cd $pansible && git status -sb" C-m
             #tmux killp -t $session:$n.+3
         fi
     tmux select-pane -t :.+
