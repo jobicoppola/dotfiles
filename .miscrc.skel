@@ -13,3 +13,7 @@ export SUNLIGHT_API_KEY=
 #
 # linode
 export LINODE_API_KEY=
+#
+# hashicorp atlas
+export ATLAS_TOKEN=
+export ATLAS_USERNAME=
