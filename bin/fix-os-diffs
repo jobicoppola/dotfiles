@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-vrc=~/.vimrc
+vimrc=~/.vimrc
 
 disable_colorscheme() {
-    sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vrc
+    sed -i 's/^color/" colorscheme auto-disabled on linux\n" color/' $vimrc
 }
 
 linux_colorscheme() {
-    sed -i 's/molokai_macbot/molokai_jobot /' $vrc
+    sed -i 's/molokai_macbot/molokai_jobot /' $vimrc
 }
 
 # remove tmux conf for other operating systems
