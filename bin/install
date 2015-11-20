@@ -1,0 +1,320 @@
+#!/usr/bin/env bash
+
+#=-----------------------------------------------------------------------------
+#
+# run this script via cli: `curl -Lk http://git.io/2nPUsQ | bash`
+#
+#=-----------------------------------------------------------------------------
+
+SRC=~/src
+INSTALL=()
+OS=$(uname)
+
+SUBLIME_PC_DIR=~/Library/Application\ Support/Sublime\ Text\ 3/Installed\ Packages
+SUBLIME_PC_FILE=Package\ Control.sublime-package
+SUBLIME_PC=${SUBLIME_PC_DIR}/${SUBLIME_PC_FILE}
+
+curl=$(which curl)
+
+
+download(){
+    local url="$1"; shift
+    local tempfile="$1"
+    $curl --location --insecure -o ${tempfile} ${url}
+}
+
+check_git(){
+    local missing=0
+    [ -z "$(which git)" ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'git is missing'
+        INSTALL+=("git")
+    fi
+}
+
+check_homebrew(){
+    local missing=0
+    [ -z "$(which brew)" ] && missing=1
+    if [ -n "$(which brew)" ]; then
+        [ "$(brew help |grep -o Example)" != Example ] && missing=1
+    fi
+    if [ "$missing" -eq 1 ]; then
+        echo 'homebrew is missing'
+        INSTALL+=("homebrew")
+    fi
+}
+
+check_vagrant(){
+    local missing=0
+    [ -z "$(which vagrant)" ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'vagrant is missing'
+        INSTALL+=("vagrant")
+    fi
+}
+
+check_virtualbox(){
+    local missing=0
+    [ -z "$(which vboxwebsrv)" ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'virtualbox is missing'
+        INSTALL+=("virtualbox")
+    fi
+}
+
+check_virtualbox_deps(){
+    local missing=0
+    [ -z "$(which VBoxManage)" ] && missing=1
+    if [ -n "$(which VBoxManage)" ]; then
+        [ "$(VBoxManage list extpacks)" = "Extension Packs: 0" ] && missing=1
+    fi
+    if [ "$missing" -eq 1 ]; then
+        echo "virtualbox-extpack is missing"
+        INSTALL+=("virtualbox_extpack")
+    fi
+}
+
+check_pip(){
+    local missing=0
+    [ -z "$(which pip)" ] && missing=1
+    if [ -n "$(which pip)" ]; then
+        [ "$(pip --help |grep -o Usage)" != Usage ] && missing=1
+    fi
+    if [ "$missing" -eq 1 ]; then
+        echo 'pip is missing'
+        INSTALL+=("pip")
+    fi
+}
+
+check_ansible_deps(){
+    local missing=0
+    local deps=(paramiko PyYAML Jinja2 httplib2)
+    for pkg in ${deps[@]}; do
+        [ -z "$(pip freeze |grep $pkg)" ] && missing=1
+        if [ "$missing" -eq 1 ]; then
+            echo "$pkg is missing"
+            sudo pip install $pkg
+        fi
+    done
+}
+
+check_sublime_package_control(){
+    local missing=0
+    [ -z "$(ls -l $SUBLIME_PC_DIR |grep $SUBLIME_PC_FILE)" ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'sublime-package-control is missing'
+        install_sublime_package_control
+    fi
+}
+
+check_sublime(){
+    local missing=0
+    [ -z "$(ls -l /Applications/ |grep 'Sublime Text.app')"  ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'sublime is missing'
+        INSTALL+=("sublime")
+    fi
+    if [ "$missing" -eq 0 ]; then
+        check_sublime_package_control
+    fi
+}
+
+check_mysql_workbench(){
+    local missing=1
+    [ -z "$(ls -l /Applications/ |grep MySQLWorkbench.app)"  ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'mysql_workbench is missing'
+        INSTALL+=("mysql_workbench")
+    fi
+}
+
+check_sequel_pro(){
+    local missing=1
+    [ -z "$(ls -l /Applications/ |grep 'Sequel Pro.app')"  ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'sequel_pro is missing'
+        INSTALL+=("sequel_pro")
+    fi
+}
+
+check_iterm2(){
+    local missing=1
+    [ -z "$(ls -l /Applications/ |grep iTerm.app)"  ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'iterm2 is missing'
+        INSTALL+=("iterm2")
+    fi
+}
+
+check_deps(){
+    check_git
+    check_homebrew
+    check_vagrant
+    check_virtualbox
+    check_virtualbox_deps
+    check_pip
+    check_ansible_deps
+    check_sublime
+    check_mysql_workbench
+    check_sequel_pro
+    check_iterm2
+}
+
+dedup_deps(){
+    local install_git=0
+    local install_homebrew=0
+}
+
+install_git(){
+    install_homebrew
+}
+
+install_homebrew(){
+    # the xcode command line tools include git; this makes sure the tools
+    # are installed - basically just does a `xcode-select --install`
+    local hb_url=https://raw.githubusercontent.com/Homebrew/install/master/install
+    ruby -e "$($curl -fSL ${hb_url})"
+}
+
+install_pip(){
+    local dl_url=https://raw.github.com/pypa/pip/master/contrib/get-pip.py
+    local pip_tmp=/tmp/get-pip.py
+    [ ! -f "${pip_tmp}" ] && download ${dl_url} ${pip_tmp}
+    sudo python ${pip_tmp}
+}
+
+get_latest_version_virtualbox(){
+    local latest_url=${VBOX_URL}/LATEST.TXT
+    local latest_tmp=/tmp/vboxversion
+    local version=$(download ${latest_url} ${latest_tmp} && cat ${latest_tmp})
+    echo ${version}
+}
+
+get_latest_build_virtualbox(){
+    local sha_url=${VBOX_URL}/${VBOX_VERSION}/SHA256SUMS
+    local sha_tmp=/tmp/vbshasums
+    local build=$(download ${sha_url} ${sha_tmp} && \
+                  grep dmg ${sha_tmp} |awk -F- "{print \$3}")
+    echo ${build}
+}
+
+install_virtualbox(){
+    local dl_url=${VBOX_URL}/${VBOX_VERSION}
+    local dmg_url=${dl_url}/VirtualBox-${VBOX_VERSION}-${VBOX_BUILD}-OSX.dmg
+    local dmg_tmp=/tmp/VirtualBox-${VBOX_VERSION}-${VBOX_BUILD}-OSX.dmg
+
+    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
+
+    hdiutil attach -mountpoint /Volumes/VirtualBox ${dmg_tmp}
+    sudo /usr/sbin/installer -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /
+    hdiutil detach /Volumes/VirtualBox
+}
+
+install_virtualbox_extpack(){
+    local dl_url=${VBOX_URL}/${VBOX_VERSION}
+    local fname=Oracle_VM_VirtualBox_Extension_Pack-${VBOX_VERSION}.vbox-extpack
+    local ep_url=${dl_url}/${fname}
+    local ep_tmp=/tmp/${fname}
+
+    [ ! -f "${ep_tmp}" ] && download ${ep_url} ${ep_tmp}
+
+    /usr/bin/VBoxManage extpack install ${ep_tmp}
+}
+
+install_vagrant(){
+    local version=1.7.4
+    local dl_url=https://dl.bintray.com/mitchellh/vagrant
+    local dmg_url=${dl_url}/Vagrant_${version}.dmg
+    local sha_url=${dl_url}/${version}_SHA256SUMS?direct
+    local dmg_tmp=/tmp/Vagrant_${version}.dmg
+
+    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
+
+    hdiutil attach -mountpoint /Volumes/Vagrant ${dmg_tmp}
+    sudo /usr/sbin/installer -pkg /Volumes/Vagrant/Vagrant.pkg -target /
+    hdiutil detach /Volumes/Vagrant
+}
+
+install_sublime_package_control(){
+    local dl_url=https://sublime.wbond.net/Package%20Control.sublime-package
+    local dl_tmp=/tmp/${SUBLIME_PC_FILE}
+
+    [ ! -f "${dl_tmp}" ] && download ${dl_url} ${dl_tmp}
+    [ ! -f "${SUBLIME_PC}" ] && cp ${dl_tmp} ${SUBLIME_PC_DIR}
+}
+
+install_sublime(){
+    local build=3065
+    local dl_url=http://c758482.r82.cf2.rackcdn.com
+    local dmg_url=${dl_url}/Sublime%20Text%20Build%20${build}.dmg
+    local dmg_tmp=/tmp/SublimeText${build}.dmg
+
+    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
+
+    hdiutil attach -mountpoint /Volumes/SublimeText${build} ${dmg_tmp}
+    sudo cp -r /Volumes/SublimeText${build}/Sublime\ Test.app /Applications/
+    hdiutil detach /Volumes/SublimeText${build}
+
+    install_sublime_package_control
+}
+
+install_mysql_workbench(){
+    local version=6.2.4
+    local dmg_file=mysql-workbench-community-${version}-osx-i686.dmg
+    local dl_url=http://dev.mysql.com/get/Downloads/MySQLGUITools
+    local dmg_url=${dl_url}/${dmg_file}
+    local dmg_tmp=/tmp/${dmg_file}
+
+    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
+
+    hdiutil attach -mountpoint /Volumes/MySQL\ Workbench ${dmg_tmp}
+    sudo cp -r /Volumes/MySQL\ Workbench/MySQLWorkbench.app /Applications/
+    hdiutil detach /Volumes/MySQL\ Workbench
+}
+
+install_sequel_pro(){
+    local version=1.0.2
+    local dmg_file=sequel-pro-${version}.dmg
+    local dmg_url=https://sequel-pro.googlecode.com/files/${dmg_file}
+    local dmg_tmp=/tmp/${dmg_file}
+
+    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
+
+    hdiutil attach -mountpoint /Volumes/Sequel\ Pro\ ${version} ${dmg_tmp}
+    sudo cp -r /Volumes/Sequel\ Pro\ ${version}/Sequel\ Pro.app /Applications/
+    hdiutil detach /Volumes/Sequel\ Pro\ ${version}
+}
+
+install_iterm2(){
+    local version=v2_0
+    local zip_file=iTerm2_${version}.zip
+    local zip_url=https://iterm2.com/downloads/stable/${zip_file}
+    local zip_tmp=/tmp/${zip_file}
+    local zip_app=/tmp/iTerm.app
+
+    [ ! -f "${zip_tmp}" ] && download ${zip_url} ${zip_tmp}
+
+    unzip ${zip_tmp}
+    sudo cp -r ${zip_app} /Applications/
+}
+
+install_deps(){
+    if [  "${#INSTALL[*]}" -gt 0 ]; then
+        echo -e "\n${#INSTALL[*]} dependencies to install: ${INSTALL[*]}"
+        for dep in ${INSTALL[@]}; do
+            echo -e "\nInstalling ${dep}..."
+            install_${dep}
+        done
+    fi
+}
+
+install(){
+    check_deps
+    install_deps
+}
+
+VBOX_URL=http://download.virtualbox.org/virtualbox
+VBOX_VERSION=$(get_latest_version_virtualbox)
+VBOX_BUILD=$(get_latest_build_virtualbox)
+
+install
