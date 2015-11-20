@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 #=-----------------------------------------------------------------------------
-#
-# run this script via cli: `curl -Lk http://git.io/2nPUsQ | bash`
-#
+# run this script via cli: `curl -Lk http://git.io/v4Qx8 | bash`
 #=-----------------------------------------------------------------------------
 
 SRC=~/src
