@@ -37,8 +37,7 @@ fi
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
-alias ls='ls --color=auto'                 # linux
-[[ "$OS" == Darwin ]] && alias ls='ls -G'  # osx
+alias ls='ls --color=auto'
 alias ll='ls -l'
 alias lsh='ll -S'
 alias lshr='ll -Sr'
@@ -49,3 +48,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias vi="$(which vim)"
+
+# mac specific aliases
+if [[ "$OS" == Darwin ]]; then
+    alias ls='ls -G'
+    alias killhogz="echo 'kill: backblaze, adobe cc helper, notifyd, wacom, synergy'"
+    alias killnotifyd="ps -ef |grep notifyd |grep -v grep |awk '{print \$2}' |xargs kill -9"
+fi
