@@ -54,4 +54,5 @@ if [[ "$OS" == Darwin ]]; then
     alias ls='ls -G'
     alias killhogz="echo 'kill: backblaze, adobe cc helper, notifyd, wacom, synergy'"
     alias killnotifyd="ps -ef |grep notifyd |grep -v grep |awk '{print \$2}' |xargs kill -9"
+    alias killcertsecurityagent="killall -HUP SecurityAgent"
 fi
