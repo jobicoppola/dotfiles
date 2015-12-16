@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ssh-agent null test/fix
 # gratuitous comments warning <<
 

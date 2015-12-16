@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # connect to existing tmux session, or start fresh
 # TODO: move functionality provided here into tmux.conf, as this should all be
 # possible just with appropriate config settings there, so, like, someone

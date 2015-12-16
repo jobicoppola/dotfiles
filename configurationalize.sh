@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # get home dir sorted
 
 cd "$(dirname $0)"
