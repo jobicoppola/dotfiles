@@ -115,6 +115,13 @@ defaults write com.apple.terminal StringEncodings -array 4
 # disable confirmation prompt when closing iterm2
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
+#=-----------------------------------------------------------------------------
+
+# sudo needed to change settings below
+echo -e "\nSudo password may be requested to disable:\n"
+echo -e "\tsudden motion sensor"
+echo -e "\tspotlight indexing of newly mounted volumes\n"
+
 # disable sudden motion sensor - pointless for ssd
 sudo pmset -a sms 0
 
