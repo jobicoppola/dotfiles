@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+brew_bash=/usr/local/bin/bash
+
+brew_list_bash(){
+    local installed=$(brew list bash)
+    echo $?
+}
+
+use_brew_bash(){
+    if [ -L ${brew_bash} ] && [[ "$(brew_list_bash)" == 0 ]]; then
+        echo "Changing login shell to: $brew_bash"
+        chsh -s ${brew_bash}
+    else
+        echo "Login shell unchanged."
+    fi
+}
+
+use_brew_bash
+
+exit $?
