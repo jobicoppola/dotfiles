@@ -6,7 +6,8 @@ cd "$(dirname $0)"
 git pull
 git submodule --quiet update --init
 
-read -p "NOTE: This can/will dropkick existing files in $HOME - proceed? (y/n) " yaynay
+echo "WARNING: This script can/will dropkick existing files in $HOME"
+read -p "Ok to proceed? (y/n) " yaynay
 
 STAMP=$(date +"%Y%m%d-%H%M%S")
 BACKUPDIR=~/tmp/$(basename $(pwd))-backup-$STAMP
