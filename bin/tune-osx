@@ -123,7 +123,7 @@ echo -e "\tsudden motion sensor"
 echo -e "\tspotlight indexing of newly mounted volumes\n"
 
 # disable sudden motion sensor - pointless for ssd
-sudo pmset -a sms 0
+[ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ] && sudo pmset -a sms 0
 
 # tell spotlight not to index newly mounted and un-indexed volumes
 sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
