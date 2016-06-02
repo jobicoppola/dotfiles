@@ -117,24 +117,50 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 #=-----------------------------------------------------------------------------
 
-# sudo needed to change settings below
-echo -e "\nSudo password may be requested to disable:\n"
-echo -e "\tsudden motion sensor"
-echo -e "\tspotlight indexing of newly mounted volumes\n"
+# sudo may be needed to change settings below
+sudo_use=0
+sms_enabled=0
+spotlight_excluded=0
+
+sudo_message(){
+    echo -e "\nSudo password may be requested to disable:\n"
+    echo -e "\tsudden motion sensor"
+    echo -e "\tspotlight indexing of newly mounted volumes\n"
+}
 
 # disable sudden motion sensor - pointless for ssd
-[ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ] && sudo pmset -a sms 0
+sms_test(){
+    if [ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ]; then
+        sudo_use=1
+        sms_enabled=1
+    fi
+}
+sms_disable(){
+    sudo pmset -a sms 0
+}
 
 # tell spotlight not to index newly mounted and un-indexed volumes
-spotlight_exclude_volumes(){
-    local exclude=/Volumes
-    local tmpfile=/tmp/.jc-spotlight-exclude
-    if [ -f $tmpfile ]; then
-        [ $(grep "\/Volumes" $tmpfile) ] && exit 0
+spotlight_tmpfile=/tmp/.jc-spotlight-exclude
+
+spotlight_test(){
+    if [ -f $spotlight_tmpfile ]; then
+        if [ $(grep "\/Volumes" $spotlight_tmpfile) ]; then
+            sudo_use=1
+            spotlight_excluded=1
+        fi
     fi
-    sudo defaults write \
-        /.Spotlight-V100/VolumeConfiguration Exclusions -array "$exclude"
-    sudo defaults read \
-        /.Spotlight-V100/VolumeConfiguration Exclusions -array > $tmpfile
 }
-spotlight_exclude_volumes
+spotlight_exclude(){
+    sudo defaults write \
+        /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+    sudo defaults read \
+        /.Spotlight-V100/VolumeConfiguration Exclusions -array > $spotlight_tmpfile
+}
+
+# only print message and run sudo commands if necessary
+sms_test
+spotlight_test
+
+[ $sudo_use -eq 1 ] && sudo_message
+[ $sms_enabled -eq 1 ] && sms_disable
+[ $spotlight_excluded -eq 0 ] && spotlight_exclude
