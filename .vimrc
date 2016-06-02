@@ -228,6 +228,10 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 " show current file in tree; extra cr moves focus back to the file
 map <leader>f :NERDTreeFind<CR><CR>
 
+" close nerdtree when it is the last window
+autocmd bufenter * if (winnr("$") == 1
+    \ && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
 
 "\_____________________________________________________________________________
 " surround.vim
