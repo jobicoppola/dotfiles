@@ -126,4 +126,15 @@ echo -e "\tspotlight indexing of newly mounted volumes\n"
 [ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ] && sudo pmset -a sms 0
 
 # tell spotlight not to index newly mounted and un-indexed volumes
-sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+spotlight_exclude_volumes(){
+    local exclude=/Volumes
+    local tmpfile=/tmp/.jc-spotlight-exclude
+    if [ -f $tmpfile ]; then
+        [ $(grep "\/Volumes" $tmpfile) ] && exit 0
+    fi
+    sudo defaults write \
+        /.Spotlight-V100/VolumeConfiguration Exclusions -array "$exclude"
+    sudo defaults read \
+        /.Spotlight-V100/VolumeConfiguration Exclusions -array > $tmpfile
+}
+spotlight_exclude_volumes
