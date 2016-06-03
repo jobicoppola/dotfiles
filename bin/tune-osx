@@ -145,7 +145,6 @@ spotlight_tmpfile=/tmp/.jc-spotlight-exclude
 spotlight_test(){
     if [ -f $spotlight_tmpfile ]; then
         if [ $(grep "\/Volumes" $spotlight_tmpfile) ]; then
-            sudo_use=1
             spotlight_excluded=1
         fi
     fi
