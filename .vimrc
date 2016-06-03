@@ -27,7 +27,6 @@ Bundle 'tpope/vim-haml.git'
 Bundle 'sickill/vim-pasta.git'
 Bundle 'vim-scripts/Gist.vim.git'
 Bundle 'tpope/vim-endwise.git'
-Bundle 'klen/python-mode.git'
 Bundle 'vim-scripts/php.vim--Garvin.git'
 Bundle 'groenewege/vim-less'
 Bundle 'altercation/vim-colors-solarized.git'
@@ -186,26 +185,6 @@ set statusline+=%<%P                            " file position as percent
 set go-=T
 set guioptions-=r
 set guioptions-=L
-
-
-"\_____________________________________________________________________________
-" python-mode
-"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" set default pymode options
-let g:pymode_options = 1
-
-" don't let pymode override relativenumber
-let g:pymode_options_other = 0
-
-" tell pymode not to worry about vim python paths
-let g:pymode_virtualenv = 0
-
-" don't load rope plugin
-let g:pymode_rope = 0
-
-" don't show docstring window during completion
-autocmd FileType python setlocal completeopt-=preview
 
 
 "\_____________________________________________________________________________
