@@ -27,6 +27,8 @@ Bundle 'tpope/vim-haml.git'
 Bundle 'sickill/vim-pasta.git'
 Bundle 'vim-scripts/Gist.vim.git'
 Bundle 'tpope/vim-endwise.git'
+Bundle 'davidhalter/jedi-vim'
+Bundle 'python-rope/ropevim'
 Bundle 'vim-scripts/php.vim--Garvin.git'
 Bundle 'groenewege/vim-less'
 Bundle 'altercation/vim-colors-solarized.git'
@@ -95,7 +97,7 @@ let mapleader = ","
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " autocompletion
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -188,6 +190,20 @@ set guioptions-=L
 
 
 "\_____________________________________________________________________________
+" python ropevim and jedi-vim
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" use ropevim and jedi-vim together for auto completion
+let ropevim_extended_complete = 1
+let ropevim_enable_autoimport = 1
+let g:ropevim_autoimport_modules = ["os.*","traceback","django.*"]
+imap <S-space> <C-R>=RopeCodeAssistInsertMode()<CR>
+
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#auto_close_doc = 1
+
+
+"\_____________________________________________________________________________
 " nerdtree
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -264,6 +280,14 @@ endif
 let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 
+" play nice with jedi-vim
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#popup_on_dot = 0
+let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
 
 
 "\_____________________________________________________________________________
