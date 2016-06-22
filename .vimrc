@@ -27,6 +27,7 @@ Bundle 'tpope/vim-haml.git'
 Bundle 'sickill/vim-pasta.git'
 Bundle 'vim-scripts/Gist.vim.git'
 Bundle 'tpope/vim-endwise.git'
+Bundle 'alvan/vim-closetag'
 Bundle 'davidhalter/jedi-vim'
 Bundle 'python-rope/ropevim'
 Bundle 'vim-scripts/php.vim--Garvin.git'
@@ -109,6 +110,7 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
+autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
 "autocmd BufRead,BufNewFile *.jinja,*.jinja2,*.j2 set ft=jinja
 
 
@@ -201,6 +203,14 @@ imap <S-space> <C-R>=RopeCodeAssistInsertMode()<CR>
 
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#auto_close_doc = 1
+
+
+"\_____________________________________________________________________________
+" vim-closetag
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" use for these filetypes
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 
 
 "\_____________________________________________________________________________
