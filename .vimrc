@@ -8,50 +8,52 @@ set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+call vundle#begin()
 
 " let vundle manage vundle
-Bundle 'gmarik/vundle'
+Plugin 'VundleVim/Vundle.vim'
 
-" bundles on github
-Bundle 'mileszs/ack.vim.git'
-Bundle 'scrooloose/nerdtree.git'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'scrooloose/syntastic.git'
-Bundle 'tpope/vim-surround.git'
-Bundle 'tpope/vim-repeat.git'
-Bundle 'scrooloose/nerdcommenter.git'
-Bundle 'vim-scripts/chef.vim.git'
-Bundle 'tpope/vim-haml.git'
-Bundle 'sickill/vim-pasta.git'
-Bundle 'vim-scripts/Gist.vim.git'
-Bundle 'tpope/vim-endwise.git'
-Bundle 'alvan/vim-closetag'
-Bundle 'davidhalter/jedi-vim'
-Bundle 'python-rope/ropevim'
-Bundle 'vim-scripts/php.vim--Garvin.git'
-Bundle 'groenewege/vim-less'
-Bundle 'altercation/vim-colors-solarized.git'
-Bundle 'Shougo/neocomplete.vim.git'
-Bundle 'dan-bolsun/vim-nginx.git'
-Bundle 'jobicoppola/vim-json-bundle.git'
-Bundle 'fholgado/minibufexpl.vim.git'
-Bundle 'kien/ctrlp.vim.git'
-Bundle 'tpope/vim-rails.git'
-Bundle 'jobicoppola/vim-jinja.git'
-Bundle 'chase/vim-ansible-yaml'
-Bundle 'vim-scripts/VimClojure.git'
-Bundle 'jpalardy/vim-slime.git'
-Bundle 'Shougo/neosnippet.vim.git'
-Bundle 'moll/vim-bbye.git'
-Bundle 'jiangmiao/auto-pairs.git'
-Bundle 'ervandew/supertab.git'
-Bundle 'honza/vim-snippets.git'
-Bundle 'rizzatti/funcoo.vim'
-Bundle 'rizzatti/dash.vim'
+" plugins on github
+Plugin 'mileszs/ack.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'Shougo/neocomplete.vim'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'python-rope/ropevim'
+Plugin 'kien/ctrlp.vim'
+Plugin 'moll/vim-bbye'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-endwise'
+Plugin 'alvan/vim-closetag'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'sickill/vim-pasta'
+Plugin 'ervandew/supertab'
+Plugin 'honza/vim-snippets'
+Plugin 'rizzatti/funcoo.vim'
+Plugin 'rizzatti/dash.vim'
+Plugin 'jpalardy/vim-slime'
+Plugin 'vim-scripts/VimClojure'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'jobicoppola/vim-json-bundle'
+Plugin 'chase/vim-ansible-yaml'
+Plugin 'jobicoppola/vim-jinja'
+Plugin 'vim-scripts/chef.vim'
+Plugin 'dan-bolsun/vim-nginx'
+Plugin 'groenewege/vim-less'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-haml'
 
-" shared bundles
-Bundle 'L9'
+" shared plugins
+Plugin 'L9'
+
+" plugins must be listed above this line
+call vundle#end()
 
 filetype plugin indent on
 
@@ -432,13 +434,13 @@ highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
 
 " returns to where you were the last time you edited the file
-au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+autocmd BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
 " automatically reload vimrc when it's saved
-au BufWritePost .vimrc so ~/.vimrc
+autocmd BufWritePost .vimrc so ~/.vimrc
 
 " save when focus is lost
-au FocusLost * :wa
+autocmd FocusLost * :wa
 
 "\_____________________________________________________________________________
 " projects
