@@ -236,7 +236,7 @@ map <leader>f :NERDTreeFind<CR><CR>
 
 " close nerdtree when it is the last window
 autocmd bufenter * if (winnr("$") == 1
-    \ && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+    \ && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 
 "\_____________________________________________________________________________
@@ -329,7 +329,6 @@ let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 " reverse default tabbing direction
 let g:SuperTabMappingForward = '<S-TAB>'
 let g:SuperTabMappingBackward = '<TAB>'
-
 
 
 "\_____________________________________________________________________________
