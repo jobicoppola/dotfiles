@@ -237,7 +237,7 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 map <leader>f :NERDTreeFind<CR><CR>
 
 " close nerdtree when it is the last window
-autocmd bufenter * if (winnr("$") == 1
+autocmd BufEnter * if (winnr("$") == 1
     \ && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 
