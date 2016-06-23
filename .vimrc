@@ -220,6 +220,9 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
 
+" go to file window instead of nerdtree window
+autocmd VimEnter * wincmd p
+
 " disable relativenumber for nerdtree, taglist filetypes
 autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
