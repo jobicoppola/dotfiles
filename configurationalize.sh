@@ -26,7 +26,7 @@ if [[ $yaynay == y* ]]; then
         --backup --backup-dir $BACKUPDIR/ -av . ~
 
     echo -e "\nInstalling vundle bundles"
-    vim +BundleInstall +qall
+    vim +PluginInstall +qall
 
     echo -e "\nTuning user prefs and conf files for OS friendliness"
     [[ "$(uname)" == Linux ]] && bin/tune-linux || bin/tune-osx
