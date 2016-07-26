@@ -29,7 +29,8 @@ if [[ $yaynay == y* ]]; then
     vim +PluginInstall +qall
 
     echo -e "\nTuning user prefs and conf files for OS friendliness"
-    [[ "$(uname)" == Linux ]] && bin/tune-linux || bin/tune-osx
+    [[ $(uname) == Linux ]] && bin/tune-linux
+    [[ $(uname) == Darwin ]] && bin/tune-osx
 fi
 
 . ~/.bashrc
