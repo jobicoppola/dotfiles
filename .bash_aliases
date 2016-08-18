@@ -19,11 +19,8 @@ alias curls="cd ~/curls"
 alias lbin="cd /usr/local/bin"
 alias dbox="cd ~/Dropbox"
 alias dbin="cd  ~/Dropbox/jhome/bin"
-alias snbin="cd ~/ec2/sn/bin"
-alias sncook="cd ~/git/sporting-news/cookbooks"
 alias gitdot='cd ~/git/dotfiles && git st'
 alias venvs='cd ~/venvs/'
-alias cdperform='cd ~/git/perform'
 #
 # vi
 alias vi='vim'
