@@ -5,7 +5,7 @@
 set -e
 
 # set vars
-SOCK="$SSH_AUTH_SOCK"
+AUTHSOCK="$SSH_AUTH_SOCK"
 JSOCK=/tmp/ssh-agent-`hostname`
 MSG="SSH_AUTH_SOCK => $SOCK"
 MSG_ZPB="Exists / size > ZER0 bytes"
@@ -39,21 +39,21 @@ runtest() {
 # helped me figure out how this script needed to work,
 # so i shall remain loyal and keep them employed
 file_exists_zero_plus_bytes() {
-    if [ -s "$SOCK" ]; then
+    if [ -s "$AUTHSOCK" ]; then
         echo 'TRUE'
     else
       echo 'FALSE'
     fi
 }
 file_exists() {
-    if [ -e "$SOCK" ]; then
+    if [ -e "$AUTHSOCK" ]; then
         echo 'TRUE'
     else
         echo 'FALSE'
     fi
 }
 exists_and_is_socket() {
-    if [ -S "$SOCK" ]; then
+    if [ -S "$AUTHSOCK" ]; then
         echo 'TRUE'
     else
         echo 'FALSE'
@@ -104,9 +104,10 @@ startssh() {
     runtest
 
     # sort out agent and authsock if necessary
-    if [[ "$SOCK" != "$JSOCK" ]]; then
-        echo -e "\nINFO: $MSG_MISMATCH $SOCK $JSOCK\n"
-        test "$SOCK" && ln -sf "$SOCK" "$JSOCK"
+    if [[ "$AUTHSOCK" != "$JSOCK" ]]; then
+        echo -e "\nINFO: $MSG_MISMATCH $AUTHSOCK $JSOCK\n"
+        test "$AUTHSOCK" && ln -sf "$AUTHSOCK" "$JSOCK"
+        #export SSH_AUTH_SOCK=$JSOCK
     else
         echo "Trying new agent..."
         start_agent
@@ -115,19 +116,24 @@ startssh() {
 
     # keycounts
     USER_KEYS=$(ls -1 ~/.ssh/*.pub)
-    RUNNING_KEYS=$(ssh-add -l)
+    RUNNING_KEYS=$(listkeys)
     UC=$(countuserkeys)
     KC=$(countkeys)
 
     # make sure agent has all keys
     [[ "$KC" -lt "$UC" ]] && echo -e "Keycount: ${KC} < ${UC}\n"
     [[ "$(identities)" == "n" ]] && echo "Ohnoes! Agent has no identities!"
-    for KEY in ${USER_KEYS[@]}; do
-        KEY=${KEY%.pub}
-        if [[ $(contains "${RUNNING_KEYS[@]}" "$KEY") == "n" ]]; then
-            ssh-add "$KEY"
-        fi
-    done
+
+    if [[ $(uname) == Darwin ]]; then
+        ssh-add -A
+    else
+        for KEY in ${USER_KEYS[@]}; do
+            KEY=${KEY%.pub}
+            if [[ $(contains "${RUNNING_KEYS[@]}" "$KEY") == "n" ]]; then
+                ssh-add "$KEY"
+            fi
+        done
+    fi
 }
 
 # start agent and add keys if requested
