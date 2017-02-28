@@ -65,7 +65,6 @@ alias ga='git add'
 alias gctb='git checkout --track -b'
 alias gctbe="echo 'git checkout --track -b <loc_branch> origin/<rem_branch>'"
 alias gph='git push heroku master'
-alias shipit='git pull && git push'
 #
 # virtualenv
 # courtesy @doughellman
