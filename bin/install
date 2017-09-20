@@ -69,30 +69,6 @@ check_virtualbox_deps(){
     fi
 }
 
-check_pip(){
-    local missing=0
-    [ -z "$(which pip)" ] && missing=1
-    if [ -n "$(which pip)" ]; then
-        [ "$(pip --help |grep -o Usage)" != Usage ] && missing=1
-    fi
-    if [ "$missing" -eq 1 ]; then
-        echo 'pip is missing'
-        INSTALL+=("pip")
-    fi
-}
-
-check_ansible_deps(){
-    local missing=0
-    local deps=(paramiko PyYAML Jinja2 httplib2)
-    for pkg in ${deps[@]}; do
-        [ -z "$(pip freeze |grep $pkg)" ] && missing=1
-        if [ "$missing" -eq 1 ]; then
-            echo "$pkg is missing"
-            sudo pip install $pkg
-        fi
-    done
-}
-
 check_sublime_package_control(){
     local missing=0
     [ -z "$(ls -l $SUBLIME_PC_DIR |grep $SUBLIME_PC_FILE)" ] && missing=1
@@ -138,8 +114,6 @@ check_deps(){
     check_vagrant
     check_virtualbox
     check_virtualbox_deps
-    check_pip
-    check_ansible_deps
     check_sublime
     check_mysql_workbench
     check_sequel_pro
@@ -160,13 +134,6 @@ install_homebrew(){
     # are installed - basically just does a `xcode-select --install`
     local hb_url=https://raw.githubusercontent.com/Homebrew/install/master/install
     ruby -e "$($curl -fSL ${hb_url})"
-}
-
-install_pip(){
-    local dl_url=https://raw.github.com/pypa/pip/master/contrib/get-pip.py
-    local pip_tmp=/tmp/get-pip.py
-    [ ! -f "${pip_tmp}" ] && download ${dl_url} ${pip_tmp}
-    sudo python ${pip_tmp}
 }
 
 get_latest_version_virtualbox(){
