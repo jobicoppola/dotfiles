@@ -117,15 +117,6 @@ check_sublime(){
     fi
 }
 
-check_mysql_workbench(){
-    local missing=1
-    [ -z "$(ls -l /Applications/ |grep MySQLWorkbench.app)"  ] && missing=1
-    if [ "$missing" -eq 1 ]; then
-        echo 'mysql_workbench is missing'
-        INSTALL+=("mysql_workbench")
-    fi
-}
-
 check_sequel_pro(){
     local missing=1
     [ -z "$(ls -l /Applications/ |grep 'Sequel Pro.app')"  ] && missing=1
@@ -219,18 +210,33 @@ install_virtualbox_extpack(){
     /usr/bin/VBoxManage extpack install ${ep_tmp}
 }
 
+install_vagrant_plugins(){
+    local plugin_list=(
+        vagrant-dotvm
+        vagrant-group
+        vagrant-notify-forwarder
+        vagrant-vbguest
+    )
+    local plugins="${plugin_list[*]}"
+    vagrant plugin install ${plugins}
+}
+
 install_vagrant(){
-    local version=1.7.4
-    local dl_url=https://dl.bintray.com/mitchellh/vagrant
-    local dmg_url=${dl_url}/Vagrant_${version}.dmg
-    local sha_url=${dl_url}/${version}_SHA256SUMS?direct
+    local version=1.8.1
+    local arch=$(uname -m)
+    local hc_url=https://releases.hashicorp.com
+    local dl_url=${hc_url}/vagrant/${version}/vagrant_${version}
+    local dmg_url=${dl_url}_${arch}.dmg
+    local sha_url=${dl_url}_SHA256SUMS
     local dmg_tmp=/tmp/Vagrant_${version}.dmg
 
     [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
 
     hdiutil attach -mountpoint /Volumes/Vagrant ${dmg_tmp}
-    sudo /usr/sbin/installer -pkg /Volumes/Vagrant/Vagrant.pkg -target /
+    sudo /usr/sbin/installer -pkg /Volumes/Vagrant/vagrant.pkg -target /
     hdiutil detach /Volumes/Vagrant
+
+    install_vagrant_plugins
 }
 
 install_sublime_package_control(){
@@ -242,8 +248,8 @@ install_sublime_package_control(){
 }
 
 install_sublime(){
-    local build=3065
-    local dl_url=http://c758482.r82.cf2.rackcdn.com
+    local build=3143
+    local dl_url=https://download.sublimetext.com
     local dmg_url=${dl_url}/Sublime%20Text%20Build%20${build}.dmg
     local dmg_tmp=/tmp/SublimeText${build}.dmg
 
@@ -256,24 +262,11 @@ install_sublime(){
     install_sublime_package_control
 }
 
-install_mysql_workbench(){
-    local version=6.2.4
-    local dmg_file=mysql-workbench-community-${version}-osx-i686.dmg
-    local dl_url=http://dev.mysql.com/get/Downloads/MySQLGUITools
-    local dmg_url=${dl_url}/${dmg_file}
-    local dmg_tmp=/tmp/${dmg_file}
-
-    [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
-
-    hdiutil attach -mountpoint /Volumes/MySQL\ Workbench ${dmg_tmp}
-    sudo cp -r /Volumes/MySQL\ Workbench/MySQLWorkbench.app /Applications/
-    hdiutil detach /Volumes/MySQL\ Workbench
-}
-
 install_sequel_pro(){
-    local version=1.0.2
+    local version=1.1.2
     local dmg_file=sequel-pro-${version}.dmg
-    local dmg_url=https://sequel-pro.googlecode.com/files/${dmg_file}
+    local dl_url=https://github.com/sequelpro/sequelpro/releases/download
+    local dmg_url=${dl_url}/release-${version}/${dmg_file}
     local dmg_tmp=/tmp/${dmg_file}
 
     [ ! -f "${dmg_tmp}" ] && download ${dmg_url} ${dmg_tmp}
