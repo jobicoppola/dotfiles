@@ -155,9 +155,9 @@ PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 [ -f ~/.bash_aliases_jc ] && . ~/.bash_aliases_jc
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
 
-# sportingnews
-[ -f ~/.snrc ] && . ~/.snrc
-[ -f ~/.bash_aliases_sn ] && . ~/.bash_aliases_sn
+# perform
+[ -f ~/.pserc ] && . ~/.pserc
+[ -f ~/.bash_aliases_pse ] && . ~/.bash_aliases_pse
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
@@ -189,4 +189,3 @@ set_db_vars(){
     # mysql path
     export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 }
-
