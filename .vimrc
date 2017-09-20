@@ -42,8 +42,7 @@ Plugin 'vim-scripts/VimClojure'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'jobicoppola/vim-json-bundle'
-Plugin 'chase/vim-ansible-yaml'
-Plugin 'jobicoppola/vim-jinja'
+Plugin 'pearofducks/ansible-vim'
 Plugin 'vim-scripts/chef.vim'
 Plugin 'groenewege/vim-less'
 Plugin 'tpope/vim-rails'
@@ -112,6 +111,7 @@ autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
 autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
+autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "autocmd BufRead,BufNewFile *.jinja,*.jinja2,*.j2 set ft=jinja
 
 
@@ -380,6 +380,14 @@ map <leader>gw :Gwrite<CR>
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+
+
+"\_____________________________________________________________________________
+" ansible-vim
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" reset indentation after 2 newlines in insert mode
+let g:ansible_unindent_after_newline = 1
 
 
 "\_____________________________________________________________________________
