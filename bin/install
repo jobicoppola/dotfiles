@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #\\.
 #=-----------------------------------------------------------------------------
-# run this script via cli: `curl -Lk http://git.io/v4Qx8 | bash`
+# run this script via cli: `curl -L http://git.io/v4Qx8 |bash`
 #=-----------------------------------------------------------------------------
 #//`
 #
