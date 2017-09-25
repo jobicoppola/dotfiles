@@ -233,7 +233,7 @@ install_iterm2(){
     local zip_tmp=/tmp/${zip_file}
     local zip_app=/tmp/iTerm.app
     [ ! -f "${zip_tmp}" ] && download ${zip_url} ${zip_tmp}
-    unzip ${zip_tmp}
+    unzip ${zip_tmp} -d ${zip_app}
     sudo cp -r ${zip_app} /Applications/
 }
 
