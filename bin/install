@@ -115,7 +115,6 @@ check_deps(){
     check_virtualbox
     check_virtualbox_deps
     check_sublime
-    check_mysql_workbench
     check_sequel_pro
     check_iterm2
 }
