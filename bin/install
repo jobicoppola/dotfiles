@@ -227,8 +227,8 @@ install_sequel_pro(){
 }
 
 install_iterm2(){
-    local version=v2_0
-    local zip_file=iTerm2_${version}.zip
+    local version=3_1_2
+    local zip_file=iTerm2-${version}.zip
     local zip_url=https://iterm2.com/downloads/stable/${zip_file}
     local zip_tmp=/tmp/${zip_file}
     local zip_app=/tmp/iTerm.app
