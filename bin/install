@@ -108,6 +108,15 @@ check_iterm2(){
     fi
 }
 
+check_atom(){
+    local missing=0
+    [ -z "$(which atom)" ] && missing=1
+    if [ "$missing" -eq 1 ]; then
+        echo 'atom is missing'
+        INSTALL+=("atom")
+    fi
+}
+
 check_deps(){
     check_git
     check_homebrew
@@ -117,6 +126,7 @@ check_deps(){
     check_sublime
     check_sequel_pro
     check_iterm2
+    check_atom
 }
 
 dedup_deps(){
@@ -235,6 +245,18 @@ install_iterm2(){
     [ ! -f "${zip_tmp}" ] && download ${zip_url} ${zip_tmp}
     unzip ${zip_tmp} -d ${zip_app}
     sudo cp -r ${zip_app} /Applications/
+}
+
+install_atom(){
+    local version=1.20.1
+    local zip_file=atom-mac.zip
+    local dl_url=https://github.com/atom/atom/releases/download
+    local zip_url=${dl_url}/v${version}/${zip_file}
+    local zip_tmp=/tmp/${zip_file}
+    local zip_app=/tmp/Atom.app
+    [ ! -f "${zip_tmp}" ] && download ${zip_url} ${zip_tmp}
+    unzip ${zip_tmp} -d ${zip_app}
+    cp -r ${zip_app} /Applications/
 }
 
 install_deps(){
