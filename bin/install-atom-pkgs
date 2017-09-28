@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+install_packages(){
+    apm install --packages-file ~/.atom-packages.lst
+}
