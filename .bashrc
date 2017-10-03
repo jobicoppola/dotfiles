@@ -30,7 +30,8 @@ shopt -s hostcomplete
 # set path
 if [[ "$OS" == Darwin ]]; then
     COREUTILS=/usr/local/opt/coreutils/libexec/gnubin
-    P1=/usr/local/bin:$COREUTILS:/usr/local/sbin:/usr/local/mysql/bin
+    PY=/usr/local/opt/python/libexec/bin
+    P1=$PY:/usr/local/bin:$COREUTILS:/usr/local/sbin:/usr/local/mysql/bin
     P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
     P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
     export PATH=$P1:$P2:$P3
