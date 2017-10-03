@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # get home dir sorted
 
+[ -n "$1" ] && update=1 || update=0
+
 cd "$(dirname $0)"
 
 git pull
@@ -28,8 +30,10 @@ if [[ $yaynay == y* ]]; then
     echo -e "\nInstalling vundle bundles"
     vim +PluginInstall +qall
 
-    echo -e "\nUpdating vundle bundles"
-    vim -c VundleUpdate -c quitall
+    if [ ${update} -eq 1 ]; then
+        echo -e "\nUpdating vundle bundles"
+        vim -c VundleUpdate -c quitall
+    fi
 
     echo -e "\nTuning user prefs and conf files for OS friendliness"
     [[ $(uname) == Linux ]] && bin/tune-linux
