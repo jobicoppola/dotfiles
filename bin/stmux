@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
+
+#/>=---------------------------------------------------------------------------
 # connect to existing tmux session, or start fresh
 # TODO: move functionality provided here into tmux.conf, as this should all be
 # possible just with appropriate config settings there, so, like, someone
 # should totally do something about that
+#\>=---------------------------------------------------------------------------
 
 # check if we need to add identities to ssh-agent before starting
 ~/bin/ssh-start
@@ -21,15 +24,15 @@ if [ $? -eq 0 ]; then
     exit 0;
 fi
 
-# if there are no existing sessions,
-# let's create a new session, then detach
+# if there are no existing sessions, let's create a new session, then detach
 tmux new-session -d -s $session
 
 # set some names
 repos=~/git
 perform=$repos/perform
 dotvm=$perform/dotvm
-pansible=$dotvm/ansible
+pansible=~/projects/ansible
+venvs=~/venvs
 three=repl
 four=venvs
 five=sncore
@@ -37,6 +40,11 @@ six=dotfiles
 seven=snweb
 eight=snsysadmin
 nine=$dotvm
+
+# create dirs if necessary
+for dir in ${repos} ${dotvm} ${pansible} ${venvs}; do
+    [ ! -d "${dir}" ] && mkdir -p ${dir}
+done
 
 # open some default windows
 tmux neww -t $session:0 -n temp
@@ -64,9 +72,9 @@ for n in {3..9}; do
         tmux splitw -h -t $session:$n
         tmux splitw -v -t $session:$n
         if [ $n -eq 4 ]; then
-            tmux send -t $session:$n.+1 "cd ~/venvs && workon sn-inventory-dev" C-m
-            tmux send -t $session:$n.+2 "cd ~/venvs && workon sn-inventory-dev" C-m
-            tmux send -t $session:$n.+3 "cd ~/venvs && workon sn-inventory-dev" C-m
+            tmux send -t $session:$n.+1 "cd ${venvs} && workon sn-inventory-dev" C-m
+            tmux send -t $session:$n.+2 "cd ${venvs} && workon sn-inventory-dev" C-m
+            tmux send -t $session:$n.+3 "cd ${venvs} && workon sn-inventory-dev" C-m
         elif [ $n -eq 5 ]; then
             tmux send -t $session:$n.+1 "cd $repos/$five && git status -sb" C-m
             tmux send -t $session:$n.+2 "cd $repos/$five" C-m
@@ -85,7 +93,7 @@ for n in {3..9}; do
             tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
         elif [ $n -eq 9 ]; then
             tmux send -t $session:$n.+1 "cd $pansible && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $dotvm/projects/pg_infra" C-m
+            tmux send -t $session:$n.+2 "cd $dotvm" C-m
             tmux send -t $session:$n.+3 "cd $nine" C-m
             tmux send -t $session:$n.+4 "cd $nine" C-m
             tmux send -t $session:$n.+5 "cd $pansible && git status -sb" C-m
