@@ -149,9 +149,12 @@ sudo_message(){
 
 # disable sudden motion sensor - pointless for ssd
 sms_test(){
-    if [ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ]; then
-        sudo_use=1
-        sms_enabled=1
+    local mbp_version=$(uname -a |awk '{print $(NF-1)}')
+    if [ ${mbp_version} != 'MacBookPro13,3'  ]; then
+        if [ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ]; then
+            sudo_use=1
+            sms_enabled=1
+        fi
     fi
 }
 sms_disable(){
