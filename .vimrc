@@ -181,7 +181,6 @@ set statusline+=\[%{strlen(&ft)?&ft:'none'}]    " file type
 set statusline+=\[%{(&fenc==\"\"?&enc:&fenc)}]  " encoding
 set statusline+=\%{fugitive#statusline()}       " fugitive
 set statusline+=%=                              " right align the rest
-set statusline+=0x%-8B                          " character code under cursor
 set statusline+=%-14(%l,%c%V%)                  " line, character
 set statusline+=%<%P                            " file position as percent
 
