@@ -92,7 +92,7 @@ alias mpysma='python manage.py schemamigration --auto'
 alias ansibleupdate='git pull --rebase && git submodule update --init --recursive'
 #
 # ag aka silver surfer
-alias aga='ag -a --hidden'
+alias aga='ag --all-types --hidden'
 #
 # rg aka ripgrep
-alias rga='rg -uu --ignore-case'
+alias rga='rg --no-ignore --hidden --ignore-case'
