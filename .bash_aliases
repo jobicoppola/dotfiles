@@ -93,3 +93,6 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 #
 # ag aka silver surfer
 alias aga='ag -a --hidden'
+#
+# rg aka ripgrep
+alias rga='rg -uu --ignore-case'
