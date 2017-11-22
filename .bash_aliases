@@ -95,4 +95,4 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 alias aga='ag --all-types --hidden'
 #
 # rg aka ripgrep
-alias rga='rg --no-ignore --hidden --ignore-case'
+alias rga='rg --no-ignore --hidden --ignore-case --follow'
