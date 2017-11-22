@@ -190,3 +190,37 @@ set_db_vars(){
     # mysql path
     export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 }
+
+# use rg and fzf to find things quickly and open them in vim
+#
+rg_command='rg --column --line-number --no-heading --fixed-strings '
+rg_command+='--ignore-case --no-ignore --hidden --follow --color "always"'
+rg_command_dirs='rg --ignore-case --no-ignore --hidden --follow --color "always"'
+
+sf() {
+    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    printf -v search "%q" "$*"
+    local files=$(eval $rg_command $search \
+                  | fzf --ansi --multi --reverse \
+                  | awk -F ':' '{print $1":"$2":"$3}')
+    [[ -n "$files" ]] && ${EDITOR:-vim} $files
+}
+sd() {
+    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    printf -v search "%q" "$*"
+    local directories=$(eval $rg_command_dirs -g "*$search*" --files \
+                        | sort \
+                        | fzf --ansi --multi --reverse)
+    [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
+}
+sfd(){
+    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    printf -v search "%q" "$*"
+
+    local files=$(eval $rg_command $search | awk -F ':' '{print $1":"$2":"$3}')
+    local directories=$(eval $rg_command_dirs -g "*$search*" --files | sort -u)
+
+    local fd=( "${files[@]}" "${directories[@]}" )
+    local all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
+    [[ -n "$all" ]] && ${EDITOR:-vim} $all
+}
