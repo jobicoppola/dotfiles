@@ -47,6 +47,7 @@ Plugin 'vim-scripts/chef.vim'
 Plugin 'groenewege/vim-less'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-haml'
+Plugin 'kopischke/vim-fetch'
 
 " shared plugins
 Plugin 'L9'
