@@ -1,4 +1,8 @@
-# ~/.bashrc :: jcopp.cfxd.net
+#>=-</.|.\>=------------------------------------------------------------------\
+#   
+#  ~/.bashrc :: jcopp.cfxd.net
+#
+#\\<<=------------------------------------------------------------------------/
 
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
@@ -27,7 +31,18 @@ shopt -s globstar
 HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
 
-# set path
+# make compilers behave
+export ARCHFLAGS="-arch x86_64"
+
+# set editor vars
+export EDITOR=$(which vim)
+export GIT_EDITOR=$(which vim)
+export GIT_MERGE_AUTOEDIT=no
+
+
+# path setup
+#=-----------------------------------------------------------------------------
+
 if [[ "$OS" == Darwin ]]; then
     COREUTILS=/usr/local/opt/coreutils/libexec/gnubin
     PY=/usr/local/opt/python/libexec/bin
@@ -44,30 +59,31 @@ else
     export PATH=$P1:$P2
 fi
 
+
+# ssh setup
+#=-----------------------------------------------------------------------------
+
 # start ssh-agent and set sock var
 if [ -s "$SSH_AUTH_SOCK" -o ! -S "$SSH_AUTH_SOCK" ]; then
-  `rm -f $SSH_AUTH_SOCK`
-  export SSH_AUTH_SOCK=/tmp/ssh-agent-`hostname`
+  rm -f $SSH_AUTH_SOCK
+  export SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
   if [ ! -S "$SSH_AUTH_SOCK" ]; then
-    eval `ssh-agent -a $SSH_AUTH_SOCK -s`
-    `ssh-add`
-    `ssh-add ~/.ssh/id_rsa_sn`
-    `ssh-add ~/.ssh/id_rsa_github`
-    `ssh-add ~/.ssh/id_rsa_sn_jobot`
+    eval ssh-agent -a $SSH_AUTH_SOCK -s
+    ssh-add
+    ssh-add ~/.ssh/id_rsa_github
   fi
 fi
 
-# set editor vars
-export EDITOR=$(which vim)
-export GIT_EDITOR=$(which vim)
-export GIT_MERGE_AUTOEDIT=no
 
 # ruby related
+#=-----------------------------------------------------------------------------
+
 export RUBYOPT=rubygems
 export GEM_HOME=$HOME/gems
 export RUBYPATH=$GEM_HOME
 export GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
+
 if [[ "$OS" == Darwin ]]; then
     # fyi only
     SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
@@ -86,40 +102,35 @@ alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 
+
 # node.js
+#=-----------------------------------------------------------------------------
+
 NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
 
-# make compilers behave
-export ARCHFLAGS="-arch x86_64"
 
-# source color helper file
-[ -f ~/.bash_colors ] && . ~/.bash_colors
+# virtualenv
+#=-----------------------------------------------------------------------------
 
-# function to read in password
-readpass(){
-    echo -n >&2 "Password: "
-    local was="$(stty -a | grep -ow -e '-\?echo')" pass
-    stty -echo
-    read pass
-    stty "$was"
-    echo >&2
-    echo "$pass"
-}
+export WORKON_HOME=$HOME/venvs
+VWSH=$(which virtualenvwrapper.sh)
+[ -f "$VWSH" ] && . "$VWSH"
 
-# virtualenv info
+
+# prompt setup
+#=-----------------------------------------------------------------------------
+
 get_venv(){
     [ $VIRTUAL_ENV ] && echo "$(basename $VIRTUAL_ENV):"
 }
 
-# return current git branch
-get_branch(){
+get_current_git_branch(){
     REF=$(git symbolic-ref HEAD 2> /dev/null) || return
     echo "("${REF#refs/heads/}")"
 }
 
-# find git status
-get_status(){
+get_git_status(){
     CMSG='nothing to commit'
     TMSG='Changes to be committed'
     SMSG='Changes not staged for commit'
@@ -138,23 +149,32 @@ get_status(){
     fi
 }
 
-# set prompt
+# bring in named colors
+[ -f ~/.bash_colors ] && . ~/.bash_colors
+
 PS1_VENV="\n$BGreen\$(get_venv)$Purple"
 PS1_USER="\u@\h$BWhite\w$BYellow"
-PS1_GIT="\$(get_branch)$BGreen\$(get_status)$Ecol"
+PS1_GIT="\$(get_current_git_branch)$BGreen\$(get_git_status)$Ecol"
 PS1_END="\n$Blue$ $Ecol"
-PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 
-# vars and paths for aws tools
-[ -f ~/.awsrc ] && . ~/.awsrc
+# now actually set the prompt
+if [[ "$OS" == Darwin ]] && [[ "$(hostname)" == L0100* ]]; then
+    # override ugly hostname on perform machines
+    PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
+else
+    PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
+fi
 
-# twilio, sunlight api creds
-[ -f ~/.miscrc ] && . ~/.miscrc
 
-# source various alias files if they exist
+# aliases
+#=-----------------------------------------------------------------------------
+
 [ -f ~/.alias ] && . ~/.alias
-[ -f ~/.bash_aliases_jc ] && . ~/.bash_aliases_jc
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
+[ -f ~/.bash_aliases_jc ] && . ~/.bash_aliases_jc
+
+[ -f ~/.miscrc ] && . ~/.miscrc
+[ -f ~/.awsrc ] && . ~/.awsrc
 
 # perform
 [ -f ~/.pserc ] && . ~/.pserc
@@ -162,70 +182,59 @@ PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
-    # source osx aliases file
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
-    # override ugly prompt on perform machines
-    if [[ "$(hostname)" == L0100* ]]; then
-        PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
-    fi
     # brew completion
-    [ -f `brew --prefix`/etc/bash_completion ] && . `brew --prefix`/etc/bash_completion
-    [ -f `brew --prefix grc`/etc/grc.bashrc ] && . `brew --prefix grc`/etc/grc.bashrc
+    [ -f $(brew --prefix)/etc/bash_completion ] && . $(brew --prefix)/etc/bash_completion
+    [ -f $(brew --prefix grc)/etc/grc.bashrc ] && . $(brew --prefix grc)/etc/grc.bashrc
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
 fi
 
-# virtualenv
-export WORKON_HOME=$HOME/venvs
-VWSH=$(which virtualenvwrapper.sh)
-[ -f "$VWSH" ] && . "$VWSH"
 
-# clojure
-export VIMCLOJURE_SERVER_JAR="$HOME/lib/vimclojure/server.jar"
+# rg and fzf helpers
+#=-----------------------------------------------------------------------------
 
-# set db related env vars
-set_db_vars(){
-    # oracle
-    export ORACLE_HOME=/usr/local/oracle
-    # mysql path
-    export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
-}
-
-# use rg and fzf to find things quickly and open them in vim
-#
 rg_command='rg --column --line-number --no-heading --fixed-strings '
 rg_command+='--ignore-case --no-ignore --hidden --follow --color "always"'
 rg_command_dirs='rg --ignore-case --no-ignore --hidden --follow --color "always"'
 
 sf() {
+    local files
     if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
     printf -v search "%q" "$*"
-    local files=$(eval $rg_command $search \
-                  | fzf --ansi --multi --reverse \
-                  | awk -F ':' '{print $1":"$2":"$3}')
+    files=$(eval $rg_command $search \
+            | fzf --ansi --multi --reverse \
+            | awk -F ':' '{print $1":"$2":"$3}')
     [[ -n "$files" ]] && ${EDITOR:-vim} $files
 }
+
 sd() {
+    local directories
     if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
     printf -v search "%q" "$*"
-    local directories=$(eval $rg_command_dirs -g "*$search*" --files \
-                        | sort \
-                        | fzf --ansi --multi --reverse)
+    directories=$(eval $rg_command_dirs -g "*$search*" --files \
+                  | sort \
+                  | fzf --ansi --multi --reverse)
     [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
 }
+
 sfd(){
+    local files directories fd all
     if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
     printf -v search "%q" "$*"
 
-    local files=$(eval $rg_command $search | awk -F ':' '{print $1":"$2":"$3}')
-    local directories=$(eval $rg_command_dirs -g "*$search*" --files | sort -u)
+    files=$(eval $rg_command $search | awk -F ':' '{print $1":"$2":"$3}')
+    directories=$(eval $rg_command_dirs -g "*$search*" --files | sort -u)
 
-    local fd=( "${files[@]}" "${directories[@]}" )
-    local all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
+    fd=( "${files[@]}" "${directories[@]}" )
+    all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
 }
 
-# ftpane - switch pane (@george-b)
+
+# switch tmux pane (@george-b)
+#=-----------------------------------------------------------------------------
+
 ftpane() {
     local panes current_window current_pane target target_window target_pane
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
@@ -243,4 +252,18 @@ ftpane() {
         tmux select-pane -t ${target_window}.${target_pane} &&
         tmux select-window -t $target_window
     fi
+}
+
+
+# securely read in password
+#=-----------------------------------------------------------------------------
+
+readpass(){
+    echo -n >&2 "Password: "
+    local was="$(stty -a | grep -ow -e '-\?echo')" pass
+    stty -echo
+    read pass
+    stty "$was"
+    echo >&2
+    echo "$pass"
 }
