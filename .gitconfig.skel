@@ -30,11 +30,13 @@
     st = status
     lc = log ORIG_HEAD.. --stat --no-merges
     lol = log --graph --decorate --oneline
-    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    lg = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset'
+    lola = log --graph --decorate --abbrev-commit --all
+    lg = log --graph --abbrev-commit --pretty=jobi-nonames
     ll = log --graph --abbrev-commit --pretty=jobi
+    ls = log --graph --stat --pretty=short
 [pretty]
     jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%cN%Creset %Cgreen%cr%Creset
+    jobi-nonames = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset
 [core]
     excludesfile = ~/.gitignore-global
     pager = less -IRFX
