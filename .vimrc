@@ -399,6 +399,10 @@ map <leader>p :CtrlPMixed<CR>
 let g:ctrlp_working_path_mode = 'rw' " set to nearest ancestor with a .git dir
 let g:ctrlp_show_hidden = 1          " scan for dotfiles and dotdirs
 let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
+let g:ctrlp_prompt_mappings = {
+    \ 'PrtCurRight()':       ['<right>'],
+    \ 'PrtSelectMove("j")':  ['<c-l>', '<down>'],
+    \ }
 
 " use ripgrep for search
 if executable('rg')
