@@ -400,11 +400,12 @@ let g:ctrlp_working_path_mode = 'rw' " set to nearest ancestor with a .git dir
 let g:ctrlp_show_hidden = 1          " scan for dotfiles and dotdirs
 let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
 
-" use ag the silver surfer
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-" ag fast enough
-let g:ctrlp_use_caching = 0
+" use ripgrep for search
+if executable('rg')
+    set grepprg=rg\ --color=never
+    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+    let g:ctrlp_use_caching = 0
+endif
 
 
 "\_____________________________________________________________________________
