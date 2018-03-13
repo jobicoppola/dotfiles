@@ -2,7 +2,7 @@
 #
 #  ~/.bashrc :: jcopp.cfxd.net
 #
-#\\<<=-------------------------------------------------------------------------
+#>=\\<<=-----------------------------------------------------------------------
 
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
@@ -185,8 +185,12 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
     # brew completion
-    [ -f $(brew --prefix)/etc/bash_completion ] && . $(brew --prefix)/etc/bash_completion
-    [ -f $(brew --prefix grc)/etc/grc.bashrc ] && . $(brew --prefix grc)/etc/grc.bashrc
+    localbrew=$(brew --prefix)
+    [ -f ${localbrew}/etc/bash_completion.d/brew ] && . ${localbrew}/etc/bash_completion.d/brew
+    [ -f ${localbrew}/etc/grc.bashrc ] && . ${localbrew}/etc/grc.bashrc
+
+    # other completions
+    [ -f ~/.fzf.bash ] && . ~/.fzf.bash
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
 fi
 
@@ -195,12 +199,12 @@ fi
 #=-----------------------------------------------------------------------------
 
 rg_command='rg --column --line-number --no-heading --fixed-strings '
-rg_command+='--ignore-case --no-ignore --hidden --follow --color "always"'
-rg_command_dirs='rg --ignore-case --no-ignore --hidden --follow --color "always"'
+rg_command+='--ignore-case --no-ignore --hidden --color "always" --glob "!.git"'
+rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "always"'
 
 sf() {
     local files
-    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
     files=$(eval $rg_command $search \
             | fzf --ansi --multi --reverse \
@@ -210,23 +214,23 @@ sf() {
 
 sd() {
     local directories
-    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
-    directories=$(eval $rg_command_dirs -g "*$search*" --files \
-                  | sort \
+    directories=$(eval $rg_command_dirs -g \"*$search*\" --files \
+                  | sort -u \
                   | fzf --ansi --multi --reverse)
     [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
 }
 
 sfd(){
     local files directories fd all
-    if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
 
     files=$(eval $rg_command $search | awk -F ':' '{print $1":"$2":"$3}')
     directories=$(eval $rg_command_dirs -g "*$search*" --files | sort -u)
 
-    fd=( "${files[@]}" "${directories[@]}" )
+    fd=( "${directories[@]}" "${files[@]}" )
     all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
 }
