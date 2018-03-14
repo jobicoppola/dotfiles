@@ -37,9 +37,11 @@ brew install wget
 brew install autoconf
 brew install automake
 brew install brew-cask
+brew install gawk
 brew install gdbm
 brew install gmp
 brew install john
+brew install jq
 brew install libevent
 brew install libtool
 brew install libyaml
