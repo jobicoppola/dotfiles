@@ -236,10 +236,75 @@ sfd(){
 }
 
 
+# from fzf wiki examples
+#=-----------------------------------------------------------------------------
+
+fco(){
+    # checkout git branch/tag
+    local tags branches target
+    tags=$(git tag \
+           | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+    branches=$(git branch --all \
+               | grep -v HEAD \
+               | sed "s/.* //" \
+               | sed "s#remotes/[^/]*/##" \
+               | sort -u \
+               | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+    target=$( (echo "$tags"; echo "$branches") \
+               | fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+    git checkout $(echo "$target" | awk '{print $2}')
+}
+
+fcoc(){
+    # checkout git commit
+    local commits commit
+    commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+    # +s --no-sort ; +m --no-multi ; --tac "reverse order of the input"
+    commit=$(echo "$commits" | fzf --tac +s +m --exact) &&
+    git checkout $(echo "$commit" | sed "s/ .*//")
+}
+
+fcor(){
+    # checkout git branch (incl remote), sorted by most recent commit, limit n
+    local branches branch limit=50
+    branches=$(git for-each-ref \
+               --count=$limit \
+               --sort=-committerdate \
+               refs/heads/ \
+               --format="%(refname:short)") &&
+    branch=$(echo "$branches" \
+             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+
+fcs(){
+    # get git commit sha
+    # example usage: git rebase -i `fcs`
+    local commits commit
+    commits=$(git log --color=always \
+              --pretty=oneline --abbrev-commit --reverse) &&
+    commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse) &&
+    echo -n $(echo "$commit" | sed "s/ .*//")
+}
+
+fshow(){
+    # git commit browser
+    git log --graph --color=always \
+        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
+        | fzf --ansi --no-sort --reverse --tiebreak=index \
+        --bind=ctrl-s:toggle-sort \
+        --bind "ctrl-m:execute:
+            (grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+            {}
+FZF-EOF"
+}
+
+
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
 
-ftpane() {
+ftpane(){
     local panes current_window current_pane target target_window target_pane
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
     current_pane=$(tmux display-message -p '#I:#P')
