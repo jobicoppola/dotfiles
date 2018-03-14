@@ -1,0 +1,2 @@
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone --recursive https://github.com/Morantron/tmux-fingers ~/.tmux/plugins/tmux-fingers
