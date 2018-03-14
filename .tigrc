@@ -1,4 +1,9 @@
 # ~/.tigrc :: jcopp.cfxd.net
 
+#>=----------------------------------------------------------------------------
+# user-defined commands
+
 bind main R !git rebase -i %(commit)^
 bind diff R !git rebase -i %(commit)^
+
+bind diff V !ansible-vault view %(file)
