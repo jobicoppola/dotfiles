@@ -96,3 +96,6 @@ alias aga='ag --all-types --hidden'
 #
 # rg aka ripgrep
 alias rga='rg --no-ignore --hidden --ignore-case --follow'
+#
+# fzf
+alias fzp='fzf --preview "head -100 {}"'
