@@ -25,6 +25,8 @@ Plugin 'Shougo/neosnippet-snippets'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'python-rope/ropevim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 Plugin 'moll/vim-bbye'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
@@ -388,6 +390,15 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 " reset indentation after 2 newlines in insert mode
 let g:ansible_unindent_after_newline = 1
+
+
+"\_____________________________________________________________________________
+" fzf
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" bring up fzf
+map <leader>z :FZF<CR>
+let g:fzf_layout = { 'down': '~25%' }
 
 
 "\_____________________________________________________________________________
