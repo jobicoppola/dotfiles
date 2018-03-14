@@ -164,6 +164,7 @@ set textwidth=79
 set formatoptions=qrn1
 set colorcolumn=80                      " new in 7.3
 set switchbuf=useopen                   " keep window layout for existing bffrs
+set regexpengine=1                      " fix slow scrolling in perl files issue
 
 " search options
 nnoremap / /\v
