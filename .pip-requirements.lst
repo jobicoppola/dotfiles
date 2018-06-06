@@ -1,6 +1,7 @@
 ansible
 ansible-lint
-BeautifulSoup
+ats-vault
+BeautifulSoup4
 blessings
 bpython
 colored
@@ -10,6 +11,7 @@ cryptography
 curtsies
 ecdsa
 greenlet
+httpstat
 jedi
 Jinja2
 MarkupSafe
@@ -27,7 +29,7 @@ requests-ntlm
 setuptools
 six
 stevedore
-vboxapi
+pyvbox
 virtualenv
 virtualenv-clone
 virtualenvwrapper
