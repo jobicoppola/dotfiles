@@ -33,6 +33,7 @@ pyvbox
 virtualenv
 virtualenv-clone
 virtualenvwrapper
+watchdog
 XenAPI
 xmltodict
 yamllint
