@@ -2,7 +2,7 @@
 #
 #  ~/.bashrc :: jcopp.cfxd.net
 #
-#>\/<<=-----------------------------------------------------------------------
+#>\|/<<=-----------------------------------------------------------------------
 
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
@@ -197,6 +197,9 @@ fi
 
 # rg and fzf helpers
 #=-----------------------------------------------------------------------------
+
+# set default - also used by vim
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
 
 rg_command='rg --column --line-number --no-heading --fixed-strings '
 rg_command+='--ignore-case --no-ignore --hidden --color "always" --glob "!.git"'
