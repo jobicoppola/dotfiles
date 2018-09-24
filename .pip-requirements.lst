@@ -1,6 +1,5 @@
 ansible
 ansible-lint
-ats-vault
 BeautifulSoup4
 blessings
 bpython
@@ -10,6 +9,7 @@ crudini
 cryptography
 curtsies
 ecdsa
+fast.com
 greenlet
 httpstat
 jedi
