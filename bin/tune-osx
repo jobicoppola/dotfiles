@@ -136,6 +136,14 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 #=-----------------------------------------------------------------------------
 
+# fix font rendering for certain apps on mojave (e.g. iterm, atom, chrome)
+# https://cl.ly/ec32950cc36f
+fix_fonts_mojave(){
+    if [ $(uname -r |awk -F. '{print $1}') -eq 18 ]; then
+        defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
+    fi
+}
+
 # sudo may be needed to change settings below
 sudo_use=0
 sms_enabled=0
