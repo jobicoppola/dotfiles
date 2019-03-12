@@ -45,6 +45,8 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'jobicoppola/vim-json-bundle'
 Plugin 'pearofducks/ansible-vim'
+Plugin 'b4b4r07/vim-ansible-vault'
+Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'vim-scripts/chef.vim'
 Plugin 'groenewege/vim-less'
 Plugin 'tpope/vim-rails'
@@ -391,6 +393,35 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 " reset indentation after 2 newlines in insert mode
 let g:ansible_unindent_after_newline = 1
+
+
+"\_____________________________________________________________________________
+" ansible-vault
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:ansible_vault_password_file = $ANSIBLE_VAULT_PASSWORD_FILE
+nmap <leader>i :call InlineEncrypt()<CR>
+nmap <leader>u :call InlineDecrypt()<CR>
+function! InlineDecrypt()
+    silent exe 'normal viiy'
+    silent exe 'e tmp'
+    silent exe 'normal P=G'
+    silent exe 'AnsibleVaultDecrypt'
+    silent exe 'normal ggyG'
+    silent exe 'Bdelete!'
+    silent exe 'normal viipkJd3bx'
+endfunction
+function! InlineEncrypt()
+    silent exe 'e tmp'
+    silent exe 'normal P=G'
+    silent exe 'AnsibleVaultEncrypt'
+    silent exe 'normal ggyG'
+    silent exe 'Bdelete!'
+    silent exe 'normal o'
+    silent exe 'normal kA!vault |'
+    silent exe 'normal p=}v}>'
+    silent exe 'normal kwwdw'
+endfunction
 
 
 "\_____________________________________________________________________________
