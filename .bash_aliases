@@ -98,7 +98,7 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 alias aga='ag --all-types --hidden'
 #
 # rg aka ripgrep
-alias rga='rg --no-ignore --hidden --ignore-case --follow'
+alias rga='rg --no-ignore --hidden --ignore-case'
 #
 # fzf
 alias fzp='fzf --preview "head -100 {}"'
