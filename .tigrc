@@ -7,3 +7,10 @@ bind main R !git rebase -i %(commit)^
 bind diff R !git rebase -i %(commit)^
 
 bind diff V !ansible-vault view %(file)
+
+# deleting files in status view
+bind status D !@?rm -rf %(file)
+
+# settings
+set diff-highlight = true
+set vertical-split = no
