@@ -52,6 +52,7 @@ Plugin 'groenewege/vim-less'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-haml'
 Plugin 'kopischke/vim-fetch'
+Plugin 'hashivim/vim-terraform'
 
 " shared plugins
 Plugin 'L9'
