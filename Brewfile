@@ -5,6 +5,7 @@ tap 'homebrew/bundle'
 
 # essential utils
 brew 'bash'
+brew 'bash-completion'
 brew 'coreutils'
 brew 'git'
 brew 'lua'
