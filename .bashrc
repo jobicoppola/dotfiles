@@ -184,10 +184,18 @@ fi
 if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
-    # brew completion
-    localbrew=$(brew --prefix)
-    [ -f ${localbrew}/etc/bash_completion.d/brew ] && . ${localbrew}/etc/bash_completion.d/brew
-    [ -f ${localbrew}/etc/grc.bashrc ] && . ${localbrew}/etc/grc.bashrc
+    # brew completions
+    localbrew=$(brew --prefix)/etc
+    completions=(
+        bash_completion.d/brew
+        bash_completion.d/tmux
+        bash_completion.d/tig-completion.bash
+        grc.bashrc
+    )
+    for completion in ${completions[@]}; do
+        completion_path=${localbrew}/${completion}
+        [ -f ${completion_path} ] && . ${completion_path}
+    done
 
     # other completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
