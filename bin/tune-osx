@@ -12,9 +12,6 @@
 defaults -currentHost write -globalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# disable transparency for menu bar and elsewhere
-defaults write com.apple.universalaccess reduceTransparency -bool true
-
 # disable focus ring animation
 defaults write NSGlobalDomain NSUseAnimatedFocusRing -bool false
 
@@ -136,60 +133,75 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 #=-----------------------------------------------------------------------------
 
-# fix font rendering for certain apps on mojave (e.g. iterm, atom, chrome)
-# https://cl.ly/ec32950cc36f
-fix_fonts_mojave(){
-    if [ $(uname -r |awk -F. '{print $1}') -eq 18 ]; then
-        defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
-    fi
-}
-
-# sudo may be needed to change settings below
-sudo_use=0
-sms_enabled=0
-spotlight_excluded=0
-
-sudo_message(){
-    echo -e "\nSudo password may be requested to disable:\n"
-    echo -e "\tsudden motion sensor"
-    echo -e "\tspotlight indexing of newly mounted volumes\n"
-}
-
 # disable sudden motion sensor - pointless for ssd
-sms_test(){
-    local mbp_version=$(uname -a |awk '{print $(NF-1)}')
-    if [ ${mbp_version} != 'MacBookPro13,3'  ]; then
-        if [ $(pmset -g |grep sms |awk '{print $2}') -eq 1 ]; then
-            sudo_use=1
-            sms_enabled=1
+sms_disable(){
+    local msg="May need sudo - bc we are using ssd, disabling motion sensor..."
+    local ssd=$(system_profiler SPStorageDataType |grep 'Medium Type' |grep -c SSD)
+    if [ ${ssd} -gt 0 ]; then
+        if [ $(pmset -g |grep -c sms) -gt 0 ]; then
+            echo ${msg}
+            sudo pmset -a sms 0
+            [ $? -eq 0 ] && echo "done"
         fi
     fi
 }
-sms_disable(){
-    sudo pmset -a sms 0
-}
 
 # tell spotlight not to index newly mounted and un-indexed volumes
-spotlight_tmpfile=/tmp/.jc-spotlight-exclude
-
-spotlight_test(){
+spotlight_exclude(){
+    local msg="May need sudo - setting up Spotlight exclude..."
+    local spotlight_tmpfile=/tmp/.jc-spotlight-exclude
+    local spotlight_excluded=0
     if [ -f $spotlight_tmpfile ]; then
         if [ $(grep "\/Volumes" $spotlight_tmpfile) ]; then
             spotlight_excluded=1
         fi
     fi
-}
-spotlight_exclude(){
-    sudo defaults write \
-        /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
-    sudo defaults read \
-        /.Spotlight-V100/VolumeConfiguration Exclusions -array > $spotlight_tmpfile
+    if [ ${spotlight_excluded} -eq 0 ]; then
+        echo ${msg}
+        sudo defaults write \
+            /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+        [ $? -eq 0 ] && echo "[1 of 2] done"
+        sudo defaults read \
+            /.Spotlight-V100/VolumeConfiguration Exclusions -array > $spotlight_tmpfile
+        [ $? -eq 0 ] && echo "[2 of 2] done"
+    fi
 }
 
-# only print message and run sudo commands if necessary
-sms_test
-spotlight_test
+# disable transparency for menu bar and elsewhere
+reduce_transparency(){
+    echo -e "\nReducing transparency..."
+    defaults write com.apple.universalaccess reduceTransparency -bool true
+    [ $? -eq 0 ] && echo "done"
+}
 
-[ $sudo_use -eq 1 ] && sudo_message
-[ $sms_enabled -eq 1 ] && sms_disable
-[ $spotlight_excluded -eq 0 ] && spotlight_exclude
+# fix font rendering for certain apps on mojave (e.g. iterm, atom, chrome)
+# https://cl.ly/ec32950cc36f
+fix_fonts_mojave(){
+    echo -e "\nFixing mojave font rendering..."
+    defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
+    [ $? -eq 0 ] && echo "done"
+}
+
+#=-----------------------------------------------------------------------------
+
+# set var if we are on os version before mojave
+pre_mojave=0
+[ $(uname -r |awk -F. '{print $1}') -lt 18 ] && pre_mojave=1
+
+# set var when we are on mojave
+mojave=0
+[ $(uname -r |awk -F. '{print $1}') -eq 18 ] && mojave=1
+
+# do certain things if we are pre-mojave
+if [ ${pre_mojave} -eq 1 ]; then
+    reduce_transparency
+    spotlight_exclude
+fi
+
+# do certain things if we are on mojave
+if [ ${mojave} -eq 1 ]; then
+    fix_fonts_mojave
+fi
+
+# for all macos versions
+sms_disable
