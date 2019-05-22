@@ -177,9 +177,12 @@ reduce_transparency(){
 # fix font rendering for certain apps on mojave (e.g. iterm, atom, chrome)
 # https://cl.ly/ec32950cc36f
 fix_fonts_mojave(){
-    echo -e "\nFixing mojave font rendering..."
-    defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
-    [ $? -eq 0 ] && echo "done"
+    local smooth=$(defaults read -g CGFontRenderingFontSmoothingDisabled -bool)
+    if [ ${smooth} -ne 0 ]; then
+        echo -e "\nFixing mojave font rendering..."
+        defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
+        [ $? -eq 0 ] && echo "done"
+    fi
 }
 
 #=-----------------------------------------------------------------------------
