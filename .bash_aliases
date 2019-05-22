@@ -35,7 +35,7 @@ alias vvim="vi ~/git/dotfiles/.vimrc"
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias Grep="grep"
-alias getip='wget -qO - icanhazip.com'
+alias getip='wget -qO - https://icanhazip.com'
 alias gi="gem install --no-rdoc --no-ri"
 alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"
