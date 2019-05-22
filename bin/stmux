@@ -47,7 +47,6 @@ for dir in ${repos} ${dotvm} ${pansible} ${venvs}; do
 done
 
 # open some default windows
-tmux neww -t $session:0 -n temp
 tmux neww -t $session:1 -n home
 tmux neww -t $session:2 -n bin
 tmux neww -t $session:3 -n $three
@@ -57,10 +56,6 @@ tmux neww -t $session:6 -n $six
 tmux neww -t $session:7 -n $seven
 tmux neww -t $session:8 -n $eight
 tmux neww -t $session:9 -n syseng
-
-# avoid reattach-to-user-namespace as window title
-tmux kill-window -t $session:0
-tmux neww -t $session:0 -n root
 
 # split some windows into panes, then set those panes up
 for n in {3..9}; do
@@ -109,7 +104,7 @@ tmux send-keys -t $session:2 "cd ~/bin" C-m
 tmux send-keys -t $session:0 "sudo su -" C-m
 
 # set default selected win
-tmux select-window -t $session:1
+tmux select-window -t $session:0
 
 # attached to new session
 tmux attach -t $session
