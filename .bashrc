@@ -152,7 +152,8 @@ get_git_status(){
 # bring in named colors
 [ -f ~/.bash_colors ] && . ~/.bash_colors
 
-PS1_VENV="\n$BGreen\$(get_venv)$Purple"
+PS1_TIME="\n$Cyan\t$Blue"
+PS1_VENV="$BGreen\$(get_venv)$Purple"
 PS1_USER="\u@\h$BWhite\w$BYellow"
 PS1_GIT="\$(get_current_git_branch)$BGreen\$(get_git_status)$Ecol"
 PS1_END="\n$Blue$ $Ecol"
@@ -160,9 +161,9 @@ PS1_END="\n$Blue$ $Ecol"
 # now actually set the prompt
 if [[ "$OS" == Darwin ]] && [[ "$(hostname)" == L0100* ]]; then
     # override ugly hostname on perform machines
-    PS1="${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
+    PS1="${PS1_TIME}|${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
 else
-    PS1="${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
+    PS1="${PS1_TIME}${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
 
