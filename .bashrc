@@ -156,14 +156,15 @@ PS1_TIME="\n$Cyan\t$Blue"
 PS1_VENV="$BGreen\$(get_venv)$Purple"
 PS1_USER="\u@\h$BWhite\w$BYellow"
 PS1_GIT="\$(get_current_git_branch)$BGreen\$(get_git_status)$Ecol"
-PS1_END="\n$Blue$ $Ecol"
 
 # now actually set the prompt
 if [[ "$OS" == Darwin ]] && [[ "$(hostname)" == L0100* ]]; then
+    PS1_END="\n$Blue$ $Ecol"
     # override ugly hostname on perform machines
     PS1="${PS1_TIME}|${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
 else
-    PS1="${PS1_TIME}${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
+    PS1_END="\n$Ecol$Gray$ $Ecol"
+    PS1="${PS1_TIME}$Gray|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
 
