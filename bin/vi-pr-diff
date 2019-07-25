@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+usage(){
+    echo "Usage: $0 <name-of-branch>"; exit 2
+}
+
+[ -n "$1" ] && branch_name="$1" || usage
+
+branch=origin/${branch_name}
+
+diff_details=$(git diff --unified=0 ${branch} \
+    $(git merge-base ${branch} origin/master) \
+    |egrep '^@@|^---')
+
+filenames=( $(echo "$diff_details" |sed 'n;d' |cut -c7-) )
+line_numbers=( $(echo "$diff_details" \
+    |sed '1d;n;d' \
+    |awk -F, '{print $1}' \
+    |awk '{print $2}' \
+    |cut -c2-) )
+
+files=( )
+for ((i=0; i < ${#filenames[@]}; ++i)); do
+    files+=("${filenames[$i]}:${line_numbers[$i]}")
+done
+
+[[ -n "$files" ]] && ${EDITOR:-vim} ${files[*]}
