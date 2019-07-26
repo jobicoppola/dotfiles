@@ -26,6 +26,6 @@ for ((i=0; i < ${#filenames[@]}; ++i)); do
     files+=("${filenames[$i]}:${line_numbers[$i]}")
 done
 
-git checkout ${branch}
+git checkout ${branch_name}
 
 [[ -n "$files" ]] && ${EDITOR:-vim} ${files[*]}
