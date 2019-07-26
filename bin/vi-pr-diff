@@ -10,6 +10,8 @@ branch=origin/${branch_name}
 
 diff_details=$(git diff --unified=0 ${branch} \
     $(git merge-base ${branch} origin/master) \
+    |grep -A2 '^---' \
+    |sed '/^+++/d' \
     |egrep '^@@|^---')
 
 filenames=( $(echo "$diff_details" |sed 'n;d' |cut -c7-) )
