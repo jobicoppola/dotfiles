@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#
 #=-----------------------------------------------------------------------------
 #
 # sadly didn't find this repo until after googling for many of the
@@ -132,79 +132,3 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 #=-----------------------------------------------------------------------------
-
-# disable sudden motion sensor - pointless for ssd
-sms_disable(){
-    local msg="May need sudo - bc we are using ssd, disabling motion sensor..."
-    local ssd=$(system_profiler SPStorageDataType |grep 'Medium Type' |grep -c SSD)
-    if [ ${ssd} -gt 0 ]; then
-        if [ $(pmset -g |grep -c sms) -gt 0 ]; then
-            echo ${msg}
-            sudo pmset -a sms 0
-            [ $? -eq 0 ] && echo "done"
-        fi
-    fi
-}
-
-# tell spotlight not to index newly mounted and un-indexed volumes
-spotlight_exclude(){
-    local msg="May need sudo - setting up Spotlight exclude..."
-    local spotlight_tmpfile=/tmp/.jc-spotlight-exclude
-    local spotlight_excluded=0
-    if [ -f $spotlight_tmpfile ]; then
-        if [ $(grep "\/Volumes" $spotlight_tmpfile) ]; then
-            spotlight_excluded=1
-        fi
-    fi
-    if [ ${spotlight_excluded} -eq 0 ]; then
-        echo ${msg}
-        sudo defaults write \
-            /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
-        [ $? -eq 0 ] && echo "[1 of 2] done"
-        sudo defaults read \
-            /.Spotlight-V100/VolumeConfiguration Exclusions -array > $spotlight_tmpfile
-        [ $? -eq 0 ] && echo "[2 of 2] done"
-    fi
-}
-
-# disable transparency for menu bar and elsewhere
-reduce_transparency(){
-    echo -e "\nReducing transparency..."
-    defaults write com.apple.universalaccess reduceTransparency -bool true
-    [ $? -eq 0 ] && echo "done"
-}
-
-# fix font rendering for certain apps on mojave (e.g. iterm, atom, chrome)
-# https://cl.ly/ec32950cc36f
-fix_fonts_mojave(){
-    local smooth=$(defaults read -g CGFontRenderingFontSmoothingDisabled -bool)
-    if [ ${smooth} -ne 0 ]; then
-        echo -e "\nFixing mojave font rendering..."
-        defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
-        [ $? -eq 0 ] && echo "done"
-    fi
-}
-
-#=-----------------------------------------------------------------------------
-
-# set var if we are on os version before mojave
-pre_mojave=0
-[ $(uname -r |awk -F. '{print $1}') -lt 18 ] && pre_mojave=1
-
-# set var when we are on mojave
-mojave=0
-[ $(uname -r |awk -F. '{print $1}') -eq 18 ] && mojave=1
-
-# do certain things if we are pre-mojave
-if [ ${pre_mojave} -eq 1 ]; then
-    reduce_transparency
-    spotlight_exclude
-fi
-
-# do certain things if we are on mojave
-if [ ${mojave} -eq 1 ]; then
-    fix_fonts_mojave
-fi
-
-# for all macos versions
-sms_disable

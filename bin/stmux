@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
-
-#/>=---------------------------------------------------------------------------
+#
+#=-----------------------------------------------------------------------------
+#
 # connect to existing tmux session, or start fresh
 # TODO: move functionality provided here into tmux.conf, as this should all be
 # possible just with appropriate config settings there, so, like, someone
 # should totally do something about that
-#\>=---------------------------------------------------------------------------
+#
+#=-----------------------------------------------------------------------------
 
-# check if we need to add identities to ssh-agent before starting
-~/bin/ssh-start
-read -p "Do we need to add identities to ssh-agent? " addids
-[[ "$addids" == y* ]] && ~/bin/ssh-start now
+# functions
+#
+agent_id_check(){
+    ~/bin/ssh-start
+    read -p "Do we need to add identities to ssh-agent? " addids
+    [[ "$addids" == y* ]] && ~/bin/ssh-start now
+}
+
+# first check if we need to add identities to ssh-agent
+agent_id_check
 
 # main session
 session=0
@@ -27,81 +35,144 @@ fi
 # if there are no existing sessions, let's create a new session, then detach
 tmux new-session -d -s $session
 
-# set some names
+# vars to help setup the panes
 repos=~/git
-perform=$repos/perform
-dotvm=$perform/dotvm
-pansible=~/projects/ansible
+company='company-name'
+github=$repos/github
+bitbucket=$repos/bitbucket
+companydir=$github/$company
+repo_dotfiles=$github/dotfiles
 venvs=~/venvs
-three=repl
-four=venvs
-five=sncore
-six=dotfiles
-seven=snweb
-eight=snsysadmin
-nine=$dotvm
 
-# create dirs if necessary
-for dir in ${repos} ${dotvm} ${pansible} ${venvs}; do
+# TODO: rework this setup, it is so brittle
+# pane titles and where to start them
+one_title=home
+one_path=~
+
+two_title=aws
+two_path=~
+
+three_title=three
+three_path=${repo_three:$github}
+
+four_title=venvs
+four_path=$venvs/$venv_default
+
+five_title=dotfiles
+five_path=$repo_dotfiles
+
+six_title=workdata
+six_path=${repo_six:$github}
+
+seven_title=workapp
+seven_path=${repo_seven:$github}
+
+eight_title=scratch
+eight_path=~
+
+nine_title=misc
+nine_path=~
+
+# create directories if necessary
+for dir in ${repos} ${github} ${bitbucket} ${venvs}; do
     [ ! -d "${dir}" ] && mkdir -p ${dir}
 done
 
-# open some default windows
-tmux neww -t $session:1 -n home
-tmux neww -t $session:2 -n bin
-tmux neww -t $session:3 -n $three
-tmux neww -t $session:4 -n $four
-tmux neww -t $session:5 -n $five
-tmux neww -t $session:6 -n $six
-tmux neww -t $session:7 -n $seven
-tmux neww -t $session:8 -n $eight
-tmux neww -t $session:9 -n syseng
+# open initial windows
+tmux neww -t $session:1 -n $one_title
+tmux neww -t $session:2 -n $two_title
+tmux neww -t $session:3 -n $three_title
+tmux neww -t $session:4 -n $four_title
+tmux neww -t $session:5 -n $five_title
+tmux neww -t $session:6 -n $six_title
+tmux neww -t $session:7 -n $seven_title
+tmux neww -t $session:8 -n $eight_title
+tmux neww -t $session:9 -n $nine_title
 
-# split some windows into panes, then set those panes up
-for n in {3..9}; do
-    if [ $n -eq 3 ]; then
-        tmux splitw -v -t $session:$n
-        tmux send -t $session:$n.top "~/bin/bpython_start" C-m
-        tmux send -t $session:$n.bottom "cd ~ && pry" C-m
+# split windows 1-9 into panes
+#
+for n in {1..9}; do
+
+    tmux splitw -h -t $session:$n  # split all windows horizontally
+
+    # configure each window; always select pane on right side
+    #
+    # 1: home
+    if [ $n -eq 1 ]; then
+        tmux send -t $session:$n.left "cd $one_path" C-m
+        tmux send -t $session:$n.right "cd $one_path && date" C-m
+        tmux select-pane -t $session:$n.1
+
+    # 2: dct
+    elif [ $n -eq 2 ]; then
+        tmux send -t $session:$n.left "cd $two_path" C-m
+        tmux send -t $session:$n.right "cd $two_path" C-m
+        tmux select-pane -t $session:$n.1
+
+    # 3: gateway
+    elif [ $n -eq 3 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $three_path" C-m
+        tmux send -t $session:$n.1 "cd $three_path" C-m
+        tmux send -t $session:$n.2 "cd $three_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 4: venvs
+    elif [ $n -eq 4 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $four_path" C-m
+        tmux send -t $session:$n.1 "cd $four_path" C-m
+        tmux send -t $session:$n.2 "cd $four_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 5: dotfiles
+    elif [ $n -eq 5 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $five_path" C-m
+        tmux send -t $session:$n.1 "cd $five_path" C-m
+        tmux send -t $session:$n.2 "cd $five_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 6: dierc
+    elif [ $n -eq 6 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $six_path" C-m
+        tmux send -t $session:$n.1 "cd $six_path" C-m
+        tmux send -t $session:$n.2 "cd $six_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 7: newman
+    elif [ $n -eq 7 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $seven_path" C-m
+        tmux send -t $session:$n.1 "cd $seven_path" C-m
+        tmux send -t $session:$n.2 "cd $seven_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 8: ocp
+    elif [ $n -eq 8 ]; then
+        tmux send -t $session:$n.left "cd $eight_path" C-m
+        tmux send -t $session:$n.right "cd $eight_path" C-m
+        tmux select-pane -t $session:$n.1
+
+    # 9: misc
+    elif [ $n -eq 9 ]; then
+        tmux send -t $session:$n.left "cd $nine_path" C-m
+        tmux send -t $session:$n.right "cd $nine_path" C-m
+        tmux select-pane -t $session:$n.1
     else
-        tmux splitw -h -t $session:$n
-        tmux splitw -v -t $session:$n
-        if [ $n -eq 4 ]; then
-            tmux send -t $session:$n.+1 "cd ${venvs} && workon sn-inventory-dev" C-m
-            tmux send -t $session:$n.+2 "cd ${venvs} && workon sn-inventory-dev" C-m
-            tmux send -t $session:$n.+3 "cd ${venvs} && workon sn-inventory-dev" C-m
-        elif [ $n -eq 5 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$five && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $repos/$five" C-m
-            tmux send -t $session:$n.+3 "cd $repos/$five" C-m
-        elif [ $n -eq 6 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$six && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $repos/$six" C-m
-            tmux send -t $session:$n.+3 "cd $repos/$six" C-m
-        elif [ $n -eq 7 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$seven && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $repos/$seven" C-m
-            tmux send -t $session:$n.+3 "cd $repos/$seven" C-m
-        elif [ $n -eq 8 ]; then
-            tmux send -t $session:$n.+1 "cd $repos/$eight && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $repos/$eight" C-m
-            tmux send -t $session:$n.+3 "cd $repos/$eight" C-m
-        elif [ $n -eq 9 ]; then
-            tmux send -t $session:$n.+1 "cd $pansible && git status -sb" C-m
-            tmux send -t $session:$n.+2 "cd $dotvm" C-m
-            tmux send -t $session:$n.+3 "cd $nine" C-m
-            tmux send -t $session:$n.+4 "cd $nine" C-m
-            tmux send -t $session:$n.+5 "cd $pansible && git status -sb" C-m
-            #tmux killp -t $session:$n.+3
-        fi
-    tmux select-pane -t :.+
+        tmux splitw -v -t $session:$n.left
     fi
+
 done
 
-# tell rest of the windows what to do
-tmux send-keys -t $session:1 "cd ~" C-m
-tmux send-keys -t $session:2 "cd ~/bin" C-m
-tmux send-keys -t $session:0 "sudo su -" C-m
+# tell venvs to workon default venv
+for i in {0..2}; do
+    tmux send -t $session:4.$i "workon $venv_default" C-m
+done
+
+# start admin session on win 0
+tmux send -t $session:0 "sudo su -" C-m
 
 # set default selected win
 tmux select-window -t $session:0

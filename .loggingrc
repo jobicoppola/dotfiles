@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+#
+# make logging and printing colorized messages easier - this is basically just
+# mashup of log4bash and the stdout script in the ally-web repo
+#
+#._____________________________________________________________________________
+#`
+#
+# shellcheck disable=SC2034
+RED='\033[31m'
+ORANGE='\033[38;5;208m'
+YELLOW='\033[33m'
+GREEN='\033[32m'
+BLUE='\033[38;5;27m'
+INDIGO='\033[38;5;56m'
+VIOLET='\033[38;5;213m'
+CYAN='\033[36m'
+MAGENTA='\033[38;5;201m'
+YELLOWISH='\033[38;5;228m'
+BLACK='\033[30m'
+GRAY='\033[2m'
+WHITE='\033[37m'
+DEFAULT='\033[0m'
+
+export readonly LOG_COLOR_DEFAULT="${DEFAULT}"
+export readonly LOG_COLOR_DEBUG="${GRAY}"
+export readonly LOG_COLOR_INFO="${MAGENTA}"
+export readonly LOG_COLOR_WARN="${YELLOW}"
+export readonly LOG_COLOR_ERROR="${RED}"
+export readonly LOG_COLOR_SUCCESS="${GREEN}"
+
+# logging
+#
+log(){
+    # pass in color, level, and message
+    local color="$1" level="$2"
+    printf "%b[%s] %s%b\n" "${color}" "${level}" "${*:3}" "${LOG_COLOR_DEFAULT}"
+}
+
+msg(){
+    log "$LOG_COLOR_DEFAULT" "MSG" "${@}"
+}
+
+debug(){
+    log "$LOG_COLOR_DEBUG" "DEBUG" "${@}"
+}
+
+info(){
+    log "$LOG_COLOR_INFO" "INFO" "${@}"
+}
+
+warn(){
+    log "$LOG_COLOR_WARN" "WARN" "${@}" >&2
+}
+
+error(){
+    log "$LOG_COLOR_ERROR" "ERROR" "${@}" >&2
+}
+
+success(){
+    log "$LOG_COLOR_SUCCESS" "SUCCESS" "${@}"
+}
+
+# colors
+#
+color(){
+    # pass in color, level, and message
+    local color="$1"
+    printf "%b%s %b\n" "${color}" "${*:2}" "${DEFAULT}"
+}
+
+red(){
+    color "$RED" "${@}"
+}
+
+orange(){
+    color "$ORANGE" "${@}"
+}
+
+yellow(){
+    color "$YELLOW" "${@}"
+}
+
+green(){
+    color "$GREEN" "${@}"
+}
+
+blue(){
+    color "$BLUE" "${@}"
+}
+
+indigo(){
+    color "$INDIGO" "${@}"
+}
+
+violet(){
+    color "$VIOLET" "${@}"
+}
+
+cyan(){
+    color "$CYAN" "${@}"
+}
+
+magenta(){
+    color "$MAGENTA" "${@}"
+}
+
+yellowish(){
+    color "$YELLOWISH" "${@}"
+}
+
+black(){
+    color "$BLACK" "${@}"
+}
+
+gray(){
+    color "$GRAY" "${@}"
+}
+
+white(){
+    color "$WHITE" "${@}"
+}
+
+defaultcolor(){
+    color "$DEFAULT" "${@}"
+}

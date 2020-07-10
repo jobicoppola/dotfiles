@@ -1,0 +1,56 @@
+# ~/.bash_aliases_czyrzy :: jcopp.cfxd.net
+#
+#=-----------------------------------------------------------------------------
+
+# navigation
+alias cdghjc='cd ~/git/github/jobicoppola'
+alias cdgh='cd ~/git/github'
+alias cdgl='cd ~/git/gitlab'
+
+# work
+alias cdprojects='cd ~/projects'
+alias cdansible='cd ~/projects/ansible'
+
+# misc
+alias vioneliners='vi ~/Downloads/one-liners'
+alias vlans="~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py"
+
+# jira cli completion
+eval "$(jira --completion-script-bash)"
+
+# note: just use `fd` now instead of bfs
+# use bfs to find things
+alias bfsf='bfs -type f -iname'
+alias bfsd='bfs -type d -iname'
+bfsa(){
+    local searchterm="$1"
+    bfs -iname "*${searchterm}*"
+}
+
+# find emoji and copy first match to clipboard
+emoc(){
+    local item="$1"
+    emojify --list |grep "$item" |awk '{print $2}' |tr -d '\n' |pbcopy
+}
+
+# create subdirs in given filepath, then open file in vi
+vimk(){
+    local filepath="$1" vi=''
+    vi=$(which vim)
+    [ -z "$filepath" ] && exit 1
+    mkdir -p "$(dirname "$filepath")" && $vi "$filepath"
+}
+
+# ansible
+ansible-vault-encrypt-oneline-string(){
+  read -r x
+  echo -n "$x" | ansible-vault encrypt_string | sed -E 's/^[ \t]+//g' 2>/dev/null
+}
+
+alias av='ansible-vault'
+alias avv="python2 \$HOME/bin/ansible-inline-vault-view"
+alias ave="ansible-vault-encrypt-oneline-string"
+alias avec="ansible-vault-encrypt-oneline-string | pbcopy"
+alias avd="sed -E 's/^[ \t]+//g' | ansible-vault decrypt 2>/dev/null"
+alias aves="ansible-vault encrypt_string"
+export ANSIBLE_VAULT_PASSWORD_FILE=~/.ansible-vault-password

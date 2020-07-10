@@ -14,17 +14,15 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " plugins on github
-Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdcommenter'
+Plugin 'preservim/nerdtree'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'preservim/nerdcommenter'
 Plugin 'fholgado/minibufexpl.vim'
-Plugin 'Shougo/neocomplete.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
+Plugin 'honza/vim-snippets'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'python-rope/ropevim'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'moll/vim-bbye'
@@ -34,34 +32,42 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-endwise'
 Plugin 'alvan/vim-closetag'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'sickill/vim-pasta'
 Plugin 'ervandew/supertab'
-Plugin 'honza/vim-snippets'
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'rizzatti/dash.vim'
-Plugin 'jpalardy/vim-slime'
-Plugin 'vim-scripts/VimClojure'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'jobicoppola/vim-json-bundle'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'b4b4r07/vim-ansible-vault'
 Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'vim-scripts/chef.vim'
-Plugin 'groenewege/vim-less'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-haml'
+Plugin 'fatih/vim-go'
 Plugin 'kopischke/vim-fetch'
 Plugin 'hashivim/vim-terraform'
+Plugin 'thanethomson/vim-jenkinsfile'
+Plugin 'gabrielelana/vim-markdown'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'groovy.vim'
+
+" plugins required by deoplete
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'roxma/nvim-yarp'
+Plugin 'roxma/vim-hug-neovim-rpc'
 
 " shared plugins
 Plugin 'L9'
+
+" version conditional plugins
+if !has("patch-8.2.1066")
+    Plugin 'Shougo/neocomplete.vim'
+endif
 
 " plugins must be listed above this line
 call vundle#end()
 
 filetype plugin indent on
 
+" for deoplete, specify where python binaries are
+let g:python_host_prog = '/usr/bin/python2.7'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 "\_____________________________________________________________________________
 " initial keybindings
@@ -113,7 +119,8 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
-autocmd FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType ruby,yaml set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType groovy set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
 autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
@@ -157,7 +164,9 @@ set visualbell
 set ttyfast
 set ruler
 set backspace=indent,eol,start
+set number                              " show current line number instead of 0
 set relativenumber                      " show line nums relative to cur pos
+set cursorline                          " highlight current line
 set nofoldenable                        " no code folding
 set backupdir=~/tmp,/tmp                " backups (~)
 set directory=~/tmp,/tmp                " swap files
@@ -191,11 +200,14 @@ set statusline+=%=                              " right align the rest
 set statusline+=%-14(%l,%c%V%)                  " line, character
 set statusline+=%<%P                            " file position as percent
 
-" make fullscreen, hide toolbar, remove scrollbars
-" set fu
-set go-=T
-set guioptions-=r
-set guioptions-=L
+" gui options
+set guioptions-=T                               " hide toolbar
+set guioptions-=r                               " remove right scrollbar
+set guioptions-=L                               " remove left scrollbar vsplits
+
+" remove underline
+highlight clear CursorLine
+highlight CursorLineNR cterm=none
 
 
 "\_____________________________________________________________________________
@@ -224,6 +236,12 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 " nerdtree
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" show hidden files
+let g:NERDTreeShowHidden=1
+
+" set nerdtree window size
+let g:NERDTreeWinSize = 30
+
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
 
@@ -234,14 +252,11 @@ autocmd VimEnter * wincmd p
 autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
 
-" set nerdtree window size
-let g:NERDTreeWinSize = 30
-
 " toggles nerdtree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " show current file in tree; extra cr moves focus back to the file
-map <leader>f :NERDTreeFind<CR><CR>
+map <leader>F :NERDTreeFind<CR><CR>
 
 " close nerdtree when it is the last window
 autocmd BufEnter * if (winnr("$") == 1
@@ -265,70 +280,95 @@ let g:surround_61 = "<%= \r %>"   " =
 
 
 "\_____________________________________________________________________________
-" neocomplete
+" deoplete
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" basic settings
-let g:acp_enableAtStartup = 0                       " disable AutoComplPop
-let g:neocomplete#enable_at_startup = 1             " use neocomplete
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#min_keyword_length = 3
-
-" define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" plugin key-mappings
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option({
+      \ "min_pattern_length": 1,
+      \ })
 
 " <TAB>: completion
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" <C-h>, <BS>: close popup and delete backword char
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
 
-" enable heavy omni completion
-if !exists('g:neocomplete#omni_patterns')
-    let g:neocomplete#omni_patterns = {}
-endif
-let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"\_____________________________________________________________________________
+" neocomplete
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" play nice with jedi-vim
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
+" use neocomplete for older versions of vim
+" see https://github.com/vim/vim/commit/bd84617d1a6766efd59c94aabebb044bef805b99
+if !has("patch-8.2.1066")
+
+    " basic settings
+    let g:acp_enableAtStartup = 0                       " disable AutoComplPop
+    let g:neocomplete#enable_at_startup = 1             " use neocomplete
+    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#sources#min_keyword_length = 3
+
+    " define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+    " plugin key-mappings
+    inoremap <expr><C-g>     neocomplete#undo_completion()
+    inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+    " <TAB>: completion
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+    " <C-h>, <BS>: close popup and delete backword char
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><C-y>  neocomplete#close_popup()
+    inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+    " enable heavy omni completion
+    if !exists('g:neocomplete#omni_patterns')
+        let g:neocomplete#omni_patterns = {}
+    endif
+    let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+    let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+
+    " play nice with jedi-vim
+    if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+    endif
+    autocmd FileType python setlocal omnifunc=jedi#completions
+    let g:jedi#auto_vim_configuration = 0
+    let g:jedi#popup_on_dot = 0
+    let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
+
 endif
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#popup_on_dot = 0
-let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
 
 
 "\_____________________________________________________________________________
 " neosnippet
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" plugin key-mappings
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+" use neosnippet for older versions of vim
+" see https://github.com/vim/vim/commit/bd84617d1a6766efd59c94aabebb044bef805b99
+if !has("patch-8.2.1066")
 
-" for snippet_complete marker
-if has('conceal')
-    set conceallevel=2 concealcursor=i
+    " plugin key-mappings
+    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+    " for snippet_complete marker
+    if has('conceal')
+        set conceallevel=2 concealcursor=i
+    endif
+
+    " enable snipmate compatibility feature.  TODO: remove, causes prob with tab completion
+    "let g:neosnippet#enable_snipmate_compatibility = 1
+
+    " user defined snippets
+    let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
+
 endif
-
-" enable snipmate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-
-" user defined snippets
-let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
 
 "\_____________________________________________________________________________
@@ -352,21 +392,45 @@ let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 
 
 "\_____________________________________________________________________________
-" vim clojure settings
+" vim-terraform
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:vimclojure#HighlightBuiltins = 1
-let g:vimclojure#ParenRainbow = 1
-let g:vimclojure#WantNailgun = 1
-let g:vimclojure#SplitPos = "bottom"
-let g:vimclojure#SplitSize = 10
+" run `terraform fmt` when saving *.tf and *.tfvars files
+let g:terraform_fmt_on_save=1
+
+" set indent to 2 spaces to conform to hashicorp style
+let g:terraform_align=1
 
 
 "\_____________________________________________________________________________
-" vim-slime
+" vim-markdown
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:slime_target = "tmux"
+let g:markdown_enable_spell_checking = 0
+
+
+"\_____________________________________________________________________________
+" vim-gitgutter
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" default is 4000 milliseconds, which is way too slow for sign updates
+set updatetime=150
+
+" clear background color of sign column (use same color as main bg)
+let g:gitgutter_override_sign_column_highlight = 1
+highlight clear SignColumn
+
+" customize signs here
+let g:gitgutter_sign_added = '+'
+let g:gitgutter_sign_modified = '»'
+let g:gitgutter_sign_removed = '←'
+let g:gitgutter_sign_removed_first_line = '↑'
+let g:gitgutter_sign_modified_removed = '‹'
+
+" sign colors
+highlight GitGutterAdd    ctermfg=78
+highlight GitGutterChange ctermfg=218
+highlight GitGutterDelete ctermfg=196
 
 
 "\_____________________________________________________________________________
@@ -376,7 +440,6 @@ let g:slime_target = "tmux"
 map <leader>gb :Gblame<CR>
 map <leader>gc :Gcommit<CR>
 map <leader>gp :Gpull<SPACE>
-map <leader>gs :Gstatus<CR>
 map <leader>gs :Gstatus<CR><C-w>20+
 map <leader>gw :Gwrite<CR>
 
@@ -430,30 +493,16 @@ endfunction
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " bring up fzf
-map <leader>z :FZF<CR>
+nnoremap <leader>z :FZF<CR>
+nnoremap <leader>f :Rg<CR>
 let g:fzf_layout = { 'down': '~25%' }
 
-
-"\_____________________________________________________________________________
-" ctrlp
-"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" bring up ctrlp
-map <leader>p :CtrlPMixed<CR>
-let g:ctrlp_working_path_mode = 'rw' " set to nearest ancestor with a .git dir
-let g:ctrlp_show_hidden = 1          " scan for dotfiles and dotdirs
-let g:ctrlp_mruf_relative = 1        " only show mru files in cwd
-let g:ctrlp_prompt_mappings = {
-    \ 'PrtCurRight()':       ['<right>'],
-    \ 'PrtSelectMove("j")':  ['<c-l>', '<down>'],
-    \ }
-
-" use ripgrep for search
-if executable('rg')
-    set grepprg=rg\ --color=never
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    let g:ctrlp_use_caching = 0
-endif
+" below we override the default :Rg to search hidden files (but not .git),
+" disregard any ignore files, not follow symlinks, and not search filenames,
+" (use <leader>z to search filenames). see here for syntax help:
+" https://github.com/junegunn/fzf.vim/issues/346
+"
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.git' --no-follow --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 
 "\_____________________________________________________________________________
@@ -464,17 +513,6 @@ endif
 cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete<CR>' : 'bd')
 nnoremap <Leader>bd :Bdelete<CR>
 nnoremap <Leader>qa :bufdo :Bdelete<CR>
-
-
-"\_____________________________________________________________________________
-" ack
-"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" ack shortcut
-nnoremap <leader>a :Ack!<SPACE>
-
-" use ag the silver surfer
-let g:ackprg = 'ag --nogroup --nocolor --column'
 
 
 "\_____________________________________________________________________________
@@ -505,7 +543,7 @@ nnoremap <leader>Q gqip
 nnoremap <leader>v V`]
 
 " change existing tab chars to match current tab settings (tabs2whitespace)
-nnoremap <leader>r :retab
+nnoremap <leader>r :retab<CR>
 
 " highlight end of line whitespace
 highlight WhitespaceEOL ctermbg=red guibg=red

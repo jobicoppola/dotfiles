@@ -2,3 +2,7 @@
 .awsrc
 .bash_aliases_jc
 .miscrc
+
+# ignore homebrew lock file; we don't really care about saving a working config
+# more info here: https://github.com/Homebrew/homebrew-bundle/pull/552
+Brewfile.lock.json

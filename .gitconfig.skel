@@ -3,24 +3,13 @@
 #
 [user]
     name = jcopp
-    email = jcopp@sportingnews.com
-[color]
-    ui = auto
-    diff = auto
-    status = auto
-    interactive = auto
-    branch = auto
-[github]
-    user = jobicoppola
-    email = jobicoppola@gmail.com
-    token = <github-token-here>
-    password = !security 2>&1 >/dev/null find-generic-password -gs github.password | ruby -e 'print $1 if STDIN.gets =~ /^password: \\\"(.*)\\\"$/'
-[gist]
-    extension = 'py'
-    browse = no
-[heroku]
-    user = jobicoppola
-    email = jobicoppola@gmail.com
+    email = <email-here>
+
+#\_____________________________________________________________________________
+#
+[core]
+    excludesfile = ~/.gitignore-global
+    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-style=plain --theme='Dracula'
 [push]
     default = current
 [pull]
@@ -37,6 +26,29 @@
 [pretty]
     jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%aN%Creset %Cgreen%cr%Creset
     jobi-nonames = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset
-[core]
-    excludesfile = ~/.gitignore-global
-    pager = less -IRFX
+    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-style=plain --theme='DarkNeon'
+[color]
+    ui = auto
+    diff = auto
+    status = auto
+    interactive = auto
+    branch = auto
+[credential]
+	helper = osxkeychain
+
+#\_____________________________________________________________________________
+#
+[github]
+    user = jobicoppola
+    email = <email-here>
+    token = <github-token-here>
+    password = !security 2>&1 >/dev/null find-generic-password -gs github.password | ruby -e 'print $1 if STDIN.gets =~ /^password: \\\"(.*)\\\"$/'
+[gist]
+    extension = 'py'
+    browse = no
+[heroku]
+    user = jobicoppola
+    email = <email-here>
+
+#\_____________________________________________________________________________
+#

@@ -1,6 +1,13 @@
+# Brewfile :: jcopp
+#
+# Run `brew bundle` from same dir as this file
+#
+#=-----------------------------------------------------------------------------
+
 cask_args appdir: '/Applications'
 
-tap 'caskroom/cask'
+# official repos
+tap 'homebrew/cask'
 tap 'homebrew/bundle'
 
 # essential utils
@@ -10,71 +17,60 @@ brew 'coreutils'
 brew 'git'
 brew 'lua'
 brew 'tmux'
-brew 'vim', args: ['with-lua']
+brew 'vim'
 
-# python and ruby
+# go, python, ruby
+brew 'golang'
 brew 'python'
 brew 'python3'
 brew 'ruby'
 
 # handy improvers of life
-brew 'ack'
+brew 'awscli'
+brew 'bat'
 brew 'colordiff'
 brew 'emojify'
+brew 'fd'
 brew 'fzf'
 brew 'ghi'
+brew 'git-delta'
+brew 'go-jira'
 brew 'grc'
+brew 'helm'
 brew 'htop-osx'
 brew 'hub'
 brew 'jq'
 brew 'node'
+brew 'openshift-cli'
 brew 'openssl'
-brew 'phantomjs'
 brew 'pstree'
+brew 'python-yq'
 brew 'readline'
 brew 'reattach-to-user-namespace'
 brew 'ripgrep'
+brew 'shellcheck'
 brew 'speedtest-cli'
 brew 'ssh-copy-id'
+brew 'terraform'
 brew 'tig'
 brew 'tree'
 brew 'watch'
 brew 'wget'
 
+# completions
+brew 'django-completion'
+brew 'docker-completion'
+brew 'docker-compose-completion'
+brew 'docker-machine-completion'
+brew 'gem-completion'
+brew 'packer-completion'
+brew 'pip-completion'
+brew 'vagrant-completion'
+brew 'yarn-completion'
+
 # misc libs and tools
-brew 'autoconf'
-brew 'automake'
-brew 'gawk'
-brew 'gdbm'
-brew 'john'
-brew 'libtool'
-brew 'libyaml'
-brew 'lnav'
-brew 'multitail'
-brew 'ncdu'
-brew 'nmap'
-brew 'openssl'
-brew 'pandoc'
-brew 'pcre'
-brew 'phantomjs'
-brew 'pkg-config'
-brew 'putty'
-brew 'pwgen'
-brew 'readline'
-brew 'slimerjs'
-brew 'sqlite'
-brew 'wrk'
 brew 'xz'
 
-# compiled apps
-cask 'atom'
-cask 'firefox'
-cask 'google-chrome'
-cask 'iterm2'
-cask 'slack'
-cask 'spotify'
-cask 'sublime-text'
-
-# app store
-mas 'TypeIt4Me', id: 412141729
-mas 'AntiSleep', id: 946798523
+# jj json stream editor
+tap 'tidwall/jj'
+brew 'jj'
