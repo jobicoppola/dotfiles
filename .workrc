@@ -1,0 +1,1 @@
+[ -f ~/.workrc-$(whoami) ] && . ~/.workrc-$(whoami)

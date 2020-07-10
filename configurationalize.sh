@@ -5,13 +5,10 @@
 
 cd "$(dirname $0)"
 
-git pull
-git submodule --quiet update --init
-
 emoji="\xE2\x9D\x97"
 
 echo -e "$emoji WARNING: This script can/will dropkick existing files in $HOME"
-read -p "Ok to proceed? (y/n) " yaynay
+read -rp "Ok to proceed? (y/n) " yaynay
 
 STAMP=$(date +"%Y%m%d-%H%M%S")
 BACKUPDIR=~/tmp/$(basename $(pwd))-backup-$STAMP

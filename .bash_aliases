@@ -1,5 +1,7 @@
 # ~/.bash_aliases :: jcopp.cfxd.net
 #
+#=-----------------------------------------------------------------------------
+
 # aliases
 alias ls="ls --color"
 alias ll="ls -lh"
@@ -8,7 +10,7 @@ alias lsh="ll -S"
 alias lshr="ll -Sr"
 alias ltr="ll -tr"
 alias latr="ll -atr"
-#
+
 # cd
 alias dl="cd ~/downloads"
 alias tor="cd ~/downloads/torrents"
@@ -19,18 +21,18 @@ alias curls="cd ~/curls"
 alias lbin="cd /usr/local/bin"
 alias dbox="cd ~/Dropbox"
 alias dbin="cd  ~/Dropbox/jhome/bin"
-alias gitdot='cd ~/git/dotfiles && git st'
+alias gitdot='cd ~/git/github/dotfiles && git st'
 alias venvs='cd ~/venvs/'
-#
+
 # vi
 alias vi='vim'
 alias jcc="vi ~/Dropbox/jhome/jc3"
-alias vbash="vi ~/git/dotfiles/.bashrc"
-alias sbash="cp -p ~/git/dotfiles/.bash* ~/ && . ~/.bashrc"
-alias svim="cp -p ~/git/dotfiles/.vimrc ~/"
-alias valias="vi ~/git/dotfiles/.bash_aliases"
-alias vvim="vi ~/git/dotfiles/.vimrc"
-#
+alias vbash="vi ~/git/github/dotfiles/.bashrc"
+alias sbash="cp -p ~/git/github/dotfiles/.bash* ~/ && . ~/.bashrc"
+alias svim="cp -p ~/git/github/dotfiles/.vimrc ~/"
+alias valias="vi ~/git/github/dotfiles/.bash_aliases"
+alias vvim="vi ~/git/github/dotfiles/.vimrc"
+
 # cmd
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -48,7 +50,8 @@ alias mtail='multitail'
 alias emo='emojify'
 alias emol='emo --list'
 alias emog='emol |grep'
-#
+alias nodig='dig +nocmd +nostats +nocomments'
+
 # git
 alias cdgit='cd ~/git/'
 alias gp='git push'
@@ -60,16 +63,26 @@ alias gba='git branch -a'
 alias gc='git commit -v'
 alias gcm='git commit -m'
 alias gcma='git commit -am'
-alias gd='git diff --color-words'
+alias gd='git diff'
+alias gdc='git diff --color-words'
 alias gra='git remote add'
 alias grr='git remote rm'
 alias gl='git log'
 alias glf='git log --name-status --oneline'
 alias ga='git add'
 alias gctb='git checkout --track -b'
-alias gctbe="echo 'git checkout --track -b <loc_branch> origin/<rem_branch>'"
 alias gph='git push heroku master'
-#
+alias gpuo='git push -u origin'
+alias grwm='git fetch && git rebase origin/master'
+alias gpf='git push --force-with-lease'
+
+# github
+alias gistit='gist --shorten --copy'
+alias prgist='gistit --private'
+alias pgist='gistit --paste'
+alias hpr='hub pull-request'
+alias gitshort='curl -i https://git.io -F'
+
 # virtualenv
 # courtesy @doughellman
 alias v='workon'
@@ -82,7 +95,7 @@ alias v.add2virtualenv='add2virtualenv'
 alias v.cdsitepackages='cdsitepackages'
 alias v.cd='cdvirtualenv'
 alias v.lssitepackages='lssitepackages'
-#
+
 # django aliases
 alias mpy='python manage.py'
 alias mpys='python manage.py shell'
@@ -90,15 +103,37 @@ alias mpydbs='python manage.py dbshell'
 alias mpyrs='python manage.py runserver'
 alias mpysm='python manage.py schemamigration'
 alias mpysma='python manage.py schemamigration --auto'
-#
+
 # ansible
 alias ansibleupdate='git pull --rebase && git submodule update --init --recursive'
-#
-# ag aka silver surfer
-alias aga='ag --all-types --hidden'
-#
+
 # rg aka ripgrep
 alias rga='rg --no-ignore --hidden --ignore-case'
-#
+
 # fzf
 alias fzp='fzf --preview "head -100 {}"'
+
+# fd fast find
+alias fdh='fd --hidden'
+alias fde='fd --extension'
+alias fda='fd --no-ignore --hidden'
+
+# t task manager
+alias t='python ~/git/github/t/t.py --task-dir ~/tasks --list tasks'
+alias g='python ~/git/github/t/t.py --task-dir ~/tasks --list groceries'
+alias m='python ~/git/github/t/t.py --task-dir ~/tasks --list music'
+
+# curl
+ak_headers=(
+    akamai-x-cache-on
+    akamai-x-cache-remote-on
+    akamai-x-check-cacheable
+    akamai-x-get-cache-key
+    akamai-x-get-extracted-values
+    akamai-x-get-nonces
+    akamai-x-get-ssl-client-session-id
+    akamai-x-get-true-cache-key
+    akamai-x-serial-no
+)
+alias acurl="curl -H 'Pragma: ${ak_headers[*]}' -sSiLD - -o /dev/null"
+alias scurl="curl -sSiLD - -o /dev/null"

@@ -35,8 +35,9 @@ shopt -s hostcomplete
 export ARCHFLAGS="-arch x86_64"
 
 # set editor vars
-export EDITOR=$(which vim)
-export GIT_EDITOR=$(which vim)
+VIM=$(which vim)
+export EDITOR="${VIM}"
+export GIT_EDITOR="${VIM}"
 export GIT_MERGE_AUTOEDIT=no
 
 
@@ -45,14 +46,12 @@ export GIT_MERGE_AUTOEDIT=no
 
 if [[ "$OS" == Darwin ]]; then
     COREUTILS=/usr/local/opt/coreutils/libexec/gnubin
+    GREP=/usr/local/opt/grep/libexec/gnubin
     PY=/usr/local/opt/python/libexec/bin
-    P1=$PY:/usr/local/bin:$COREUTILS:/usr/local/sbin:/usr/local/mysql/bin
-    P2=/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin
-    P3=$HOME/bin:$HOME:/usr/local/php5:/usr/local/git/bin:$HOME/pear/bin
+    P1=$PY:$COREUTILS:$GREP
+    P2=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+    P3=$HOME/bin:$HOME/go/bin
     export PATH=$P1:$P2:$P3
-    # prepend postgresql
-    export PATH=/Applications/Postgres.app/Contents/MacOS/bin:$PATH
-
 else
     P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
     P2=$HOME/bin
@@ -64,13 +63,13 @@ fi
 #=-----------------------------------------------------------------------------
 
 # start ssh-agent and set sock var
-if [ -s "$SSH_AUTH_SOCK" -o ! -S "$SSH_AUTH_SOCK" ]; then
-  rm -f $SSH_AUTH_SOCK
-  export SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
+if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+  rm -f "$SSH_AUTH_SOCK"
+  SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
+  export SSH_AUTH_SOCK="$SSH_AUTH_SOCK"
   if [ ! -S "$SSH_AUTH_SOCK" ]; then
-    eval ssh-agent -a $SSH_AUTH_SOCK -s
+    eval ssh-agent -a "$SSH_AUTH_SOCK" -s
     ssh-add
-    ssh-add ~/.ssh/id_rsa_github
   fi
 fi
 
@@ -85,9 +84,9 @@ export GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
 
 if [[ "$OS" == Darwin ]]; then
-    # fyi only
-    SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8
-    SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+    # mojave; fyi only
+    SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/gems/2.3
+    SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/bin/ruby
 fi
 
 # use rbenv to manage ruby versions
@@ -110,24 +109,42 @@ NODE_PATH=/usr/local/lib/node
 export PATH=$PATH:$HOME/node_modules/.bin
 
 
+# go
+#=-----------------------------------------------------------------------------
+
+gobin=~/go/bin
+goenv=~/go/env
+[ -d "$goenv" ] || mkdir -p "$goenv"
+export GOBIN="${gobin}"
+export GOENV="${goenv}"
+
+
 # virtualenv
 #=-----------------------------------------------------------------------------
 
+vepy_version=$(python -V |awk '{print $2}' |cut -d. -f1-2)
+vepy_path="/Users/$(whoami)/Library/Python/${vepy_version}"
+vepy_wrapper="${vepy_path}/bin/virtualenvwrapper.sh"
+export PATH=$PATH:${vepy_path}/bin
 export WORKON_HOME=$HOME/venvs
-VWSH=$(which virtualenvwrapper.sh)
-[ -f "$VWSH" ] && . "$VWSH"
+export VIRTUALENVWRAPPER_PYTHON=$(which python)
+export VIRTUALENVWRAPPER_SCRIPT="${vepy_wrapper}"
+[ -f "$VIRTUALENVWRAPPER_SCRIPT" ] && . "$VIRTUALENVWRAPPER_SCRIPT" || echo 'No VIRTUALENVWRAPPER'
+#vepy_ww=$(which virtualenvwrapper.sh)
+#vepy_wsh=${vepy_ww:=$vepy_wrapper}
+#[ -f "${vepy_wrapper}" ] && . "${vepy_wrapper}" || echo 'No VIRTUALENVWRAPPER'
 
 
 # prompt setup
 #=-----------------------------------------------------------------------------
 
 get_venv(){
-    [ $VIRTUAL_ENV ] && echo "$(basename $VIRTUAL_ENV):"
+    [ "${VIRTUAL_ENV}" ] && echo "$(basename ${VIRTUAL_ENV}):"
 }
 
 get_current_git_branch(){
     REF=$(git symbolic-ref HEAD 2> /dev/null) || return
-    echo "("${REF#refs/heads/}")"
+    echo "(${REF#refs/heads/})"
 }
 
 get_git_status(){
@@ -136,13 +153,13 @@ get_git_status(){
     SMSG='Changes not staged for commit'
     UMSG='nothing added to commit but untracked files present'
     GSTAT=$(git status 2> /dev/null) || return
-    if [[ $(echo ${GSTAT} |grep -c "$SMSG") > 0 ]]; then
+    if [[ $(echo "${GSTAT}" |grep -c "${SMSG}") > 0 ]]; then
         echo '?'
-    elif [[ $(echo ${GSTAT} |grep -c "$TMSG") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${TMSG}") > 0 ]]; then
         echo '!'
-    elif [[ $(echo ${GSTAT} |grep -c "$UMSG") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${UMSG}") > 0 ]]; then
         echo 'u'
-    elif [[ $(echo ${GSTAT} |grep -c "$CMSG") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${CMSG}") > 0 ]]; then
         echo '¬'
     else
         echo 'f'
@@ -152,35 +169,36 @@ get_git_status(){
 # bring in named colors
 [ -f ~/.bash_colors ] && . ~/.bash_colors
 
-PS1_TIME="\n$Cyan\t$Blue"
-PS1_VENV="$BGreen\$(get_venv)$Purple"
-PS1_USER="\u@\h$BWhite\w$BYellow"
-PS1_GIT="\$(get_current_git_branch)$BGreen\$(get_git_status)$Ecol"
+# shellcheck disable=SC2154
+PS1_TIME="\n${ClockColor}\t${Blue}"
+PS1_VENV="${Bold}${VenvColor}\$(get_venv)"
+PS1_USER="\u@\h${BWhite}\w${BYellow}"
+PS1_USER_MAC="${EC}${UserColor}jcopp@macbot"
+PS1_CWD="${Bold}${CwdColor}\w"
+PS1_GIT="${BranchColor}\$(get_current_git_branch)${BGreen}\$(get_git_status)${EC}"
+PS1_END="\n${EC}${Gray}$ ${EC}"
+PS1_END_MAC="\n${Bold}${DollarColor}$ ${EC}"
 
 # now actually set the prompt
-if [[ "$OS" == Darwin ]] && [[ "$(hostname)" == L0100* ]]; then
-    PS1_END="\n$Blue$ $Ecol"
-    # override ugly hostname on perform machines
-    PS1="${PS1_TIME}|${PS1_VENV}jcopp@macbot$BWhite\w$BYellow${PS1_GIT}${PS1_END}"
+if [[ "$OS" == Darwin ]] && [[ "$(hostname)" != *bot ]]; then
+    # override ugly hostname on work machines
+    PS1="${PS1_TIME}|${PS1_VENV}${PS1_USER_MAC}${PS1_CWD}${PS1_GIT}${PS1_END_MAC}"
 else
-    PS1_END="\n$Ecol$Gray$ $Ecol"
     PS1="${PS1_TIME}$Gray|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
 
-# aliases
+# source aliases and other custom config files
 #=-----------------------------------------------------------------------------
 
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
-[ -f ~/.bash_aliases_jc ] && . ~/.bash_aliases_jc
+[ -f ~/.bash_aliases_$(whoami) ] && . ~/.bash_aliases_$(whoami)
+
+[ -f ~/.sensible.bash ] && . ~/.sensible.bash
 
 [ -f ~/.miscrc ] && . ~/.miscrc
 [ -f ~/.awsrc ] && . ~/.awsrc
-
-# perform
-[ -f ~/.pserc ] && . ~/.pserc
-[ -f ~/.bash_aliases_pse ] && . ~/.bash_aliases_pse
 
 # mac specific
 if [[ "$OS" == Darwin ]]; then
@@ -194,6 +212,8 @@ if [[ "$OS" == Darwin ]]; then
     # other completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
+    #[ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
+    #[ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
 fi
 
 
@@ -329,7 +349,7 @@ ftpane(){
 }
 
 
-# securely read in password
+# try to securely deal with passwords
 #=-----------------------------------------------------------------------------
 
 readpass(){
@@ -341,3 +361,25 @@ readpass(){
     echo >&2
     echo "$pass"
 }
+
+setpass(){
+    local id="$1" group="$2" pw=""
+    if [[ "$OS" == Darwin ]]; then
+        pw=$(readpass)
+        security delete-generic-password -a "$group" -s "$id" 2> /dev/null
+        security add-generic-password -a "$group" -s "$id" -w $pw
+    fi
+}
+
+getpass(){
+    local id="$1" group="$2"
+    if [[ "$OS" == Darwin ]]; then
+        security find-generic-password -a "$group" -s "$id" -w
+    fi
+}
+
+
+# work setup
+#=-----------------------------------------------------------------------------
+
+[ -f ~/.workrc ] && . ~/.workrc

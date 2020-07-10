@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# print colors used by the dragonfly black dac
+#
+# https://www.audioquest.com/dacs/dragonfly/dragonfly-black
+#
+
+# shellcheck source=/dev/null
+. ~/.loggingrc || { echo -e "\nCan't find ~/.loggingrc for color configs!"; exit; }
+
+red     "standby [red]"
+green   "44.1kHz [green]"
+blue    "48kHz   [blue]"
+orange  "88.2kHz [amber]"
+magenta "96kHz   [magenta]"
+indigo  "MQA     [purple]"

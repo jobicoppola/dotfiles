@@ -1,9 +1,8 @@
 # ~/.bash_colors :: http://bit.ly/nDwexP
-# use ~/bin/colortest to view the colors
 
-# Reset
-Color_Off='\[\e[0m\]'       # Text Reset
-Ecol=${Color_Off}
+# Attributes
+EC='\[\e[0m\]'              # End Color / Text Reset
+Bold='\[\e[1m\]'            # Bold Text
 
 # Regular Colors
 Black='\[\e[0;30m\]'        # Black
@@ -14,7 +13,51 @@ Blue='\[\e[0;34m\]'         # Blue
 Purple='\[\e[0;35m\]'       # Purple
 Cyan='\[\e[0;36m\]'         # Cyan
 White='\[\e[0;37m\]'        # White
-Gray='\[\e[1;30m\]'         # Gray
+Gray='\[\e[2;33m\]'         # Gray
+
+# prompt: clock color options [blues]
+Color_75='\[\e[38;5;75m\]'
+Color_116='\[\e[38;5;116m\]'
+Color_117='\[\e[38;5;117m\]'
+Color_122='\[\e[38;5;122m\]'
+Color_123='\[\e[38;5;123m\]'
+Color_158='\[\e[38;5;158m\]'
+ClockColor="$Color_75"
+
+# prompt: user@host color options [pinks]
+Color_170='\[\e[38;5;170m\]'
+Color_171='\[\e[38;5;171m\]'
+Color_176='\[\e[38;5;176m\]'
+Color_177='\[\e[38;5;177m\]'
+Color_212='\[\e[38;5;212m\]'
+Color_213='\[\e[38;5;213m\]'
+UserColor="$Color_177"
+
+# prompt: venv color options [greens]
+Color_48='\[\e[38;5;48m\]'
+Color_82='\[\e[38;5;82m\]'
+Color_85='\[\e[38;5;85m\]'
+VenvColor="$Color_48"
+
+# prompt: git branch color options [yellows]
+Color_11='\[\e[38;5;11m\]'
+Color_190='\[\e[38;5;190m\]'
+Color_191='\[\e[38;5;191m\]'
+Color_192='\[\e[38;5;192m\]'
+Color_226='\[\e[38;5;226m\]'
+Color_227='\[\e[38;5;227m\]'
+Color_228='\[\e[38;5;228m\]'
+BranchColor="$Color_228"
+
+# prompt: current working directory color options [whites]
+Color_15='\[\e[38;5;15m\]'
+Color_231='\[\e[38;5;231m\]'
+CwdColor="$Color_15"
+
+# prompt: dollar sign color options [grays]
+Color_242='\[\e[38;5;242m\]'
+Color_244='\[\e[38;5;244m\]'
+DollarColor="$Color_244"
 
 # Bold
 BBlack='\[\e[1;30m\]'       # Black

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+[ -f ~/.loggingrc ] && . ~/.loggingrc
+
+ddate="$(date)"
+
+# logging
+print_logging_colors(){
+    echo '' 
+    msg "$ddate"
+    debug "$ddate"
+    info "$ddate"
+    warn "$ddate"
+    error "$ddate"
+    success "$ddate"
+}
+
+# colors
+print_rainbow_colors(){
+    echo ''
+    red "[RED] $ddate"
+    orange "[ORANGE] $ddate"
+    yellow "[YELLOW] $ddate"
+    green "[GREEN] $ddate"
+    blue "[BLUE] $ddate"
+    indigo "[INDIGO] $ddate"
+    violet "[VIOLET] $ddate"
+}
+
+print_cmyk_colors(){
+    echo ''
+    cyan "[CYAN] $ddate"
+    magenta "[MAGENTA] $ddate"
+    yellowish "[YELLOWISH] $ddate"
+    black "[BLACK] $ddate"
+}
+
+print_other_colors(){
+    echo ''
+    gray "[GRAY] $ddate"
+    white "[WHITE] $ddate"
+    defaultcolor "[DEFAULT] $ddate"
+}
+
+print_logging_colors
+print_rainbow_colors
+print_cmyk_colors
+print_other_colors

@@ -22,6 +22,7 @@ pbr
 pip
 pycrypto
 Pygments
+pynvim  # required by deoplete (vim plugin)
 pywinrm
 PyYAML
 requests

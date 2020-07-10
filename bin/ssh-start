@@ -6,7 +6,7 @@ set -e
 
 # set vars
 AUTHSOCK="$SSH_AUTH_SOCK"
-JSOCK=/tmp/ssh-agent-`hostname`
+JSOCK=/tmp/ssh-agent-$(hostname)
 MSG="SSH_AUTH_SOCK => $SOCK"
 MSG_ZPB="Exists / size > ZER0 bytes"
 MSG_EXISTS="File exists"
