@@ -32,9 +32,16 @@ if [[ $yaynay == y* ]]; then
         vim -c VundleUpdate -c quitall
     fi
 
+    ln -sf ~/.bash_aliases_user ~/.bash_aliases_$(whoami)
+
     echo -e "\nTuning user prefs and conf files for OS friendliness"
-    [[ $(uname) == Linux ]] && bin/tune-linux
-    [[ $(uname) == Darwin ]] && bin/tune-osx
+    if [[ $(uname) == Linux ]]; then
+        bin/tune-linux
+        rm -f ~/.bash_aliases_osx
+    elif [[ $(uname) == Darwin ]]; then
+        bin/tune-osx
+        rm -f ~/.bash_aliases_{el,linux,ubuntu}
+    fi
 fi
 
 . ~/.bashrc
