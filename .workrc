@@ -1,1 +1,7 @@
-[ -f ~/.workrc-$(whoami) ] && . ~/.workrc-$(whoami)
+#
+# source additional work configs
+#._____________________________________________________________________________
+#`
+
+[ -f ~/.bash_aliases_work ] && . ~/.bash_aliases_work
+[ -f ~/.workrc-"$(whoami)" ] && . ~/.workrc-"$(whoami)"

@@ -196,10 +196,8 @@ fi
 
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
-[ -f ~/.bash_aliases_work ] && . ~/.bash_aliases_work
 [ -f ~/.bash_aliases_$(whoami) ] && . ~/.bash_aliases_$(whoami)
-
-[ -f ~/.sensible.bash ] && . ~/.sensible.bash
+[ -f ~/.bash_sensible ] && . ~/.bash_sensible
 
 [ -f ~/.miscrc ] && . ~/.miscrc
 [ -f ~/.awsrc ] && . ~/.awsrc
