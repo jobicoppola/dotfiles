@@ -193,6 +193,7 @@ fi
 
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
+[ -f ~/.bash_aliases_work ] && . ~/.bash_aliases_work
 [ -f ~/.bash_aliases_$(whoami) ] && . ~/.bash_aliases_$(whoami)
 
 [ -f ~/.sensible.bash ] && . ~/.sensible.bash
@@ -212,8 +213,11 @@ if [[ "$OS" == Darwin ]]; then
     # other completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
-    #[ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
-    #[ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
+    [ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
+    [ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
+
+    # awscli completions
+    [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 fi
 
 
