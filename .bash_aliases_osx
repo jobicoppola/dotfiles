@@ -10,3 +10,7 @@ alias dnsflush='dscacheutil -flushcache'
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 alias rdp="$(which rdio) play"
 alias karabiner="/Applications/Karabiner.app/Contents/Library/bin/karabiner"
+
+# get `ls` to colorize orphaned links on macos
+eval "$(gdircolors)"
+alias ls="gls --color=auto"
