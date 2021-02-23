@@ -40,6 +40,9 @@ export EDITOR="${VIM}"
 export GIT_EDITOR="${VIM}"
 export GIT_MERGE_AUTOEDIT=no
 
+# use `bat` as manpage formatter
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 
 # path setup
 #=-----------------------------------------------------------------------------
