@@ -6,7 +6,7 @@ ddate="$(date)"
 
 # logging
 print_logging_colors(){
-    echo '' 
+    echo ''
     msg "$ddate"
     debug "$ddate"
     info "$ddate"
