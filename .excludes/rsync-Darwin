@@ -1,0 +1,8 @@
+.DS_Store
+/.bash_aliases_el
+/.bash_aliases_linux
+/.bash_aliases_ubuntu
+/.tmux-linux.conf
+/Brewfile*
+/com.googlecode.iterm2.plist
+/macbot.itermcolors

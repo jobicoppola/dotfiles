@@ -196,7 +196,7 @@ fi
 
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
-[ -f ~/.bash_aliases_$(whoami) ] && . ~/.bash_aliases_$(whoami)
+[ -f ~/.bash_aliases_user ] && . ~/.bash_aliases_user
 [ -f ~/.bash_sensible ] && . ~/.bash_sensible
 
 [ -f ~/.miscrc ] && . ~/.miscrc

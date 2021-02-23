@@ -16,12 +16,16 @@ BACKUPDIR=~/tmp/$(basename $(pwd))-backup-$STAMP
 if [[ $yaynay == y* ]]; then
     echo -e "\nSyncing dotfiles repo with home dir..."
     echo -e "\nBackup up existing files to $BACKUPDIR"
-    rsync --exclude ".git*" \
-        --exclude "README.md" \
-        --exclude "configurationalize.sh" \
-        --exclude ".DS_Store" \
-        --exclude "macbot.itermcolors" \
+    #rsync \
+        #--exclude ".git*" \
+        #--exclude "README.md" \
+        #--exclude "configurationalize.sh" \
+        #--exclude ".DS_Store" \
+        #--exclude "macbot.itermcolors" \
+    rsync -nv \
         --keep-dirlinks \
+        --exclude-from ".excludes/rsync" \
+        --exclude-from ".excludes/rsync-$(uname)" \
         --backup --backup-dir $BACKUPDIR/ -av . ~
 
     echo -e "\nInstalling vundle bundles"
@@ -37,10 +41,10 @@ if [[ $yaynay == y* ]]; then
     echo -e "\nTuning user prefs and conf files for OS friendliness"
     if [[ $(uname) == Linux ]]; then
         bin/tune-linux
-        rm -f ~/.bash_aliases_osx
+        #rm -f ~/.bash_aliases_osx ~/.tmux-osx.conf
     elif [[ $(uname) == Darwin ]]; then
         bin/tune-osx
-        rm -f ~/.bash_aliases_{el,linux,ubuntu}
+        #rm -f ~/.bash_aliases_{el,linux,ubuntu} ~/.tmux-linux.conf
     fi
 fi
 

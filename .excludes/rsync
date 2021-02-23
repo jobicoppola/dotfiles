@@ -1,0 +1,9 @@
+.git*
+!.gitignore-global
+/.*.skel
+/.atom-packages.lst
+/.bashrc_root
+/.excludes
+/.pip-requirements.lst
+/README.md
+/configurationalize.sh
