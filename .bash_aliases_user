@@ -18,15 +18,6 @@ alias vlans="~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py"
 # jira cli completion
 eval "$(jira --completion-script-bash)"
 
-# note: just use `fd` now instead of bfs
-# use bfs to find things
-alias bfsf='bfs -type f -iname'
-alias bfsd='bfs -type d -iname'
-bfsa(){
-    local searchterm="$1"
-    bfs -iname "*${searchterm}*"
-}
-
 # find emoji and copy first match to clipboard
 emoc(){
     local item="$1"
