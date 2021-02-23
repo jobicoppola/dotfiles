@@ -4,6 +4,8 @@
 /.atom-packages.lst
 /.bashrc_root
 /.excludes
+/.iterm
 /.pip-requirements.lst
+/Brewfile*
 /README.md
 /configurationalize.sh

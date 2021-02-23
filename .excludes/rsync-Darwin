@@ -3,6 +3,3 @@
 /.bash_aliases_linux
 /.bash_aliases_ubuntu
 /.tmux-linux.conf
-/Brewfile*
-/com.googlecode.iterm2.plist
-/macbot.itermcolors

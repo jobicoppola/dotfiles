@@ -6,10 +6,12 @@
 alias cdghjc='cd ~/git/github/jobicoppola'
 alias cdgh='cd ~/git/github'
 alias cdgl='cd ~/git/gitlab'
-
-# work
+alias cdbb='cd ~/git/bitbucket'
 alias cdprojects='cd ~/projects'
 alias cdansible='cd ~/projects/ansible'
+alias cdsync='cd ~/Dropbox/sync'
+alias cdsyncsh='cd ~/Dropbox/sync/shell'
+alias cdnotes='cd ~/Dropbox/files/notes'
 
 # misc
 alias vioneliners='vi ~/Downloads/one-liners'
