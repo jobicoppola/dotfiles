@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
 # make logging and printing colorized messages easier - this is basically just
-# mashup of log4bash and the stdout script in the ally-web repo
-#
+# mashup of log4bash and logger ideas from previous jobs
 #._____________________________________________________________________________
 #`
-#
+
 # shellcheck disable=SC2034
 RED='\033[31m'
 ORANGE='\033[38;5;208m'

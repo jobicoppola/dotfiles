@@ -28,6 +28,7 @@ brew 'ruby'
 # handy improvers of life
 brew 'awscli'
 brew 'bat'
+brew 'choose-rust'
 brew 'colordiff'
 brew 'emojify'
 brew 'fd'
@@ -56,6 +57,7 @@ brew 'tig'
 brew 'tree'
 brew 'watch'
 brew 'wget'
+brew 'xsv'
 
 # completions
 brew 'django-completion'
@@ -74,3 +76,10 @@ brew 'xz'
 # jj json stream editor
 tap 'tidwall/jj'
 brew 'jj'
+
+# space age sed
+tap 'ms-jpq/sad'
+brew 'sad'
+
+# manage local aws creds
+cask 'aws-vault'

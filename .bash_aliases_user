@@ -14,7 +14,7 @@ alias cdsyncsh='cd ~/Dropbox/sync/shell'
 alias cdnotes='cd ~/Dropbox/files/notes'
 
 # misc
-alias vioneliners='vi ~/Downloads/one-liners'
+alias vioneliners='vi ~/Dropbox/sync/shell/one-liners'
 alias vlans="~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py"
 
 # jira cli completion
@@ -40,10 +40,15 @@ ansible-vault-encrypt-oneline-string(){
   echo -n "$x" | ansible-vault encrypt_string | sed -E 's/^[ \t]+//g' 2>/dev/null
 }
 
-alias av='ansible-vault'
-alias avv="python2 \$HOME/bin/ansible-inline-vault-view"
-alias ave="ansible-vault-encrypt-oneline-string"
-alias avec="ansible-vault-encrypt-oneline-string | pbcopy"
-alias avd="sed -E 's/^[ \t]+//g' | ansible-vault decrypt 2>/dev/null"
-alias aves="ansible-vault encrypt_string"
-export ANSIBLE_VAULT_PASSWORD_FILE=~/.ansible-vault-password
+alias anv='ansible-vault'
+alias anvv="python2 \$HOME/bin/ansible-inline-vault-view"
+alias anve="ansible-vault-encrypt-oneline-string"
+alias anvec="ansible-vault-encrypt-oneline-string | pbcopy"
+alias anvd="sed -E 's/^[ \t]+//g' | ansible-vault decrypt 2>/dev/null"
+alias anves="ansible-vault encrypt_string"
+
+# aws-vault
+alias av='aws-vault'
+
+export AWS_VAULT_BACKEND='file'
+# export AWS_VAULT_FILE_PASSPHRASE  # see ~/.miscrc

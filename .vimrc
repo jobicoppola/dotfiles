@@ -25,6 +25,7 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'python-rope/ropevim'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'junegunn/vim-easy-align'
 Plugin 'moll/vim-bbye'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
@@ -68,6 +69,7 @@ filetype plugin indent on
 " for deoplete, specify where python binaries are
 let g:python_host_prog = '/usr/bin/python2.7'
 let g:python3_host_prog = '/usr/local/bin/python3'
+
 
 "\_____________________________________________________________________________
 " initial keybindings
@@ -208,6 +210,14 @@ set guioptions-=L                               " remove left scrollbar vsplits
 " remove underline
 highlight clear CursorLine
 highlight CursorLineNR cterm=none
+
+
+"\_____________________________________________________________________________
+" syntastic
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" allow shellcheck to follow source files
+let g:syntastic_sh_shellcheck_args = "-x"
 
 
 "\_____________________________________________________________________________
@@ -506,6 +516,13 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.
 
 
 "\_____________________________________________________________________________
+" vim-easy-align
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+"\_____________________________________________________________________________
 " bdelete
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -545,6 +562,14 @@ nnoremap <leader>v V`]
 " change existing tab chars to match current tab settings (tabs2whitespace)
 nnoremap <leader>r :retab<CR>
 
+" reformat json with jq
+nnoremap <leader>j :%!jq .<CR>
+nnoremap <leader>J :%!jq --indent 4 .<CR>
+
+" quickly add newlines above and below cursur
+nnoremap <leader>nlo o<ESC>
+nnoremap <leader>nll O<ESC>
+
 " highlight end of line whitespace
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
@@ -557,6 +582,7 @@ autocmd BufWritePost .vimrc so ~/.vimrc
 
 " save when focus is lost
 autocmd FocusLost * :wa
+
 
 "\_____________________________________________________________________________
 " projects

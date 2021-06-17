@@ -1,8 +1,11 @@
+#
 #>=-</.|.\>=-------------------------------------------------------------------
-#
+#`
 #  ~/.bashrc :: jcopp.cfxd.net
-#
-#>\|/<<=-----------------------------------------------------------------------
+#•
+#|\>=--------------------------------------------------------------------------
+#`
+
 
 # only proceed for interactive shells
 [ -z "$PS1" ] && return
@@ -214,6 +217,7 @@ if [[ "$OS" == Darwin ]]; then
     # other completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
+    [ -f ~/bash_completion.d/terraform ] && . ~/bash_completion.d/terraform
     [ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
     [ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
 

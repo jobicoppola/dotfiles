@@ -35,16 +35,17 @@ fi
 # if there are no existing sessions, let's create a new session, then detach
 tmux new-session -d -s $session
 
+# TODO: rework this whole setup; it is far too brittle and mixes personal/work
 # vars to help setup the panes
+company='aidentified'
 repos=~/git
-company='company-name'
+venvs=~/venvs
 github=$repos/github
 bitbucket=$repos/bitbucket
-companydir=$github/$company
+repos_company=$github/$company
 repo_dotfiles=$github/dotfiles
-venvs=~/venvs
+venv_default=copptop
 
-# TODO: rework this setup, it is so brittle
 # pane titles and where to start them
 one_title=home
 one_path=~
@@ -52,26 +53,31 @@ one_path=~
 two_title=aws
 two_path=~
 
-three_title=three
-three_path=${repo_three:$github}
+three_title=scratch
+three_path=~
 
 four_title=venvs
 four_path=$venvs/$venv_default
 
 five_title=dotfiles
-five_path=$repo_dotfiles
+five_repo=$repo_dotfiles
+five_path=${five_repo:-$github}
 
-six_title=workdata
-six_path=${repo_six:$github}
+six_title=aidrc
+six_repo=$repos_company/aidentifiedrc
+six_path=${six_repo:-$github}
 
-seven_title=workapp
-seven_path=${repo_seven:$github}
+seven_title=api
+seven_repo=$repos_company/coredata-api
+seven_path=${seven_repo:-$github}
 
-eight_title=scratch
-eight_path=~
+eight_title=ops
+eight_repo=$repos_company/aidentified-ops
+eight_path=${eight_repo:-$github}
 
-nine_title=misc
-nine_path=~
+nine_title=terraform
+nine_repo=$repos_company/terraform-aws-foundation
+nine_path=${nine_repo:-$github}
 
 # create directories if necessary
 for dir in ${repos} ${github} ${bitbucket} ${venvs}; do
@@ -103,13 +109,13 @@ for n in {1..9}; do
         tmux send -t $session:$n.right "cd $one_path && date" C-m
         tmux select-pane -t $session:$n.1
 
-    # 2: dct
+    # 2: aws
     elif [ $n -eq 2 ]; then
         tmux send -t $session:$n.left "cd $two_path" C-m
         tmux send -t $session:$n.right "cd $two_path" C-m
         tmux select-pane -t $session:$n.1
 
-    # 3: gateway
+    # 3: three
     elif [ $n -eq 3 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $three_path" C-m
@@ -133,7 +139,7 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $five_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 6: dierc
+    # 6: aidrc
     elif [ $n -eq 6 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $six_path" C-m
@@ -141,7 +147,7 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $six_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 7: newman
+    # 7: api
     elif [ $n -eq 7 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $seven_path" C-m
@@ -149,17 +155,22 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $seven_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 8: ocp
+    # 8: ops
     elif [ $n -eq 8 ]; then
-        tmux send -t $session:$n.left "cd $eight_path" C-m
-        tmux send -t $session:$n.right "cd $eight_path" C-m
-        tmux select-pane -t $session:$n.1
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $eight_path" C-m
+        tmux send -t $session:$n.1 "cd $eight_path" C-m
+        tmux send -t $session:$n.2 "cd $eight_path && git status -sb" C-m
+        # TODO: add panes for `ssh ops1` and `watchmedo tricks-from .watchmedo.yaml`
+        tmux select-pane -t $session:$n.2
 
-    # 9: misc
+    # 9: terraform
     elif [ $n -eq 9 ]; then
-        tmux send -t $session:$n.left "cd $nine_path" C-m
-        tmux send -t $session:$n.right "cd $nine_path" C-m
-        tmux select-pane -t $session:$n.1
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $nine_path" C-m
+        tmux send -t $session:$n.1 "cd $nine_path" C-m
+        tmux send -t $session:$n.2 "cd $nine_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
     else
         tmux splitw -v -t $session:$n.left
     fi

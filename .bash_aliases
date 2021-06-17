@@ -26,9 +26,9 @@ alias venvs='cd ~/venvs/'
 
 # vi
 alias vi='vim'
-alias jcc="vi ~/Dropbox/jhome/jc3"
+alias sbash=". ~/.bashrc"
 alias vbash="vi ~/git/github/dotfiles/.bashrc"
-alias sbash="cp -p ~/git/github/dotfiles/.bash* ~/ && . ~/.bashrc"
+alias jcc="vi ~/Dropbox/sync/shell/legacy/jc3"
 alias svim="cp -p ~/git/github/dotfiles/.vimrc ~/"
 alias valias="vi ~/git/github/dotfiles/.bash_aliases"
 alias vvim="vi ~/git/github/dotfiles/.vimrc"
@@ -122,6 +122,10 @@ alias fda='fd --no-ignore --hidden'
 alias t='python ~/git/github/t/t.py --task-dir ~/tasks --list tasks'
 alias g='python ~/git/github/t/t.py --task-dir ~/tasks --list groceries'
 alias m='python ~/git/github/t/t.py --task-dir ~/tasks --list music'
+
+# http status codes reference
+alias http-status='httpsc'
+alias hsc='httpsc'
 
 # curl
 ak_headers=(

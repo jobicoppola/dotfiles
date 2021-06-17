@@ -2,26 +2,29 @@
 
 # timezone info /usr/share/zoneinfo
 case "$1" in
+    b|bei|beijing|Beijing)
+        TZ=Asia/Shanghai date
+        ;;
     c|clt|charlotte|Charlotte)
         TZ=America/New_York date
         ;;
-    p|pdx|w|west|la|lax|LAX)
-        TZ=America/Los_Angeles date
-        ;;
-    l|lon|london|London)
-        TZ=Europe/London date
+    i|ist|india|India)
+        TZ=Asia/Kolkata date
         ;;
     k|kat|katowice|Katowice)
         TZ=Europe/Warsaw date
         ;;
-    t|tok|tokyo|Tokyo)
-        TZ=Asia/Tokyo date
+    l|lon|london|London)
+        TZ=Europe/London date
         ;;
-    b|bei|beijing|Beijing)
-        TZ=Asia/Shanghai date
+    p|pdx|w|west|la|lax|LAX)
+        TZ=America/Los_Angeles date
         ;;
     s|syd|sydney|Sydney)
         TZ=Australia/Sydney date
+        ;;
+    t|tok|tokyo|Tokyo)
+        TZ=Asia/Tokyo date
         ;;
     u|utc|UTC)
         TZ=UTC date
