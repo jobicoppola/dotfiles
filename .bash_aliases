@@ -73,7 +73,8 @@ alias ga='git add'
 alias gctb='git checkout --track -b'
 alias gph='git push heroku master'
 alias gpuo='git push -u origin'
-alias grwm='git fetch && git rebase origin/master'
+alias grwm='git fetch && git rebase origin/main'
+alias grwmr='git fetch && git rebase origin/master'
 alias gpf='git push --force-with-lease'
 
 # github
