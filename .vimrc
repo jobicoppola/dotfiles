@@ -418,6 +418,8 @@ let g:terraform_align=1
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:markdown_enable_spell_checking = 0
+let g:markdown_enable_insert_mode_mappings = 0
+let g:markdown_mapping_switch_status = '<leader>s'
 
 
 "\_____________________________________________________________________________
