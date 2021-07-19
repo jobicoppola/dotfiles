@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# get a shortened github url
+#
+url="$*"
+curl -i https://git.io -F "url=$url"
