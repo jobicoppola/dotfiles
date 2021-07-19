@@ -40,6 +40,7 @@ Plugin 'jobicoppola/vim-json-bundle'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'b4b4r07/vim-ansible-vault'
 Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'wellle/targets.vim'
 Plugin 'fatih/vim-go'
 Plugin 'kopischke/vim-fetch'
 Plugin 'hashivim/vim-terraform'
@@ -274,7 +275,7 @@ autocmd BufEnter * if (winnr("$") == 1
 
 
 "\_____________________________________________________________________________
-" surround.vim
+" vim-surround
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " use v or # to get a variable interpolation (inside of a string)}
@@ -521,6 +522,7 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.
 
 " start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
 
 "\_____________________________________________________________________________
 " bdelete
