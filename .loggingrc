@@ -17,16 +17,21 @@ CYAN='\033[36m'
 MAGENTA='\033[38;5;201m'
 YELLOWISH='\033[38;5;228m'
 BLACK='\033[30m'
+INFOBLUE='\033[38;5;153m'
+WARNYELLOW='\033[38;5;185m'
+ERRORRED='\033[38;5;204m'
+SUCCESSGREEN='\033[38;5;119m'
+DEBUGGRAY='\033[38;5;244m'
 GRAY='\033[2m'
 WHITE='\033[37m'
 DEFAULT='\033[0m'
 
 export readonly LOG_COLOR_DEFAULT="${DEFAULT}"
-export readonly LOG_COLOR_DEBUG="${GRAY}"
-export readonly LOG_COLOR_INFO="${MAGENTA}"
-export readonly LOG_COLOR_WARN="${YELLOW}"
-export readonly LOG_COLOR_ERROR="${RED}"
-export readonly LOG_COLOR_SUCCESS="${GREEN}"
+export readonly LOG_COLOR_DEBUG="${DEBUGGRAY}"
+export readonly LOG_COLOR_INFO="${INFOBLUE}"
+export readonly LOG_COLOR_WARN="${WARNYELLOW}"
+export readonly LOG_COLOR_ERROR="${ERRORRED}"
+export readonly LOG_COLOR_SUCCESS="${SUCCESSGREEN}"
 
 # logging
 #
