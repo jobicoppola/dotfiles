@@ -49,6 +49,7 @@ alias anves="ansible-vault encrypt_string"
 
 # aws-vault
 alias av='aws-vault'
+alias avj='av exec jcopp'
 
 export AWS_VAULT_BACKEND='file'
 # export AWS_VAULT_FILE_PASSPHRASE  # see ~/.miscrc
