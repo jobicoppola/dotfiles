@@ -75,13 +75,13 @@ brew 'yarn-completion'
 # misc libs and tools
 brew 'xz'
 
-# jj json stream editor
-tap 'tidwall/jj'
-brew 'jj'
-
 # space age sed
 tap 'ms-jpq/sad'
 brew 'sad'
 
-# manage local aws creds
+# cloudsplain
+tap 'salesforce/cloudsplaining'
+brew 'cloudsplaining'
+
+# manage local creds
 cask 'aws-vault'
