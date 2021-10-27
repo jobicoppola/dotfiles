@@ -45,7 +45,7 @@ Plugin 'fatih/vim-go'
 Plugin 'kopischke/vim-fetch'
 Plugin 'hashivim/vim-terraform'
 Plugin 'thanethomson/vim-jenkinsfile'
-Plugin 'gabrielelana/vim-markdown'
+Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
 
@@ -122,7 +122,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
-autocmd FileType ruby,yaml set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType ruby,yaml,markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType groovy set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
@@ -414,12 +414,14 @@ let g:terraform_align=1
 
 
 "\_____________________________________________________________________________
-" vim-markdown
+" vim-markdown-toc
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:markdown_enable_spell_checking = 0
-let g:markdown_enable_insert_mode_mappings = 0
-let g:markdown_mapping_switch_status = '<leader>s'
+map <leader>toc :GenTocGFM<CR>
+let g:vmt_auto_update_on_save = 1
+let g:vmt_fence_hidden_markdown_style = 'GFM'
+let g:vmt_fence_text = 'TOC vim-markdown-toc'
+let g:vmt_fence_closing_text = '/TOC'
 
 
 "\_____________________________________________________________________________
