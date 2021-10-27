@@ -45,6 +45,7 @@ export GIT_MERGE_AUTOEDIT=no
 
 # use `bat` as manpage formatter
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export BAT_CONFIG_PATH=~/.batconfig
 
 
 # path setup
