@@ -47,37 +47,43 @@ repo_dotfiles=$github/dotfiles
 venv_default=copptop
 
 # pane titles and where to start them
-one_title=home
-one_path=~
+one_title=dotfiles
+onee_repo=$repo_dotfiles
+onee_path=${one_repo:-$github}
 
-two_title=aws
-two_path=~
+two_title=terraform
+two_repo=$repos_company/terraform-aws-foundation
+two_path=${one_repo:-$github}
+
+three_title=ansible
+three_repo=$repos_company/aidentified-ops
+three_path=${two_repo:-$github}
+
+four_title=api
+four_repo=$repos_company/coredata-api
+four_path=${seven_repo:-$github}
+
+five_title=aidrc
+five_repo=$repos_company/aidentifiedrc
+five_path=${six_repo:-$github}
+
+six_title=work
+six_repo=$repos_company/
+six_path=${six_repo:-$github}
+
+seven_title=work
+seven_repo=$repos_company/
+seven_path=${seven_repo:-$github}
 
 three_title=scratch
 three_path=~
 
-four_title=venvs
-four_path=$venvs/$venv_default
+eight_title=aws
+eight_repo=$repos_company/
+eight_path=~
 
-five_title=dotfiles
-five_repo=$repo_dotfiles
-five_path=${five_repo:-$github}
-
-six_title=aidrc
-six_repo=$repos_company/aidentifiedrc
-six_path=${six_repo:-$github}
-
-seven_title=api
-seven_repo=$repos_company/coredata-api
-seven_path=${seven_repo:-$github}
-
-eight_title=ops
-eight_repo=$repos_company/aidentified-ops
-eight_path=${eight_repo:-$github}
-
-nine_title=terraform
-nine_repo=$repos_company/terraform-aws-foundation
-nine_path=${nine_repo:-$github}
+nine_title=home
+nine_path=~
 
 # create directories if necessary
 for dir in ${repos} ${github} ${bitbucket} ${venvs}; do
@@ -103,17 +109,24 @@ for n in {1..9}; do
 
     # configure each window; always select pane on right side
     #
-    # 1: home
-    if [ $n -eq 1 ]; then
-        tmux send -t $session:$n.left "cd $one_path" C-m
-        tmux send -t $session:$n.right "cd $one_path && date" C-m
-        tmux select-pane -t $session:$n.1
 
-    # 2: aws
-    elif [ $n -eq 2 ]; then
-        tmux send -t $session:$n.left "cd $two_path" C-m
-        tmux send -t $session:$n.right "cd $two_path" C-m
-        tmux select-pane -t $session:$n.1
+    # 1: terraform-aws-foundation
+    if [ $n -eq 1 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $one_path" C-m
+        tmux send -t $session:$n.1 "cd $one_path" C-m
+        tmux send -t $session:$n.2 "cd $one_path && git status -sb" C-m
+        tmux select-pane -t $session:$n.2
+
+    # 2: ops
+    elif [ $n -eq 8 ]; then
+        tmux splitw -v -t $session:$n.left
+        tmux send -t $session:$n.0 "cd $two_path" C-m
+        tmux send -t $session:$n.1 "cd $two_path" C-m
+        tmux send -t $session:$n.2 "cd $two_path && git status -sb" C-m
+        # TODO: add panes for `ssh ops1` and `watchmedo tricks-from .watchmedo.yaml`
+        tmux select-pane -t $session:$n.2
+
 
     # 3: three
     elif [ $n -eq 3 ]; then
@@ -155,22 +168,19 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $seven_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 8: ops
-    elif [ $n -eq 8 ]; then
-        tmux splitw -v -t $session:$n.left
-        tmux send -t $session:$n.0 "cd $eight_path" C-m
-        tmux send -t $session:$n.1 "cd $eight_path" C-m
-        tmux send -t $session:$n.2 "cd $eight_path && git status -sb" C-m
-        # TODO: add panes for `ssh ops1` and `watchmedo tricks-from .watchmedo.yaml`
-        tmux select-pane -t $session:$n.2
+    # 8: aws
+    elif [ $n -eq 2 ]; then
+        tmux send -t $session:$n.left "cd $eight_path" C-m
+        tmux send -t $session:$n.right "cd $eight_path" C-m
+        tmux select-pane -t $session:$n.1
 
-    # 9: terraform
+    # 9: home
     elif [ $n -eq 9 ]; then
-        tmux splitw -v -t $session:$n.left
-        tmux send -t $session:$n.0 "cd $nine_path" C-m
-        tmux send -t $session:$n.1 "cd $nine_path" C-m
-        tmux send -t $session:$n.2 "cd $nine_path && git status -sb" C-m
-        tmux select-pane -t $session:$n.2
+        tmux send -t $session:$n.left "cd $nine_path" C-m
+        tmux send -t $session:$n.right "cd $nine_path && date" C-m
+        tmux select-pane -t $session:$n.1
+
+    # n: default
     else
         tmux splitw -v -t $session:$n.left
     fi
