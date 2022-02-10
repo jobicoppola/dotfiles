@@ -8,7 +8,7 @@ case "$1" in
     c|clt|charlotte|Charlotte)
         TZ=America/New_York date
         ;;
-    i|ist|india|India)
+    i|is|ist|india|India)
         TZ=Asia/Kolkata date
         ;;
     k|kat|katowice|Katowice)
