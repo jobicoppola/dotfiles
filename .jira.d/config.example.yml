@@ -17,14 +17,14 @@ custom-commands:
           {{jira}} list \
             --template table-mine \
             --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
-            --query "resolution = unresolved and assignee=currentuser()
+            --query "resolution = unresolved and status not in (Closed, Done) and assignee=currentuser()
                      and project = $JIRA_PROJECT ORDER BY priority desc, created"
       else
           # otherwise list issues for all project
           {{jira}} list \
             --template table-mine \
             --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
-            --query "resolution = unresolved and assignee=currentuser()
+            --query "resolution = unresolved and status not in (Closed, Done) and assignee=currentuser()
                      ORDER BY priority desc, created"
       fi
 
