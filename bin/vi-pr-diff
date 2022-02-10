@@ -9,18 +9,18 @@ usage(){
 branch=origin/${branch_name}
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
-diff_details=$(git diff --unified=0 ${branch} \
+diff_details=$(git diff --unified=0 --diff-filter=d ${branch} \
     $(git merge-base ${branch} origin/${current_branch}) \
-    |grep -A2 '^---' \
-    |sed '/^+++/d' \
-    |egrep '^@@|^---')
+      |grep -A2 '^---' \
+      |sed '/^+++/d' \
+      |egrep '^@@|^---')
 
 filenames=( $(echo "$diff_details" |sed 'n;d' |cut -c7-) )
 line_numbers=( $(echo "$diff_details" \
-    |sed '1d;n;d' \
-    |awk -F, '{print $1}' \
-    |awk '{print $2}' \
-    |cut -c2-) )
+                 |sed '1d;n;d' \
+                 |awk -F, '{print $1}' \
+                 |awk '{print $2}' \
+                 |cut -c2-) )
 
 files=( )
 for ((i=0; i < ${#filenames[@]}; ++i)); do
