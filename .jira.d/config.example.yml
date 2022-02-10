@@ -1,0 +1,75 @@
+endpoint: <url>
+user: <user@example.com>
+password-source: keyring
+
+
+custom-commands:
+  - name: env
+    help: print the JIRA environment variables available to custom commands
+    script: |
+      env | grep JIRA
+
+  - name: mine
+    help: display issues assigned to me
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} list \
+            --template table-mine \
+            --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
+            --query "resolution = unresolved and assignee=currentuser()
+                     and project = $JIRA_PROJECT ORDER BY priority desc, created"
+      else
+          # otherwise list issues for all project
+          {{jira}} list \
+            --template table-mine \
+            --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
+            --query "resolution = unresolved and assignee=currentuser()
+                     ORDER BY priority desc, created"
+      fi
+
+  - name: sprint
+    help: display issues for active sprint
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} list \
+            --template table \
+            --query "sprint in openSprints()
+                     and type != epic
+                     and resolution = unresolved
+                     and project=$JIRA_PROJECT ORDER BY rank asc, created"
+      else
+          # otherwise list issues for all project
+          {{jira}} list \
+            --template table \
+            --query "sprint in openSprints()
+                     and type != epic
+                     and resolution = unresolved ORDER BY rank asc, created"
+      fi
+
+  - name: custom-test
+    help: Testing the custom commands
+    options:
+      - name: abc
+        short: a
+        default: default
+      - name: day
+        type: ENUM
+        enum:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+        required: true
+    args:
+      - name: ARG
+        required: true
+      - name: MORE
+        repeat: true
+    script: |
+      echo COMMAND {{args.ARG}} \
+        --abc {{options.abc}} \
+        --day {{options.day}} \
+        {{range $more := args.MORE}}{{$more}} {{end}}
