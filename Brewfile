@@ -54,6 +54,7 @@ brew 'shellcheck'
 brew 'speedtest-cli'
 brew 'ssh-copy-id'
 brew 'terraform'
+brew 'terraform-docs'
 brew 'tflint'
 brew 'tig'
 brew 'tree'
@@ -74,6 +75,9 @@ brew 'yarn-completion'
 
 # misc libs and tools
 brew 'xz'
+
+# keyboard firmware
+brew 'qmk/qmk/qmk'
 
 # space age sed
 tap 'ms-jpq/sad'
