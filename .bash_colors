@@ -2,119 +2,119 @@
 
 # Attributes
 EC='\[\e[0m\]'              # End Color / Text Reset
-Bold='\[\e[1m\]'            # Bold Text
+BOLD='\[\e[1m\]'            # Bold Text
 
-# Regular Colors
-Black='\[\e[0;30m\]'        # Black
-Red='\[\e[0;31m\]'          # Red
-Green='\[\e[0;32m\]'        # Green
-Yellow='\[\e[0;33m\]'       # Yellow
-Blue='\[\e[0;34m\]'         # Blue
-Purple='\[\e[0;35m\]'       # Purple
-Cyan='\[\e[0;36m\]'         # Cyan
-White='\[\e[0;37m\]'        # White
-Gray='\[\e[2;33m\]'         # Gray
+# Regular COLORs
+BLACK='\[\e[0;30m\]'        # Black
+RED='\[\e[0;31m\]'          # Red
+GREEN='\[\e[0;32m\]'        # Green
+YELLOW='\[\e[0;33m\]'       # Yellow
+BLUE='\[\e[0;34m\]'         # Blue
+PURPLE='\[\e[0;35m\]'       # Purple
+CYAN='\[\e[0;36m\]'         # Cyan
+WHITE='\[\e[0;37m\]'        # White
+GRAY='\[\e[2;33m\]'         # Gray
 
 # prompt: clock color options [blues]
-Color_75='\[\e[38;5;75m\]'
-Color_116='\[\e[38;5;116m\]'
-Color_117='\[\e[38;5;117m\]'
-Color_122='\[\e[38;5;122m\]'
-Color_123='\[\e[38;5;123m\]'
-Color_158='\[\e[38;5;158m\]'
-ClockColor="$Color_75"
+COLOR_75='\[\e[38;5;75m\]'
+COLOR_116='\[\e[38;5;116m\]'
+COLOR_117='\[\e[38;5;117m\]'
+COLOR_122='\[\e[38;5;122m\]'
+COLOR_123='\[\e[38;5;123m\]'
+COLOR_158='\[\e[38;5;158m\]'
+CLOCK_COLOR="$COLOR_75"
 
 # prompt: user@host color options [pinks]
-Color_170='\[\e[38;5;170m\]'
-Color_171='\[\e[38;5;171m\]'
-Color_176='\[\e[38;5;176m\]'
-Color_177='\[\e[38;5;177m\]'
-Color_212='\[\e[38;5;212m\]'
-Color_213='\[\e[38;5;213m\]'
-UserColor="$Color_177"
+COLOR_170='\[\e[38;5;170m\]'
+COLOR_171='\[\e[38;5;171m\]'
+COLOR_176='\[\e[38;5;176m\]'
+COLOR_177='\[\e[38;5;177m\]'
+COLOR_212='\[\e[38;5;212m\]'
+COLOR_213='\[\e[38;5;213m\]'
+USER_COLOR="$COLOR_177"
 
 # prompt: venv color options [greens]
-Color_48='\[\e[38;5;48m\]'
-Color_82='\[\e[38;5;82m\]'
-Color_85='\[\e[38;5;85m\]'
-VenvColor="$Color_48"
+COLOR_48='\[\e[38;5;48m\]'
+COLOR_82='\[\e[38;5;82m\]'
+COLOR_85='\[\e[38;5;85m\]'
+VENV_COLOR="$COLOR_48"
 
 # prompt: git branch color options [yellows]
-Color_11='\[\e[38;5;11m\]'
-Color_190='\[\e[38;5;190m\]'
-Color_191='\[\e[38;5;191m\]'
-Color_192='\[\e[38;5;192m\]'
-Color_226='\[\e[38;5;226m\]'
-Color_227='\[\e[38;5;227m\]'
-Color_228='\[\e[38;5;228m\]'
-BranchColor="$Color_228"
+COLOR_11='\[\e[38;5;11m\]'
+COLOR_190='\[\e[38;5;190m\]'
+COLOR_191='\[\e[38;5;191m\]'
+COLOR_192='\[\e[38;5;192m\]'
+COLOR_226='\[\e[38;5;226m\]'
+COLOR_227='\[\e[38;5;227m\]'
+COLOR_228='\[\e[38;5;228m\]'
+BRANCH_COLOR="$COLOR_228"
 
 # prompt: current working directory color options [whites]
-Color_15='\[\e[38;5;15m\]'
-Color_231='\[\e[38;5;231m\]'
-CwdColor="$Color_15"
+COLOR_15='\[\e[38;5;15m\]'
+COLOR_231='\[\e[38;5;231m\]'
+CWD_COLOR="$COLOR_15"
 
 # prompt: dollar sign color options [grays]
-Color_242='\[\e[38;5;242m\]'
-Color_244='\[\e[38;5;244m\]'
-DollarColor="$Color_244"
+COLOR_242='\[\e[38;5;242m\]'
+COLOR_244='\[\e[38;5;244m\]'
+DOLLAR_COLOR="$COLOR_244"
 
 # Bold
-BBlack='\[\e[1;30m\]'       # Black
-BRed='\[\e[1;31m\]'         # Red
-BGreen='\[\e[1;32m\]'       # Green
-BYellow='\[\e[1;33m\]'      # Yellow
-BBlue='\[\e[1;34m\]'        # Blue
-BPurple='\[\e[1;35m\]'      # Purple
-BCyan='\[\e[1;36m\]'        # Cyan
-BWhite='\[\e[1;37m\]'       # White
+BBLACK='\[\e[1;30m\]'       # Black
+BRED='\[\e[1;31m\]'         # Red
+BGREEN='\[\e[1;32m\]'       # Green
+BYELLOW='\[\e[1;33m\]'      # Yellow
+BBLUE='\[\e[1;34m\]'        # Blue
+BPURPLE='\[\e[1;35m\]'      # Purple
+BCYAN='\[\e[1;36m\]'        # Cyan
+BWHITE='\[\e[1;37m\]'       # White
 
 # Underline
-UBlack='\[\e[4;30m\]'       # Black
-URed='\[\e[4;31m\]'         # Red
-UGreen='\[\e[4;32m\]'       # Green
-UYellow='\[\e[4;33m\]'      # Yellow
-UBlue='\[\e[4;34m\]'        # Blue
-UPurple='\[\e[4;35m\]'      # Purple
-UCyan='\[\e[4;36m\]'        # Cyan
-UWhite='\[\e[4;37m\]'       # White
+UBLACK='\[\e[4;30m\]'       # Black
+URED='\[\e[4;31m\]'         # Red
+UGREEN='\[\e[4;32m\]'       # Green
+UYELLOW='\[\e[4;33m\]'      # Yellow
+UBLUE='\[\e[4;34m\]'        # Blue
+UPURPLE='\[\e[4;35m\]'      # Purple
+UCYAN='\[\e[4;36m\]'        # Cyan
+UWHITE='\[\e[4;37m\]'       # White
 
 # Background
-On_Black='\[\e[40m\]'       # Black
-On_Red='\[\e[41m\]'         # Red
-On_Green='\[\e[42m\]'       # Green
-On_Yellow='\[\e[43m\]'      # Yellow
-On_Blue='\[\e[44m\]'        # Blue
-On_Purple='\[\e[45m\]'      # Purple
-On_Cyan='\[\e[46m\]'        # Cyan
-On_White='\[\e[47m\]'       # White
+ON_BLACK='\[\e[40m\]'       # Black
+ON_RED='\[\e[41m\]'         # Red
+ON_GREEN='\[\e[42m\]'       # Green
+ON_YELLOW='\[\e[43m\]'      # Yellow
+ON_BLUE='\[\e[44m\]'        # Blue
+ON_PURPLE='\[\e[45m\]'      # Purple
+ON_CYAN='\[\e[46m\]'        # Cyan
+ON_WHITE='\[\e[47m\]'       # White
 
 # High Intensty
-IBlack='\[\e[0;90m\]'       # Black
-IRed='\[\e[0;91m\]'         # Red
-IGreen='\[\e[0;92m\]'       # Green
-IYellow='\[\e[0;93m\]'      # Yellow
-IBlue='\[\e[0;94m\]'        # Blue
-IPurple='\[\e[0;95m\]'      # Purple
-ICyan='\[\e[0;96m\]'        # Cyan
-IWhite='\[\e[0;97m\]'       # White
+IBLACK='\[\e[0;90m\]'       # Black
+IRED='\[\e[0;91m\]'         # Red
+IGREEN='\[\e[0;92m\]'       # Green
+IYELLOW='\[\e[0;93m\]'      # Yellow
+IBLUE='\[\e[0;94m\]'        # Blue
+IPURPLE='\[\e[0;95m\]'      # Purple
+ICYAN='\[\e[0;96m\]'        # Cyan
+IWHITE='\[\e[0;97m\]'       # White
 
 # Bold High Intensty
-BIBlack='\[\e[1;90m\]'      # Black
-BIRed='\[\e[1;91m\]'        # Red
-BIGreen='\[\e[1;92m\]'      # Green
-BIYellow='\[\e[1;93m\]'     # Yellow
-BIBlue='\[\e[1;94m\]'       # Blue
-BIPurple='\[\e[1;95m\]'     # Purple
-BICyan='\[\e[1;96m\]'       # Cyan
-BIWhite='\[\e[1;97m\]'      # White
+BIBLACK='\[\e[1;90m\]'      # Black
+BIRED='\[\e[1;91m\]'        # Red
+BIGREEN='\[\e[1;92m\]'      # Green
+BIYELLOW='\[\e[1;93m\]'     # Yellow
+BIBLUE='\[\e[1;94m\]'       # Blue
+BIPURPLE='\[\e[1;95m\]'     # Purple
+BICYAN='\[\e[1;96m\]'       # Cyan
+BIWHITE='\[\e[1;97m\]'      # White
 
 # High Intensty backgrounds
-On_IBlack='\[\e[0;100m\]'   # Black
-On_IRed='\[\e[0;101m\]'     # Red
-On_IGreen='\[\e[0;102m\]'   # Green
-On_IYellow='\[\e[0;103m\]'  # Yellow
-On_IBlue='\[\e[0;104m\]'    # Blue
-On_IPurple='\[\e[10;95m\]'  # Purple
-On_ICyan='\[\e[0;106m\]'    # Cyan
-On_IWhite='\[\e[0;107m\]'   # White
+ON_IBLACK='\[\e[0;100m\]'   # Black
+ON_IRED='\[\e[0;101m\]'     # Red
+ON_IGREEN='\[\e[0;102m\]'   # Green
+ON_IYELLOW='\[\e[0;103m\]'  # Yellow
+ON_IBLUE='\[\e[0;104m\]'    # Blue
+ON_IPURPLE='\[\e[10;95m\]'  # Purple
+ON_ICYAN='\[\e[0;106m\]'    # Cyan
+ON_IWHITE='\[\e[0;107m\]'   # White

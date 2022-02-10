@@ -149,9 +149,22 @@ get_venv(){
     [ "${VIRTUAL_ENV}" ] && echo "$(basename ${VIRTUAL_ENV}):"
 }
 
-get_current_git_branch(){
-    REF=$(git symbolic-ref HEAD 2> /dev/null) || return
-    echo "(${REF#refs/heads/})"
+get_git_branch_current(){
+    local ref
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo "${ref#refs/heads/}"
+}
+
+get_git_branch_current_for_prompt(){
+    local ref
+    ref=$(get_git_branch_current 2> /dev/null) || return
+    echo "($ref)"
+}
+
+get_git_branch_default(){
+    local ref
+    ref=$(git symbolic-ref --short refs/remotes/origin/HEAD 2> /dev/null) || return
+    echo "$ref" |awk -F/ '{print $2}'
 }
 
 get_git_status(){
@@ -176,22 +189,25 @@ get_git_status(){
 # bring in named colors
 [ -f ~/.bash_colors ] && . ~/.bash_colors
 
+# manually set user section of prompt on macs
+user_mac='jcopp@macbot'
+
 # shellcheck disable=SC2154
-PS1_TIME="\n${ClockColor}\t${Blue}"
-PS1_VENV="${Bold}${VenvColor}\$(get_venv)"
-PS1_USER="\u@\h${BWhite}\w${BYellow}"
-PS1_USER_MAC="${EC}${UserColor}jcopp@macbot"
-PS1_CWD="${Bold}${CwdColor}\w"
-PS1_GIT="${BranchColor}\$(get_current_git_branch)${BGreen}\$(get_git_status)${EC}"
-PS1_END="\n${EC}${Gray}$ ${EC}"
-PS1_END_MAC="\n${Bold}${DollarColor}$ ${EC}"
+PS1_TIME="\n${CLOCK_COLOR}\t${BLUE}"
+PS1_VENV="${BOLD}${VENV_COLOR}\$(get_venv)"
+PS1_USER="\u@\h${BWHITE}\w${BYELLOW}"
+PS1_USER_MAC="${EC}${USER_COLOR}${user_mac}"
+PS1_CWD="${BOLD}${CWD_COLOR}\w"
+PS1_GIT="${BRANCH_COLOR}\$(get_git_branch_current_for_prompt)${BGREEN}\$(get_git_status)${EC}"
+PS1_END="\n${EC}${GRAY}$ ${EC}"
+PS1_END_MAC="\n${BOLD}${DOLLAR_COLOR}$ ${EC}"
 
 # now actually set the prompt
 if [[ "$OS" == Darwin ]] && [[ "$(hostname)" != *bot ]]; then
-    # override ugly hostname on work machines
+    # override ugly hostname on macs / work machines
     PS1="${PS1_TIME}|${PS1_VENV}${PS1_USER_MAC}${PS1_CWD}${PS1_GIT}${PS1_END_MAC}"
 else
-    PS1="${PS1_TIME}$Gray|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
+    PS1="${PS1_TIME}$GRAY|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
 
@@ -219,6 +235,7 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
     [ -f ~/bash_completion.d/terraform ] && . ~/bash_completion.d/terraform
+    [ -f ~/bash_completion.d/terraform-docs ] && . ~/bash_completion.d/terraform-docs  # terraform-docs completion bash
     [ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
     [ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
 
