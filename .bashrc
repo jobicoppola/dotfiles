@@ -1,27 +1,24 @@
-#
+# shellcheck shell=bash
+#.
 #>=-</.|.\>=-------------------------------------------------------------------
-#`
+#
 #  ~/.bashrc :: jcopp.cfxd.net
-#•
+#.
 #|\>=--------------------------------------------------------------------------
 #`
+[ -z "$PS1" ] && return  # only proceed for interactive shells
 
+#
+# set some vars
+#=-----------------------------------------------------------------------------
+#`
+OS=$(uname)  # determine os
 
-# only proceed for interactive shells
-[ -z "$PS1" ] && return
-
-# determine os
-OS=$(uname)
-
-# ignore duplicates and cmds starting with spaces
-HISTCONTROL=ignoreboth
-
-# append to history
-shopt -s histappend
-PROMPT_COMMAND="history -a"
-
-# set history length
-HISTSIZE=99999
+# command history
+HISTCONTROL=ignoreboth      # ignore duplicates and cmds starting with spaces
+shopt -s histappend         # append to history
+PROMPT_COMMAND="history -a" # append new history lines (from current shell)
+HISTSIZE=99999              # set history length
 HISTFILESIZE=$HISTSIZE
 
 # case-insensitive tab-completion for paths
@@ -34,8 +31,11 @@ shopt -s globstar
 HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
 
-# make compilers behave
-export ARCHFLAGS="-arch x86_64"
+#
+# export some vars
+#=-----------------------------------------------------------------------------
+#`
+export ARCHFLAGS="-arch x86_64" # make compilers behave
 
 # set editor vars
 VIM=$(which vim)
@@ -47,10 +47,10 @@ export GIT_MERGE_AUTOEDIT=no
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BAT_CONFIG_PATH=~/.batconfig
 
-
+#
 # path setup
 #=-----------------------------------------------------------------------------
-
+#`
 if [[ "$OS" == Darwin ]]; then
     COREUTILS=/usr/local/opt/coreutils/libexec/gnubin
     GREP=/usr/local/opt/grep/libexec/gnubin
@@ -65,11 +65,10 @@ else
     export PATH=$P1:$P2
 fi
 
-
+#
 # ssh setup
 #=-----------------------------------------------------------------------------
-
-# start ssh-agent and set sock var
+#`
 if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   rm -f "$SSH_AUTH_SOCK"
   SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
@@ -80,21 +79,15 @@ if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
-
-# ruby related
+#
+# ruby
 #=-----------------------------------------------------------------------------
-
+#`
 export RUBYOPT=rubygems
 export GEM_HOME=$HOME/gems
 export RUBYPATH=$GEM_HOME
 export GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
-
-if [[ "$OS" == Darwin ]]; then
-    # mojave; fyi only
-    SYSTEM_GEMS=/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/gems/2.3
-    SYSTEM_RUBY_EXEC=/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/bin/ruby
-fi
 
 # use rbenv to manage ruby versions
 export PATH=$HOME/.rbenv/bin:$PATH
@@ -108,43 +101,44 @@ alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 
-
+#
 # node.js
 #=-----------------------------------------------------------------------------
-
-NODE_PATH=/usr/local/lib/node
+#`
+export NODE_PATH=/usr/local/lib/node_modules
 export PATH=$PATH:$HOME/node_modules/.bin
 
-
+#
 # go
 #=-----------------------------------------------------------------------------
-
+#`
 gobin=~/go/bin
 goenv=~/go/env
 [ -d "$goenv" ] || mkdir -p "$goenv"
 export GOBIN="${gobin}"
 export GOENV="${goenv}"
 
-
+#
 # virtualenv
 #=-----------------------------------------------------------------------------
-
+#`
+vepy=$(which python)
 vepy_version=$(python -V |awk '{print $2}' |cut -d. -f1-2)
-vepy_path="/Users/$(whoami)/Library/Python/${vepy_version}"
-vepy_wrapper="${vepy_path}/bin/virtualenvwrapper.sh"
+vepy_path=/Users/$(whoami)/Library/Python/${vepy_version}
+vepy_wrapper=${vepy_path}/bin/virtualenvwrapper.sh
+
 export PATH=$PATH:${vepy_path}/bin
 export WORKON_HOME=$HOME/venvs
-export VIRTUALENVWRAPPER_PYTHON=$(which python)
-export VIRTUALENVWRAPPER_SCRIPT="${vepy_wrapper}"
+export VIRTUALENVWRAPPER_PYTHON=${vepy}
+export VIRTUALENVWRAPPER_SCRIPT=${vepy_wrapper}
+
+# check for virtualenvwrapper
 [ -f "$VIRTUALENVWRAPPER_SCRIPT" ] && . "$VIRTUALENVWRAPPER_SCRIPT" || echo 'No VIRTUALENVWRAPPER'
-#vepy_ww=$(which virtualenvwrapper.sh)
-#vepy_wsh=${vepy_ww:=$vepy_wrapper}
-#[ -f "${vepy_wrapper}" ] && . "${vepy_wrapper}" || echo 'No VIRTUALENVWRAPPER'
 
-
+#
 # prompt setup
 #=-----------------------------------------------------------------------------
-
+#`
 get_venv(){
     [ "${VIRTUAL_ENV}" ] && echo "$(basename ${VIRTUAL_ENV}):"
 }
@@ -210,15 +204,14 @@ else
     PS1="${PS1_TIME}$GRAY|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
-
+#
 # source aliases and other custom config files
 #=-----------------------------------------------------------------------------
-
+#`
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
 [ -f ~/.bash_aliases_user ] && . ~/.bash_aliases_user
 [ -f ~/.bash_sensible ] && . ~/.bash_sensible
-
 [ -f ~/.miscrc ] && . ~/.miscrc
 [ -f ~/.awsrc ] && . ~/.awsrc
 
@@ -226,10 +219,15 @@ fi
 if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
-    # brew completions
+    # homebrew completions
     localbrew=$(brew --prefix)/etc
-    [ -f ${localbrew}/bash_completion ] && . ${localbrew}/bash_completion
-    [ -f ${localbrew}/grc.bashrc ] && . ${localbrew}/grc.bashrc
+    brew_completions=${localbrew}/bash_completion
+    grc_completions=${localbrew}/grc.bashrc
+    [ -L "$brew_completions" ] && . "$brew_completions"
+    [ -f "$grc_completions" ] && . "$grc_completions"
+
+    # awscli completions
+    [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 
     # other completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
@@ -238,22 +236,23 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/bash_completion.d/terraform-docs ] && . ~/bash_completion.d/terraform-docs  # terraform-docs completion bash
     [ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
     [ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
-
-    # awscli completions
-    [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 fi
 
-
-# rg and fzf helpers
+#
+# rg and fzf
 #=-----------------------------------------------------------------------------
-
-# set default - also used by vim
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
-
+#`
 rg_command='rg --column --line-number --no-heading --fixed-strings '
 rg_command+='--ignore-case --no-ignore --hidden --color "always" --glob "!.git"'
 rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "always"'
 
+# set default - also used by vim
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
+
+#
+# rg and fzf functions - some custom, some from fzf wiki examples
+#=-----------------------------------------------------------------------------
+#`
 sf() {
     local files
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
@@ -287,10 +286,6 @@ sfd(){
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
 }
 
-
-# from fzf wiki examples
-#=-----------------------------------------------------------------------------
-
 fco(){
     # checkout git branch/tag
     local tags branches target
@@ -311,8 +306,7 @@ fcoc(){
     # checkout git commit
     local commits commit
     commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-    # +s --no-sort ; +m --no-multi ; --tac "reverse order of the input"
-    commit=$(echo "$commits" | fzf --tac +s +m --exact) &&
+    commit=$(echo "$commits" | fzf --tac +s +m --exact) && # +s --no-sort; +m --no-multi; --tac "reverse order of input"
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -352,10 +346,10 @@ fshow(){
 FZF-EOF"
 }
 
-
+#
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
-
+#`
 ftpane(){
     local panes current_window current_pane target target_window target_pane
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
@@ -375,10 +369,10 @@ ftpane(){
     fi
 }
 
-
+#
 # try to securely deal with passwords
 #=-----------------------------------------------------------------------------
-
+#`
 readpass(){
     echo -n >&2 "Password: "
     local was="$(stty -a | grep -ow -e '-\?echo')" pass
@@ -405,8 +399,8 @@ getpass(){
     fi
 }
 
-
+#
 # work setup
 #=-----------------------------------------------------------------------------
-
+#`
 [ -f ~/.workrc ] && . ~/.workrc
