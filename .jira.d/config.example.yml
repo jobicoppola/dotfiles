@@ -1,7 +1,10 @@
 endpoint: <url>
 user: <user@example.com>
 password-source: keyring
+editor: vim
 
+project: <project-name>
+project_short: <project-key-in-jira>
 
 custom-commands:
   - name: env
@@ -9,43 +12,157 @@ custom-commands:
     script: |
       env | grep JIRA
 
+  - name: print-project
+    help: print the name of the configured project
+    script: |
+      echo "$JIRA_PROJECT"
+
   - name: mine
     help: display issues assigned to me
     script: |-
+      queryfields="assignee,created,priority,reporter,status,summary,issuetype,timetracking,customfield_10102"
       if [ -n "$JIRA_PROJECT" ]; then
           # if `project: ...` configured just list the issues for current project
+          template="table-mine.custom"
           {{jira}} list \
-            --template table-mine \
-            --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
-            --query "resolution = unresolved and status not in (Closed, Done) and assignee=currentuser()
-                     and project = $JIRA_PROJECT ORDER BY priority desc, created"
+              --template "$template" \
+              --queryfields "$queryfields" \
+              --query "resolution = unresolved
+                       and status not in (Closed, Done)
+                       and assignee=currentuser()
+                       and project = $JIRA_PROJECT
+                       ORDER BY priority desc, created"
       else
           # otherwise list issues for all project
+          template="table-mine.custom"
           {{jira}} list \
-            --template table-mine \
-            --queryfields "assignee,created,priority,reporter,status,summary,updated,issuetype,timetracking,customfield_10102" \
-            --query "resolution = unresolved and status not in (Closed, Done) and assignee=currentuser()
-                     ORDER BY priority desc, created"
+              --template "$template" \
+              --queryfields "$queryfields" \
+              --query "resolution = unresolved
+                       and status not in (Closed, Done)
+                       and assignee=currentuser()
+                       ORDER BY priority desc, created"
       fi
 
-  - name: sprint
+  - name: epics
+    help: prints list of epics in configured project
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current proj
+          # customfield_10001 (Team)
+          team_id=1
+          template="epics.custom"
+          {{jira}} list \
+              --template "$template" \
+              --queryfields "assignee,created,reporter,status,summary,issuetype,customfield_10001" \
+              --query "resolution = unresolved
+                       and status not in (Closed, Done)
+                       and issuetype = Epic
+                       and project = $JIRA_PROJECT
+                       and Team = $team_id
+                       ORDER BY priority asc, created"
+      else
+          # otherwise list issues for all projects
+          template="table"
+          {{jira}} list \
+              --template "$template" \
+              --query "resolution = unresolved
+                       and status not in (Closed, Done)
+                       and issuetype = Epic
+                       ORDER BY priority asc, created"
+      fi
+
+  - name: sprints
     help: display issues for active sprint
     script: |-
       if [ -n "$JIRA_PROJECT" ]; then
           # if `project: ...` configured just list the issues for current project
+          template="table"
           {{jira}} list \
-            --template table \
-            --query "sprint in openSprints()
-                     and type != epic
-                     and resolution = unresolved
-                     and project=$JIRA_PROJECT ORDER BY rank asc, created"
+              --template "$template" \
+              --query "sprint in openSprints()
+                       and type != Epic
+                       and resolution = unresolved
+                       and status not in (Closed, Done)
+                       and project=$JIRA_PROJECT
+                       ORDER BY rank asc, created"
       else
           # otherwise list issues for all project
+          template="table"
           {{jira}} list \
-            --template table \
-            --query "sprint in openSprints()
-                     and type != epic
-                     and resolution = unresolved ORDER BY rank asc, created"
+              --template "$template" \
+              --query "sprint in openSprints()
+                       and type != Epic
+                       and resolution = unresolved
+                       and status not in (Closed, Done)
+                       ORDER BY rank asc, created"
+      fi
+
+  - name: sprint
+    help: display issues for active sprint
+    options:
+      - name: status
+        short: s
+        default: ""
+    script: |-
+      case "{{options.status}}" in
+          t|todo) STATUS="to do"
+          ;;
+          p|progress) STATUS="in progress"
+          ;;
+          rev|review) STATUS="in review"
+          ;;
+          r) STATUS="resolved"
+          ;;
+          d) STATUS="done"
+          ;;
+          "<no value>") STATUS=""
+          ;;
+          *) STATUS="{{options.status}}"
+      esac
+      if [ -n "$STATUS" ]; then
+          STATUS_QUERY="and status='$STATUS'"
+      fi
+      if [ -n "$JIRA_PROJECT" ]; then
+          template="table.custom"
+          {{jira}} list \
+              --template "$template" \
+              --query "sprint in openSprints()
+                     and resolution = unresolved
+                     and project=$JIRA_PROJECT $STATUS_QUERY
+                     ORDER BY rank asc, created"
+      else
+          echo "\"project: ...\" configuration missing from .jira.d/config.yml"
+      fi
+
+  - name: sprint-add
+    help: add issue to active sprint for project
+    options:
+      - name: next
+        short: 'n'
+        type: bool
+        help: add issue to next sprint, rather than the active one
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      if [ -n "$JIRA_PROJECT" ]; then
+          state={{if options.next}}future{{else}}active{{end}}
+          board_id=$({{jira}} req \
+              "/rest/agile/1.0/board?projectKeyOrId=$jiraproj&type=scrum" \
+              --gjq values.0.id)
+          sprint_id=$({{jira}} req \
+              "/rest/agile/1.0/board/$board_id/sprint?state=$state" \
+              --gjq values.0.id)
+          if [ "$sprint_id" = "" ]; then
+              echo "ERROR: No $state sprint" >&2
+              exit 1
+          fi
+          {{jira}} req -M POST \
+              "/rest/agile/1.0/sprint/$sprint_id/issue" \
+              "{\"issues\":[\"{{args.ISSUE}}\"]}"
+      else
+          echo "\"project: ...\" configuration missing from .jira.d/config.yml"
       fi
 
   - name: custom-test
@@ -69,7 +186,7 @@ custom-commands:
       - name: MORE
         repeat: true
     script: |
-      echo COMMAND {{args.ARG}} \
-        --abc {{options.abc}} \
-        --day {{options.day}} \
-        {{range $more := args.MORE}}{{$more}} {{end}}
+        echo COMMAND {{args.ARG}} \
+            --abc {{options.abc}} \
+            --day {{options.day}} \
+            {{range $more := args.MORE}}{{$more}} {{end}}
