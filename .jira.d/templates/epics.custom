@@ -1,0 +1,19 @@
+{{/* custom epics template */ -}}
+{{$w := sub termWidth 90 -}}
+{{ range .issues -}}
+  {{ .key | printf "%-12s" -}}
+  {{ .fields.summary | abbrev 76 | printf "%-78s" -}}
+  {{ .fields.issuetype.name | printf "%-8s" -}}
+  {{ .fields.status.name | printf "%-9s" -}}
+  {{ (.fields.created | age | printf "%-12s") -}}
+  {{ if .fields.customfield_10001 }}
+    {{- .fields.customfield_10001.title | printf "%-11s" -}}
+  {{ else }}
+    {{- "<team-unassigned>" -}}
+  {{ end -}}
+  {{ if .fields.reporter }}
+    {{- .fields.reporter.displayName | printf "%-22s" -}}
+  {{ else }}
+    {{- "<unknown>" -}}
+  {{ end }}
+{{ end }}

@@ -1,0 +1,14 @@
+{{/* table template */ -}}
+{{$w := sub termWidth 68 -}}
+{{ range .issues -}}
+  {{ .key | printf "%-7s"}}
+  {{ .fields.summary | abbrev (sub $w 2) | printf (printf "%%-%ds" (sub $w 2)) }}
+  {{.fields.issuetype.name | printf "%-12s" }}
+  {{if .fields.priority}}
+    {{.fields.priority.name | printf "%-12s" }}
+  {{else}}
+    <unassigned>
+  {{end}}
+  {{.fields.status.name | printf "%-12s" }}
+  {{.fields.created | age | printf "%-10s" }}
+{{ end -}}

@@ -1,0 +1,19 @@
+{{/* custom epic list template */ -}}
+{{$w := sub termWidth 84 -}}
+{{ range .issues -}}
+  {{ .key | printf "%-7s"}}
+  {{ .fields.summary | abbrev (sub $w 1) | printf (printf "%%-%ds" (sub $w 1)) }}
+  {{.fields.issuetype.name | printf "%-14s" }}
+  {{if .fields.priority}}
+    {{.fields.priority.name | printf "%-12s" }}
+  {{else}}
+    --
+  {{end}}
+  {{.fields.status.name | printf "%-12s" }}
+  {{.fields.created | age | printf "%-9s" }}
+  {{if .fields.assignee }}
+    {{.fields.assignee.name | printf "%-20s" }}
+  {{else}}
+    --
+  {{end}}
+{{ end -}}
