@@ -57,7 +57,7 @@ if [[ "$OS" == Darwin ]]; then
     PY=/usr/local/opt/python/libexec/bin
     P1=$PY:$COREUTILS:$GREP
     P2=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
-    P3=$HOME/bin:$HOME/go/bin
+    P3=$HOME/bin:$HOME/go/bin:$HOME/.cargo/bin
     export PATH=$P1:$P2:$P3
 else
     P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
