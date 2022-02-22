@@ -45,45 +45,44 @@ bitbucket=$repos/bitbucket
 repos_company=$github/$company
 repo_dotfiles=$github/dotfiles
 venv_default=copptop
+venvs_enabled=false
 
 # pane titles and where to start them
-one_title=dotfiles
-onee_repo=$repo_dotfiles
-onee_path=${one_repo:-$github}
+one_title=infra
+one_repo=$repos_company/terraform-aidentified-foundation
+one_path=${one_repo:-$github}
 
-two_title=terraform
-two_repo=$repos_company/terraform-aws-foundation
-two_path=${one_repo:-$github}
+two_title=aws
+two_repo=$repos_company/terraform-aidentified-compliance
+two_path=${two_repo:-$github}
 
 three_title=ansible
 three_repo=$repos_company/aidentified-ops
-three_path=${two_repo:-$github}
+three_path=${three_repo:-$github}
 
 four_title=api
 four_repo=$repos_company/coredata-api
-four_path=${seven_repo:-$github}
+four_path=${four_repo:-$github}
 
 five_title=aidrc
 five_repo=$repos_company/aidentifiedrc
-five_path=${six_repo:-$github}
+five_path=${five_repo:-$github}
 
-six_title=work
-six_repo=$repos_company/
+six_title=dotfiles
+six_repo=$repo_dotfiles
 six_path=${six_repo:-$github}
 
-seven_title=work
-seven_repo=$repos_company/
-seven_path=${seven_repo:-$github}
+seven_title=scratch
+seven_repo=""
+seven_path=${seven_repo:-~}
 
-three_title=scratch
-three_path=~
-
-eight_title=aws
-eight_repo=$repos_company/
-eight_path=~
+eight_title=misc
+eight_repo=""
+eight_path=${eight_repo:-~}
 
 nine_title=home
-nine_path=~
+nine_repo=""
+nine_path=${nine_repo:-~}
 
 # create directories if necessary
 for dir in ${repos} ${github} ${bitbucket} ${venvs}; do
@@ -110,7 +109,7 @@ for n in {1..9}; do
     # configure each window; always select pane on right side
     #
 
-    # 1: terraform-aws-foundation
+    # 1: infra
     if [ $n -eq 1 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $one_path" C-m
@@ -118,17 +117,16 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $one_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 2: ops
-    elif [ $n -eq 8 ]; then
+    # 2: aws
+    elif [ $n -eq 2 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $two_path" C-m
         tmux send -t $session:$n.1 "cd $two_path" C-m
         tmux send -t $session:$n.2 "cd $two_path && git status -sb" C-m
-        # TODO: add panes for `ssh ops1` and `watchmedo tricks-from .watchmedo.yaml`
         tmux select-pane -t $session:$n.2
 
 
-    # 3: three
+    # 3: ansible
     elif [ $n -eq 3 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $three_path" C-m
@@ -136,7 +134,7 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $three_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 4: venvs
+    # 4: api
     elif [ $n -eq 4 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $four_path" C-m
@@ -144,7 +142,7 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $four_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 5: dotfiles
+    # 5: aidrc
     elif [ $n -eq 5 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $five_path" C-m
@@ -152,7 +150,7 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $five_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 6: aidrc
+    # 6: dotfiles
     elif [ $n -eq 6 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $six_path" C-m
@@ -160,18 +158,18 @@ for n in {1..9}; do
         tmux send -t $session:$n.2 "cd $six_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
 
-    # 7: api
+    # 7: scratch
     elif [ $n -eq 7 ]; then
         tmux splitw -v -t $session:$n.left
         tmux send -t $session:$n.0 "cd $seven_path" C-m
         tmux send -t $session:$n.1 "cd $seven_path" C-m
-        tmux send -t $session:$n.2 "cd $seven_path && git status -sb" C-m
+        tmux send -t $session:$n.2 "cd $seven_path && date" C-m
         tmux select-pane -t $session:$n.2
 
-    # 8: aws
-    elif [ $n -eq 2 ]; then
+    # 8: misc
+    elif [ $n -eq 8 ]; then
         tmux send -t $session:$n.left "cd $eight_path" C-m
-        tmux send -t $session:$n.right "cd $eight_path" C-m
+        tmux send -t $session:$n.right "cd $eight_path && date" C-m
         tmux select-pane -t $session:$n.1
 
     # 9: home
@@ -188,9 +186,11 @@ for n in {1..9}; do
 done
 
 # tell venvs to workon default venv
-for i in {0..2}; do
-    tmux send -t $session:4.$i "workon $venv_default" C-m
-done
+if [ "$venvs_enabled" = "true" ]; then
+    for i in {0..2}; do
+        tmux send -t $session:4.$i "workon $venv_default" C-m
+    done
+fi
 
 # start admin session on win 0
 tmux send -t $session:0 "sudo su -" C-m
