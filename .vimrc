@@ -50,6 +50,17 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
 
 " plugins required by deoplete
+"
+" note: to fix vim E605 errors loading deoplete after a homebrew/python upgrade
+"
+"   - check the paths being used by the vim python
+"   - in vim, run `:pythonx import sys; print(sys.path)`
+"   - if python paths differ from expected, deps likely need to be reinstalled
+"   - install deps such as `pynvim` via the appropriate pip executable path
+"   - for example:
+"
+"       `/usr/local/opt/python@3.10/bin/pip3.10 install pynvim`
+"
 Plugin 'Shougo/deoplete.nvim'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
