@@ -11,7 +11,7 @@
 	defaultBranch = main
 [core]
     excludesfile = ~/.gitignore-global
-    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-style=plain --theme='Dracula'
+    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-header-style=plain --syntax-theme='Dracula'
 [push]
     default = current
 [pull]
@@ -28,7 +28,7 @@
 [pretty]
     jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%aN%Creset %Cgreen%cr%Creset
     jobi-nonames = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset
-    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-style=plain --theme='DarkNeon'
+    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-header-style=plain --syntax-theme='DarkNeon'
 [color]
     ui = auto
     diff = auto
@@ -43,8 +43,7 @@
 [github]
     user = jobicoppola
     email = <email-here>
-    token = <github-token-here>
-    password = !security 2>&1 >/dev/null find-generic-password -gs github.password | ruby -e 'print $1 if STDIN.gets =~ /^password: \\\"(.*)\\\"$/'
+    ;token = <github-token-here>
 [gist]
     extension = 'py'
     browse = no
