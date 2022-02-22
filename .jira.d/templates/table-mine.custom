@@ -1,4 +1,4 @@
-{{/* table template */ -}}
+{{/* custom table template for `mine` command */ -}}
 {{- headers "Issue" "Summary" "Type" "Priority" "Status" "Age" "Reporter" "Assignee" "Estimate" "Points" -}}
 {{- range .issues -}}
   {{- row -}}
