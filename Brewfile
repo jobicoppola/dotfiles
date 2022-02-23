@@ -12,18 +12,18 @@ tap 'homebrew/bundle'
 
 # essential utils
 brew 'bash'
-brew 'bash-completion'
 brew 'coreutils'
 brew 'git'
 brew 'lua'
 brew 'tmux'
 brew 'vim'
 
-# go, python, ruby
+# go, python, ruby, rust
 brew 'golang'
 brew 'python'
 brew 'python3'
 brew 'ruby'
+brew 'rust'
 
 # handy improvers of life
 brew 'awscli'
@@ -63,6 +63,7 @@ brew 'wget'
 brew 'xsv'
 
 # completions
+brew 'bash-completion@2'
 brew 'django-completion'
 brew 'docker-completion'
 brew 'docker-compose-completion'
@@ -89,3 +90,9 @@ brew 'cloudsplaining'
 
 # manage local creds
 cask 'aws-vault'
+
+# jira interactive cli
+# this looks interesting but conflicts with `go-jira` so commenting out for now
+#tap 'ankitpokhrel/jira-cli'
+#brew 'jira-cli'
+

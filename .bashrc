@@ -221,7 +221,8 @@ if [[ "$OS" == Darwin ]]; then
 
     # homebrew completions
     localbrew=$(brew --prefix)/etc
-    brew_completions=${localbrew}/bash_completion
+    #brew_completions=${localbrew}/bash_completion              # path for `bash-completion` (old)
+    brew_completions=${localbrew}/profile.d/bash_completion.sh  # path for `bash-completion@2` (bash4+)
     grc_completions=${localbrew}/grc.bashrc
     [ -L "$brew_completions" ] && . "$brew_completions"
     [ -f "$grc_completions" ] && . "$grc_completions"
@@ -257,20 +258,20 @@ sf() {
     local files
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
-    files=$(eval $rg_command $search \
+    files=$(eval "$rg_command" "$search" \
             | fzf --ansi --multi --reverse \
             | awk -F ':' '{print $1":"$2":"$3}')
-    [[ -n "$files" ]] && ${EDITOR:-vim} $files
+    [[ -n "$files" ]] && ${EDITOR:-vim} "$files"
 }
 
 sd() {
     local directories
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
-    directories=$(eval $rg_command_dirs -g \"*$search*\" --files \
+    directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files \
                   | sort -u \
                   | fzf --ansi --multi --reverse)
-    [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
+    [[ -n "$directories" ]] && ${EDITOR:-vim} "$directories"
 }
 
 sfd(){
