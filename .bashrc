@@ -261,17 +261,19 @@ sf() {
     files=$(eval "$rg_command" "$search" \
             | fzf --ansi --multi --reverse \
             | awk -F ':' '{print $1":"$2":"$3}')
-    [[ -n "$files" ]] && ${EDITOR:-vim} "$files"
+    # shellcheck disable=SC2086
+    [[ -n "$files" ]] && ${EDITOR:-vim} $files
 }
 
 sd() {
     local directories
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
-    directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files \
+    directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files -l \
                   | sort -u \
                   | fzf --ansi --multi --reverse)
-    [[ -n "$directories" ]] && ${EDITOR:-vim} "$directories"
+    # shellcheck disable=SC2086
+    [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
 }
 
 sfd(){
@@ -279,11 +281,12 @@ sfd(){
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
 
-    files=$(eval $rg_command $search | awk -F ':' '{print $1":"$2":"$3}')
-    directories=$(eval $rg_command_dirs -g "*$search*" --files | sort -u)
+    files=$(eval "$rg_command" "$search" | awk -F ':' '{print $1":"$2":"$3}')
+    directories=$(eval "$rg_command_dirs" -g "*$search*" --files | sort -u)
 
     fd=( "${directories[@]}" "${files[@]}" )
     all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
+    # shellcheck disable=SC2086
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
 }
 
@@ -332,6 +335,21 @@ fcs(){
               --pretty=oneline --abbrev-commit --reverse) &&
     commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse) &&
     echo -n $(echo "$commit" | sed "s/ .*//")
+}
+
+ffd(){
+    local dir fd
+    fd=$(which fd)
+    fd="${fd:-find}"
+
+    if [[ "$fd" == find ]]; then
+        dir=$(find "${1:-.}" -path '*/\.*' -prune -o -type d -print \
+                2>/dev/null | fzf +m) \
+            && cd "$dir" || return
+    else
+        dir=$($fd --prune --type d "${1:-.}" 2>/dev/null | fzf +m) \
+            && cd "$dir" || return
+    fi
 }
 
 fshow(){
