@@ -48,6 +48,7 @@ Plugin 'thanethomson/vim-jenkinsfile'
 Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
+Plugin 'dracula/vim', { 'name': 'dracula' }
 
 " plugins required by deoplete
 "
@@ -147,7 +148,7 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax on                               " syntax highlighting
-color molokai_macbot                    " color scheme
+colorscheme molokai_macbot              " color scheme
 
 
 "\_____________________________________________________________________________
