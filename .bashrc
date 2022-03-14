@@ -337,7 +337,7 @@ fcs(){
     echo -n $(echo "$commit" | sed "s/ .*//")
 }
 
-ffd(){
+cdf(){
     local dir fd
     fd=$(which fd)
     fd="${fd:-find}"
