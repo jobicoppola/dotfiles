@@ -140,7 +140,7 @@ export VIRTUALENVWRAPPER_SCRIPT=${vepy_wrapper}
 #=-----------------------------------------------------------------------------
 #`
 get_venv(){
-    [ "${VIRTUAL_ENV}" ] && echo "$(basename ${VIRTUAL_ENV}):"
+    [ "${VIRTUAL_ENV}" ] && echo "$(basename "$VIRTUAL_ENV"):"
 }
 
 get_git_branch_current(){
@@ -167,13 +167,13 @@ get_git_status(){
     SMSG='Changes not staged for commit'
     UMSG='nothing added to commit but untracked files present'
     GSTAT=$(git status 2> /dev/null) || return
-    if [[ $(echo "${GSTAT}" |grep -c "${SMSG}") > 0 ]]; then
+    if [[ $(echo "${GSTAT}" |grep -c "${SMSG}") -gt 0 ]]; then
         echo '?'
-    elif [[ $(echo "${GSTAT}" |grep -c "${TMSG}") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${TMSG}") -gt 0 ]]; then
         echo '!'
-    elif [[ $(echo "${GSTAT}" |grep -c "${UMSG}") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${UMSG}") -gt 0 ]]; then
         echo 'u'
-    elif [[ $(echo "${GSTAT}" |grep -c "${CMSG}") > 0 ]]; then
+    elif [[ $(echo "${GSTAT}" |grep -c "${CMSG}") -gt 0 ]]; then
         echo '¬'
     else
         echo 'f'
@@ -205,7 +205,7 @@ else
 fi
 
 #
-# source aliases and other custom config files
+# source aliases, completions and other custom config files
 #=-----------------------------------------------------------------------------
 #`
 [ -f ~/.alias ] && . ~/.alias
@@ -219,24 +219,36 @@ fi
 if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
+    # homebrew paths
+    brewpath=$(brew --prefix)
+    brewconf=${brewpath}/etc
+
     # homebrew completions
-    localbrew=$(brew --prefix)/etc
-    #brew_completions=${localbrew}/bash_completion              # path for `bash-completion` (old)
-    brew_completions=${localbrew}/profile.d/bash_completion.sh  # path for `bash-completion@2` (bash4+)
-    grc_completions=${localbrew}/grc.bashrc
-    [ -L "$brew_completions" ] && . "$brew_completions"
+    bash_completions=${brewconf}/profile.d/bash_completion.sh  # path for `bash-completion@2` (bash4+)
+    git_completions=${brewconf}/bash_completion.d/git-completion.bash
+    grc_completions=${brewconf}/grc.bashrc
+
+    # source homebrew completions
+    [ -L "$bash_completions" ] && . "$bash_completions"
     [ -f "$grc_completions" ] && . "$grc_completions"
+    [ -f "$git_completions" ] && . "$git_completions"
 
     # awscli completions
     [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 
-    # other completions
+    # fzf installer
+    "${brewpath}/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1
+
+    # fzf completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
+
+    # ssh completions
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
+
+    # terraform completions `terraform-docs completion bash`
     [ -f ~/bash_completion.d/terraform ] && . ~/bash_completion.d/terraform
-    [ -f ~/bash_completion.d/terraform-docs ] && . ~/bash_completion.d/terraform-docs  # terraform-docs completion bash
-    [ -f ~/bash_completion.d/helm ] && . ~/bash_completion.d/helm  # helm completion bash > bash_completion.d/helm
-    [ -f ~/bash_completion.d/oc ] && . ~/bash_completion.d/oc      # oc completion bash > bash_completion.d/oc
+    [ -f ~/bash_completion.d/terraform-docs ] && . ~/bash_completion.d/terraform-docs
+
 fi
 
 #
@@ -303,14 +315,16 @@ fco(){
                | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
     target=$( (echo "$tags"; echo "$branches") \
                | fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+    # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$target" | awk '{print $2}')
 }
 
 fcoc(){
     # checkout git commit
     local commits commit
-    commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-    commit=$(echo "$commits" | fzf --tac +s +m --exact) && # +s --no-sort; +m --no-multi; --tac "reverse order of input"
+    commits=$(git log --pretty=oneline --abbrev-commit --reverse)
+    commit=$(echo "$commits" | fzf --tac +s +m --exact)  # +s --no-sort; +m --no-multi; --tac "reverse order of input"
+    # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -321,23 +335,26 @@ fcor(){
                --count=$limit \
                --sort=-committerdate \
                refs/heads/ \
-               --format="%(refname:short)") &&
+               --format="%(refname:short)")
     branch=$(echo "$branches" \
-             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)
+    # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
 fcs(){
-    # get git commit sha
-    # example usage: git rebase -i `fcs`
+    # checkout commit sha
     local commits commit
     commits=$(git log --color=always \
-              --pretty=oneline --abbrev-commit --reverse) &&
-    commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse) &&
-    echo -n $(echo "$commit" | sed "s/ .*//")
+              --pretty=oneline --abbrev-commit --reverse)
+    commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse)
+    # shellcheck disable=SC2001,SC2046
+    git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
 }
 
 cdf(){
+    # fzf also provides similar functionality for many commands, with **
+    # e.g. `cd **<TAB>` or `vi **<TAB>`
     local dir fd
     fd=$(which fd)
     fd="${fd:-find}"
@@ -377,14 +394,14 @@ ftpane(){
 
     target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
 
-    target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
-    target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+    target_window=$(echo "$target" | awk 'BEGIN{FS=":|-"} {print$1}')
+    target_pane=$(echo "$target" | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
 
     if [[ $current_window -eq $target_window ]]; then
-        tmux select-pane -t ${target_window}.${target_pane}
+        tmux select-pane -t "${target_window}.${target_pane}"
     else
-        tmux select-pane -t ${target_window}.${target_pane} &&
-        tmux select-window -t $target_window
+        tmux select-pane -t "${target_window}.${target_pane}" &&
+        tmux select-window -t "$target_window"
     fi
 }
 
@@ -393,10 +410,11 @@ ftpane(){
 #=-----------------------------------------------------------------------------
 #`
 readpass(){
+    local was
     echo -n >&2 "Password: "
-    local was="$(stty -a | grep -ow -e '-\?echo')" pass
+    was="$(stty -a | grep -ow -e '-\?echo')" pass
     stty -echo
-    read pass
+    read -r pass
     stty "$was"
     echo >&2
     echo "$pass"
@@ -407,7 +425,7 @@ setpass(){
     if [[ "$OS" == Darwin ]]; then
         pw=$(readpass)
         security delete-generic-password -a "$group" -s "$id" 2> /dev/null
-        security add-generic-password -a "$group" -s "$id" -w $pw
+        security add-generic-password -a "$group" -s "$id" -w "$pw"
     fi
 }
 
