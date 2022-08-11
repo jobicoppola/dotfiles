@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+#
+# report info about various components
+#
+# to see the full list of data types available on macos, run:
+#
+#   `system_profiler -listDataTypes`
+#
+os_nick=
+os_uname=$(uname)
+
+[ "$os_uname" == Darwin ] && os_nick=macos || os_nick=linux
+
+# functions
+#
+usage(){
+    local pre="\nUsage:"
+    local msg="\n
+    -a|all          Show all system info
+    -b|battery      Information about system batteries (laptop)
+    -d|display      Details of system displays and graphics cards
+    -e|ethernet     Ethernet information
+    -H|hw|hardware  Display an overview of the system hardware
+    -m|memory       Info about ystem memory slots
+    -n|network      Networking hardware info
+    -N|nvme|ssd     Fast storage info
+    -p|power        System power and battery info
+    -S|sw|software  Short overview of system software
+    -s|storage      Local disk and volume info
+    -u|usb          USB port and controller details
+    "
+    printf "%b %s %-b" "$pre" "$0" "$msg"
+    exit 2
+}
+
+#
+all(){
+    all_${os_nick}
+}
+all_macos(){
+    data_types_macos=(
+        SPAudioDataType
+        SPBluetoothDataType
+        SPCameraDataType
+        SPDisplaysDataType
+        SPEthernetDataType
+        SPHardwareDataType
+        SPHardwareRAIDDataType
+        SPMemoryDataType
+        SPNetworkDataType
+        SPNVMeDataType
+        SPPowerDataType
+        SPSoftwareDataType
+        SPStorageDataType
+        SPUSBDataType
+    )
+    system_profiler "${data_types_macos[@]}"
+}
+all_linux(){
+    echo "TODO: linux all hardware report command"
+}
+
+#
+battery(){
+    battery_${os_nick}
+}
+battery_macos(){
+    system_profiler SPPowerDataType |sed '1d' |head -n21
+}
+battery_linux(){
+    upower -i "$(upower -e |grep BAT)"
+}
+
+#
+displays(){
+    displays_${os_nick}
+}
+displays_macos(){
+    system_profiler SPDisplaysDataType
+}
+displays_linux(){
+    echo "TODO: linux displays (monitors) hardware report command"
+}
+
+#
+ethernet(){
+    ethernet_${os_nick}
+}
+ethernet_macos(){
+    system_profiler SPEthernetDataType
+}
+ethernet_linux(){
+    echo "TODO: linux ethernet hardware report command"
+}
+
+#
+hardware(){
+    hardware_${os_nick}
+}
+hardware_macos(){
+    system_profiler SPHardwareDataType
+}
+hardware_linux(){
+    echo "TODO: linux hardware report command"
+}
+
+#
+memory(){
+    memory_${os_nick}
+}
+memory_macos(){
+    system_profiler SPMemoryDataType
+}
+memory_linux(){
+    #cat /proc/meminfo  # see if something better available now
+    echo "TODO: linux memory hardware report command"
+}
+
+#
+network(){
+    network_${os_nick}
+}
+network_macos(){
+    system_profiler SPNetworkDataType
+}
+network_linux(){
+    echo "TODO: linux network hardware report command"
+}
+
+#
+nvme(){
+    nvme_${os_nick}
+}
+nvme_macos(){
+    system_profiler SPNVMeDataType
+}
+nvme_linux(){
+    echo "TODO: linux nvme / ssd hardware report command"
+}
+
+#
+power(){
+    power_${os_nick}
+}
+power_macos(){
+    system_profiler SPPowerDataType  # includes info about battery as well
+}
+power_linux(){
+    echo "TODO: linux power hardware report command"
+}
+
+#
+software(){
+    software_${os_nick}
+}
+software_macos(){
+    system_profiler SPStorageDataType
+}
+software_linux(){
+    echo "TODO: linux software report command"
+}
+
+#
+storage(){
+    storage_${os_nick}
+}
+storage_macos(){
+    system_profiler SPStorageDataType
+}
+storage_linux(){
+    echo "TODO: linux storage hw report command"
+}
+
+#
+usb(){
+    usb_${os_nick}
+}
+storage_macos(){
+    system_profiler SPUSBDataType
+}
+storage_linux(){
+    echo "TODO: linux usb report command"
+}
+
+# do the things
+#
+case "$1" in
+    -a|all)        all       ;;
+    -b|bat*)       battery   ;;
+    -d|display*)   display   ;;
+    -e|eth*)       ethernet  ;;
+    -H|hw|hard*)   hardware  ;;
+    -m|mem*)       memory    ;;
+    -n|network)    network   ;;
+    -N|nvme|ssd)   nvme      ;;
+    -p|power)      power     ;;
+    -S|sw|soft*)   software  ;;
+    -s|stor*)      storage   ;;
+    -u|usb)        usb       ;;
+    *) usage
+esac
