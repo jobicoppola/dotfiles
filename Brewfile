@@ -53,21 +53,21 @@ brew 'ripgrep'
 brew 'shellcheck'
 brew 'speedtest-cli'
 brew 'ssh-copy-id'
-brew 'terraform'
-brew 'terraform-docs'
-brew 'tflint'
 brew 'tig'
 brew 'tree'
 brew 'watch'
 brew 'wget'
 brew 'xsv'
 
+# terraform - use tfenv to manage binaries
+brew 'terraform-docs'
+brew 'tfenv'
+brew 'tflint'
+
 # completions
 brew 'bash-completion@2'
 brew 'django-completion'
 brew 'docker-completion'
-brew 'docker-compose-completion'
-brew 'docker-machine-completion'
 brew 'gem-completion'
 brew 'packer-completion'
 brew 'pip-completion'
@@ -84,15 +84,12 @@ brew 'qmk/qmk/qmk'
 tap 'ms-jpq/sad'
 brew 'sad'
 
-# cloudsplain
-tap 'salesforce/cloudsplaining'
-brew 'cloudsplaining'
-
 # manage local creds
 cask 'aws-vault'
+cask 'git-credential-manager-core'
 
-# jira interactive cli
-# this looks interesting but conflicts with `go-jira` so commenting out for now
-#tap 'ankitpokhrel/jira-cli'
-#brew 'jira-cli'
-
+# cloudsplain - might have to run install commands manually
+# `brew tap salesforce/cloudsplaining https://github.com/salesforce/cloudsplaining`
+# `brew install cloudsplaining`
+tap 'salesforce/cloudsplaining'
+brew 'cloudsplaining'
