@@ -11,7 +11,7 @@
 	defaultBranch = main
 [core]
     excludesfile = ~/.gitignore-global
-    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-header-style=plain --syntax-theme='Dracula'
+    pager = BAT_PAGER='less -iRFX' delta --dark --hunk-header-style=plain --syntax-theme='Dracula'
 [push]
     default = current
 [pull]
@@ -28,7 +28,7 @@
 [pretty]
     jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%aN%Creset %Cgreen%cr%Creset
     jobi-nonames = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset
-    pager = BAT_PAGER='less -IRFX' delta --dark --hunk-header-style=plain --syntax-theme='DarkNeon'
+    pager = BAT_PAGER='less -iRFX' delta --dark --hunk-header-style=plain --syntax-theme='DarkNeon'
 [color]
     ui = auto
     diff = auto

@@ -26,6 +26,7 @@ alias venvs='cd ~/venvs/'
 
 # vi
 alias vi='vim'
+alias vif='vi "$(fzf)"'
 alias sbash=". ~/.bashrc"
 alias vbash="vi ~/git/github/dotfiles/.bashrc"
 alias jcc="vi ~/Dropbox/sync/shell/legacy/jc3"
@@ -42,11 +43,12 @@ alias gi="gem install --no-rdoc --no-ri"
 alias gu="gem update --no-rdoc --no-ri"
 alias tail="grc tail"
 alias diff="colordiff"
-alias less='less -IRFX'
+alias less='less -iRFX'
 alias pipup='pip install --upgrade'
 alias fib='echo 0,1,1,2,3,5,8,13,21,34,55,89,144'
 alias mtr='mtr --curses'
 alias mtail='multitail'
+alias mvi='mv -i'
 alias emo='emojify'
 alias emol='emo --list'
 alias emog='emol |grep'
@@ -144,5 +146,6 @@ ak_headers=(
     akamai-x-get-true-cache-key
     akamai-x-serial-no
 )
+# shellcheck disable=SC2139
 alias acurl="curl -H 'Pragma: ${ak_headers[*]}' -sSiLD - -o /dev/null"
 alias scurl="curl -sSiLD - -o /dev/null"
