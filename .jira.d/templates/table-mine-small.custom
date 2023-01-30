@@ -1,0 +1,14 @@
+{{/* custom table template for `mine` command */ -}}
+{{- headers "Issue" "Summary" "Type" "Priority" "Status" -}}
+{{- range .issues -}}
+  {{- row -}}
+  {{- cell .key -}}
+  {{- cell .fields.summary -}}
+  {{- cell .fields.issuetype.name -}}
+  {{- if .fields.priority -}}
+    {{- cell .fields.priority.name -}}
+  {{- else -}}
+    {{- cell "<none>" -}}
+  {{- end -}}
+  {{- cell .fields.status.name -}}
+{{- end -}}

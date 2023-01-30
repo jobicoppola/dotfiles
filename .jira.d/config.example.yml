@@ -19,11 +19,25 @@ custom-commands:
 
   - name: mine
     help: display issues assigned to me
+    options:
+      - name: size
+        short: s
+        default: "full"
     script: |-
       queryfields="assignee,created,priority,reporter,status,summary,issuetype,timetracking,customfield_10102"
+      template="table-mine.custom"
+      case "{{options.size}}" in
+          f|full) SIZE="full"
+          ;;
+          s|small) SIZE="small"
+          ;;
+          *) SIZE="{{options.size}}"
+      esac
+      if [ "$SIZE" = "small" ]; then
+          template="table-mine-small.custom"
+      fi
       if [ -n "$JIRA_PROJECT" ]; then
           # if `project: ...` configured just list the issues for current project
-          template="table-mine.custom"
           {{jira}} list \
               --template "$template" \
               --queryfields "$queryfields" \

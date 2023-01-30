@@ -53,6 +53,7 @@ Here are a few examples of how you might use this tool to get info from Jira:
 * `jira in-progress XYZ-0000` - move issue to status "in progress"
 * `jira worklog add XYZ-0000` - open template in $EDITOR to add worklog
 * `jira worklog add --noedit -T 1h XYZ-0000` - add 1hr of work with no description
+* `jira view XYZ-0000 -t debug > field-info.json` - use debug template to see fields
 
 # Known Issues
 
@@ -60,7 +61,7 @@ You still have to use Jira 😮
 
 # Links
 
-* [Jira](https://jira2.performgroup.com)
+* [Jira](https://www.atlassian.com/software/jira)
 * [go-jira](https://github.com/go-jira/jira)
 
 # Contact
