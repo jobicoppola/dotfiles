@@ -215,6 +215,9 @@ fi
 [ -f ~/.miscrc ] && . ~/.miscrc
 [ -f ~/.awsrc ] && . ~/.awsrc
 
+# http status codes
+[ -f ~/.http-status-codes ] && . ~/.http-status-codes
+
 # mac specific
 if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx

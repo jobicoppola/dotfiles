@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+#
+# made from output of `http-status` command
+# `npm install httpsc`
+#
+# ᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧ
+# 100
+#
+h1xx(){
+    local msg
+    msg=$(cat <<-'EOF'
+1xx — (Informational): The request was received, continuing process
+
+An informational response indicates that the request was received and understood. It is issued on a provisional basis while request processing continues. It alerts the client to wait for a final response. The message consists only of the status line and optional header fields, and is terminated by an empty line. As the HTTP/1.0 standard did not define any 1xx status codes, servers must not send a 1xx response to an HTTP/1.0 compliant client except under experimental conditions.
+EOF
+    )
+    echo "$msg"
+}
+h100(){ echo '100 — Continue'; }
+h101(){ echo '101 — Switching Protocols'; }
+h102(){ echo '102 — Processing (WebDAV)'; }
+h103(){ echo '103 — Early Hints (RFC 8297)'; }
+
+#
+# ᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧ
+# 200
+#
+h2xx(){
+    local msg
+    msg=$(cat <<-'EOF'
+2xx — (Successful): The request was successfully received, understood, and accepted
+
+This class of status codes indicates the action requested by the client was received, understood and accepted.
+EOF
+    )
+    echo "$msg"
+}
+h200(){ echo '200 — OK'; }
+h201(){ echo '201 — Created'; }
+h202(){ echo '202 — Accepted'; }
+h203(){ echo '203 — Non-Authoritative Information (since HTTP/1.1)'; }
+h204(){ echo '204 — No Content'; }
+h205(){ echo '205 — Reset Content'; }
+h206(){ echo '206 — Partial Content (RFC 7233)'; }
+h207(){ echo '207 — Multi-Status (WebDAV; RFC 4918)'; }
+h208(){ echo '208 — Already Reported (WebDAV; RFC 5842)'; }
+h226(){ echo '226 — IM Used (RFC 3229)'; }
+
+#
+# ᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧ
+# 300
+#
+h3xx(){
+    local msg
+    msg=$(cat <<-'EOF'
+3xx — (Redirection): Further action needs to be taken in order to complete the request
+
+This class of status code indicates the client must take additional action to complete the request. Many of these status codes are used in URL redirection. A user agent may carry out the additional action with no user interaction only if the method used in the second request is GET or HEAD. A user agent may automatically redirect a request. A user agent should detect and intervene to prevent cyclical redirects.
+EOF
+    )
+    echo "$msg"
+}
+h300(){ echo '300 — Multiple Choices'; }
+h301(){ echo '301 — Moved Permanently'; }
+h302(){ echo '302 — Found (Previously "Moved temporarily")'; }
+h303(){ echo '303 — See Other (since HTTP/1.1)'; }
+h304(){ echo '304 — Not Modified (RFC 7232)'; }
+h305(){ echo '305 — Use Proxy (since HTTP/1.1)'; }
+h306(){ echo '306 — Switch Proxy'; }
+h307(){ echo '307 — Temporary Redirect (since HTTP/1.1)'; }
+h308(){ echo '308 — Permanent Redirect (RFC 7538)'; }
+
+#
+# ᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧ
+# 400
+#
+h4xx(){
+    local msg
+    msg=$(cat <<-'EOF'
+4xx — (Client Error): The request contains bad syntax or cannot be fulfilled
+
+This class of status code is intended for situations in which the error seems to have been caused by the client. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and whether it is a temporary or permanent condition. These status codes are applicable to any request method. User agents should display any included entity to the user.
+EOF
+    )
+    echo "$msg"
+}
+h400(){ echo '400 — Bad Request'; }
+h401(){ echo '401 — Unauthorized (RFC 7235)'; }
+h402(){ echo '402 — Payment Required'; }
+h403(){ echo '403 — Forbidden'; }
+h404(){ echo '404 — Not Found'; }
+h405(){ echo '405 — Method Not Allowed'; }
+h406(){ echo '406 — Not Acceptable'; }
+h407(){ echo '407 — Proxy Authentication Required (RFC 7235)'; }
+h408(){ echo '408 — Request Timeout'; }
+h409(){ echo '409 — Conflict'; }
+h410(){ echo '410 — Gone'; }
+h411(){ echo '411 — Length Required'; }
+h412(){ echo '412 — Precondition Failed (RFC 7232)'; }
+h413(){ echo '413 — Payload Too Large (RFC 7231)'; }
+h414(){ echo '414 — URI Too Long (RFC 7231)'; }
+h415(){ echo '415 — Unsupported Media Type'; }
+h416(){ echo '416 — Range Not Satisfiable (RFC 7233)'; }
+h417(){ echo '417 — Expectation Failed'; }
+h418(){ echo '418 — I am a teapot (RFC 2324, RFC 7168)'; }
+h421(){ echo '421 — Misdirected Request (RFC 7540)'; }
+h422(){ echo '422 — Unprocessable Entity (WebDAV; RFC 4918)'; }
+h423(){ echo '423 — Locked (WebDAV; RFC 4918)'; }
+h424(){ echo '424 — Failed Dependency (WebDAV; RFC 4918)'; }
+h426(){ echo '426 — Upgrade Required'; }
+h428(){ echo '428 — Precondition Required (RFC 6585)'; }
+h429(){ echo '429 — Too Many Requests (RFC 6585)'; }
+h431(){ echo '431 — Request Header Fields Too Large (RFC 6585)'; }
+h451(){ echo '451 — Unavailable For Legal Reasons (RFC 7725)'; }
+
+#
+# ᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧᐧ
+# 500
+#
+h5xx(){
+    local msg
+    msg=$(cat <<-'EOF'
+5xx — (Server Error): The server failed to fulfill an apparently valid request
+
+Response status codes beginning with the digit "5" indicate cases in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and indicate whether it is a temporary or permanent condition. Likewise, user agents should display any included entity to the user. These response codes are applicable to any request method.
+EOF
+    )
+    echo "$msg"
+}
+h500(){ echo '500 — Internal Server Error'; }
+h501(){ echo '501 — Not Implemented'; }
+h502(){ echo '502 — Bad Gateway'; }
+h503(){ echo '503 — Service Unavailable'; }
+h504(){ echo '504 — Gateway Timeout'; }
+h505(){ echo '505 — HTTP Version Not Supported'; }
+h506(){ echo '506 — Variant Also Negotiates (RFC 2295)'; }
+h507(){ echo '507 — Insufficient Storage (WebDAV; RFC 4918)'; }
+h508(){ echo '508 — Loop Detected (WebDAV; RFC 5842)'; }
+h510(){ echo '510 — Not Extended (RFC 2774)'; }
+h511(){ echo '511 — Network Authentication Required (RFC 6585)'; }
