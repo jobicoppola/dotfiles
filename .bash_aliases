@@ -27,6 +27,7 @@ alias venvs='cd ~/venvs/'
 # vi
 alias vi='vim'
 alias vif='vi "$(fzf)"'
+alias vifp='vi "$(fzf -m --preview="bat --theme=Dracula --color=always {}")"'
 alias sbash=". ~/.bashrc"
 alias vbash="vi ~/git/github/dotfiles/.bashrc"
 alias jcc="vi ~/Dropbox/sync/shell/legacy/jc3"
@@ -74,6 +75,7 @@ alias gdc='git diff --color-words'
 alias gra='git remote add'
 alias grr='git remote rm'
 alias gl='git log'
+alias glc='git show --name-only $(git rev-parse HEAD)'
 alias glf='git log --name-status --oneline'
 alias ga='git add'
 alias gctb='git checkout --track -b'
@@ -118,7 +120,8 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 alias rga='rg --no-ignore --hidden --ignore-case'
 
 # fzf
-alias fzp='fzf --preview "head -100 {}"'
+alias fzh='fzf --preview "head -100 {}"'
+alias fzp='fzf --preview="bat --theme=Dracula --color=always {}"'
 
 # fd fast find
 alias fdh='fd --hidden'
