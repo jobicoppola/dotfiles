@@ -44,10 +44,13 @@ Plugin 'wellle/targets.vim'
 Plugin 'fatih/vim-go'
 Plugin 'kopischke/vim-fetch'
 Plugin 'hashivim/vim-terraform'
+Plugin 'aquasecurity/vim-tfsec'
 Plugin 'thanethomson/vim-jenkinsfile'
 Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
+Plugin 'catppuccin/nvim'
+Plugin 'morhetz/gruvbox'
 Plugin 'dracula/vim', { 'name': 'dracula' }
 
 " plugins required by deoplete
@@ -134,7 +137,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
-autocmd FileType ruby,yaml,markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType javascript,ruby,yaml,markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType groovy set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
@@ -148,7 +151,35 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax on                               " syntax highlighting
-colorscheme molokai_macbot              " color scheme
+"colorscheme molokai_macbot             " color scheme
+
+" we want to use catppuccin-mocha with transparent background
+" so we have to load in config overrides via lua
+" this causes highlighting to be wonky
+" thus also need to revert lua.vim
+" see github issue:
+"
+"   https://github.com/vim/vim/issues/11277
+"
+" for `C.<color-name>` below see catppuccin nvim repo:
+"
+"   https://github.com/catppuccin/nvim (file /lua/catppuccin/palettes/mocha.lua)
+"
+lua << EOF
+require("catppuccin").setup {
+    flavour = "mocha",
+	transparent_background = true,
+    highlight_overrides = {
+        mocha = function(C)
+            return {
+                LineNr = { fg = C.surface0 },
+                ColorColumn = { bg = C.mantle },
+            }
+        end,
+    },
+}
+EOF
+colorscheme catppuccin
 
 
 "\_____________________________________________________________________________
@@ -245,6 +276,28 @@ imap <S-space> <C-R>=RopeCodeAssistInsertMode()<CR>
 
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#auto_close_doc = 1
+let g:jedi#goto_stubs_command = ""
+
+"<leader>d"
+let g:jedi#goto_command = ""
+
+"<leader>g"
+let g:jedi#goto_assignments_command = ""
+
+"<leader>s"
+let g:jedi#goto_definitions_command = ""
+
+"K"
+let g:jedi#documentation_command = ""
+
+"<leader>n"
+let g:jedi#usages_command = ""
+
+"<leader>r"
+let g:jedi#rename_command = ""
+
+"<leader>R"
+let g:jedi#rename_command_keep_name = ""
 
 
 "\_____________________________________________________________________________
@@ -529,7 +582,7 @@ let g:fzf_layout = { 'down': '~25%' }
 " (use <leader>z to search filenames). see here for syntax help:
 " https://github.com/junegunn/fzf.vim/issues/346
 "
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.git' --no-follow --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.git' --glob '!venv' --no-follow --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 
 "\_____________________________________________________________________________
@@ -556,6 +609,10 @@ nnoremap <Leader>qa :bufdo :Bdelete<CR>
 
 " always go to top of commit messages
 autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
+
+" for pull request templates
+nmap <leader>X :%sj/\[ \]/\[x\]/<CR>
+nmap <leader>xx :%sj/\[x\]/\[ \]/<CR>
 
 
 "\_____________________________________________________________________________
