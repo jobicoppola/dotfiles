@@ -13,7 +13,7 @@ diff_details=$(git diff --unified=0 --diff-filter=d ${branch} \
     $(git merge-base ${branch} origin/${current_branch}) \
       |grep -A2 '^---' \
       |sed '/^+++/d' \
-      |egrep '^@@|^---')
+      |grep -E '^@@|^---')
 
 filenames=( $(echo "$diff_details" |sed 'n;d' |cut -c7-) )
 line_numbers=( $(echo "$diff_details" \
