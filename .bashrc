@@ -17,7 +17,7 @@ OS=$(uname)  # determine os
 # command history
 HISTCONTROL=ignoreboth      # ignore duplicates and cmds starting with spaces
 shopt -s histappend         # append to history
-PROMPT_COMMAND="history -a" # append new history lines (from current shell)
+PROMPT_COMMAND="history -a" # write history from current shell every prompt
 HISTSIZE=99999              # set history length
 HISTFILESIZE=$HISTSIZE
 
@@ -227,11 +227,9 @@ if [[ "$OS" == Darwin ]]; then
     brewconf=${brewpath}/etc
 
     # homebrew completions
-    bash_completions=${brewconf}/profile.d/bash_completion.sh  # path for `bash-completion@2` (bash4+)
+    bash_completions=${brewconf}/profile.d/bash_completion.sh
     git_completions=${brewconf}/bash_completion.d/git-completion.bash
     grc_completions=${brewconf}/grc.bashrc
-
-    # source homebrew completions
     [ -L "$bash_completions" ] && . "$bash_completions"
     [ -f "$grc_completions" ] && . "$grc_completions"
     [ -f "$git_completions" ] && . "$git_completions"
@@ -249,9 +247,14 @@ if [[ "$OS" == Darwin ]]; then
     [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
 
     # terraform completions `terraform-docs completion bash`
-    [ -f ~/bash_completion.d/terraform ] && . ~/bash_completion.d/terraform
-    [ -f ~/bash_completion.d/terraform-docs ] && . ~/bash_completion.d/terraform-docs
+    terraform_completions=~/bash_completion.d/terraform
+    terraform_docs_completions=~/bash_completion.d/terraform-docs
+    [ -f "$terraform_completions" ] && . "$terraform_completions"
+    [ -f "$terraform_docs_completions" ] && . "$terraform_docs_completions"
 
+    # kubectl completions `kubectl completion bash`
+    kubectl_completions=~/bash_completion.d/kubectl
+    [ -f "$kubectl_completions" ] && . "$kubectl_completions"
 fi
 
 #
@@ -269,7 +272,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "
 # rg and fzf functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
 #`
-sf() {
+sf(){
     local files
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
@@ -280,7 +283,7 @@ sf() {
     [[ -n "$files" ]] && ${EDITOR:-vim} $files
 }
 
-sd() {
+sd(){
     local directories
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
