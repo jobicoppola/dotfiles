@@ -248,17 +248,17 @@ set hlsearch
 " status line
 " used in conjunction with User* colors
 " see the catppuccin lua section above
-set laststatus=2                                      " always show the status line
-set statusline=                                       " initialize status string
-set statusline+=%1*\ %<%{gitbranch#name()}\           " show current git branch
-set statusline+=%2*\ %<%f\                            " path to file
-set statusline+=%3*\ %h%m%r%w\                        " status flags
-set statusline+=%=                                    " right align the rest
-set statusline+=%4*\ %{&ff}\ \\|                      " file format (dos,unix)
-set statusline+=%5*\ %{(&fenc==\"\"?&enc:&fenc)}\ \\| " file encoding
-set statusline+=%6*\ %{strlen(&ft)?&ft:'none'}\ \     " file type
-set statusline+=%7*\ %(%l:%c%V%)\                     " line:character (column)
-set statusline+=%8*\ %<%P\                            " curr position as % of file
+set laststatus=2                                       " always show the status line
+set statusline=                                        " initialize status string
+set statusline+=%1*\ %<%{TrimName(gitbranch#name())}\  " current git branch
+set statusline+=%2*\ %<%f\                             " path to file
+set statusline+=%3*\ %h%m%r%w\                         " status flags
+set statusline+=%=                                     " right align the rest
+set statusline+=%4*\ %{&ff}\ \\|                       " file format (dos,unix)
+set statusline+=%5*\ %{(&fenc==\"\"?&enc:&fenc)}\ \\|  " file encoding
+set statusline+=%6*\ %{strlen(&ft)?&ft:'none'}\ \      " file type
+set statusline+=%7*\ %(%l:%c%V%)\                      " line:character (column)
+set statusline+=%8*\ %<%P\                             " curr position as % of file
 
 " gui options
 set guioptions-=T                               " hide toolbar
@@ -671,9 +671,36 @@ autocmd FocusLost * :wa
 
 
 "\_____________________________________________________________________________
+" functions
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" trim git branch name for statusline
+function! TrimName(str)
+  let index = stridx(a:str, '/')
+  if index >= 0
+    let str = strpart(a:str, index+1)
+  else
+    let str = a:str
+  endif
+  let dash = stridx(str, '-')
+  if dash >= 0
+    let first_three = split(str, '-')[0:2]
+  else
+    return str
+  endif
+  if len(first_three) > 0
+    return join(first_three, '-')
+  else
+    return 'FAIL'
+  endif
+endfunction
+
+
+"\_____________________________________________________________________________
 " projects
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
 set secure  " disallows shell and write commands from cwd rc files
+
 
