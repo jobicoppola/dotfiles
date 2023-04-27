@@ -34,7 +34,6 @@ Plugin 'tpope/vim-endwise'
 Plugin 'alvan/vim-closetag'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'ervandew/supertab'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'jobicoppola/vim-json-bundle'
 Plugin 'pearofducks/ansible-vim'
@@ -50,8 +49,7 @@ Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
 Plugin 'catppuccin/nvim'
-Plugin 'morhetz/gruvbox'
-Plugin 'dracula/vim', { 'name': 'dracula' }
+Plugin 'itchyny/vim-gitbranch'
 
 " plugins required by deoplete
 "
@@ -151,7 +149,6 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax on                               " syntax highlighting
-"colorscheme molokai_macbot             " color scheme
 
 " we want to use catppuccin-mocha with transparent background
 " so we have to load in config overrides via lua
@@ -168,12 +165,26 @@ syntax on                               " syntax highlighting
 lua << EOF
 require("catppuccin").setup {
     flavour = "mocha",
-	transparent_background = true,
+    transparent_background = true,
     highlight_overrides = {
         mocha = function(C)
             return {
+                StatusLine = { bg = "#1f3320", fg = "#182319" },
+                StatusLineNC = { fg = "#182319", bg = "#1a2a1c" },
+                CursorLineNr = { fg = "#eaf584" },
                 LineNr = { fg = C.surface0 },
-                ColorColumn = { bg = C.mantle },
+                ColorColumn = { bg = "#191819" },
+                VertSplit = { fg = "#182319", bg = "#2f4e33" },
+                User1 = { bg = "#345638", fg = "#182319" },
+                User2 = { bg = "#1b2a1b", fg = "#76ac7b" },
+                User3 = { bg = "#182319", fg = "#2f4e33" },
+                User4 = { bg = "#182319", fg = "#2f4e33" },
+                User5 = { bg = "#182319", fg = "#2f4e33" },
+                User6 = { bg = "#182319", fg = "#2f4e33" },
+                User7 = { bg = "#1f3320", fg = "#528858" },
+                User8 = { bg = "#76ac7b", fg = "#1e3121" },
+                User9 = { bg = C.mantle, fg = C.pink },
+                User0 = { bg = C.crust, fg = C.red },
             }
         end,
     },
@@ -235,16 +246,19 @@ set showmatch
 set hlsearch
 
 " status line
-set laststatus=2                                " always show the status line
-set statusline=                                 " initialize status string
-set statusline+=%f\                             " path to file
-set statusline+=%h%m%r%w                        " status flags
-set statusline+=\[%{strlen(&ft)?&ft:'none'}]    " file type
-set statusline+=\[%{(&fenc==\"\"?&enc:&fenc)}]  " encoding
-set statusline+=\%{fugitive#statusline()}       " fugitive
-set statusline+=%=                              " right align the rest
-set statusline+=%-14(%l,%c%V%)                  " line, character
-set statusline+=%<%P                            " file position as percent
+" used in conjunction with User* colors
+" see the catppuccin lua section above
+set laststatus=2                                      " always show the status line
+set statusline=                                       " initialize status string
+set statusline+=%1*\ %<%{gitbranch#name()}\           " show current git branch
+set statusline+=%2*\ %<%f\                            " path to file
+set statusline+=%3*\ %h%m%r%w\                        " status flags
+set statusline+=%=                                    " right align the rest
+set statusline+=%4*\ %{&ff}\ \\|                      " file format (dos,unix)
+set statusline+=%5*\ %{(&fenc==\"\"?&enc:&fenc)}\ \\| " file encoding
+set statusline+=%6*\ %{strlen(&ft)?&ft:'none'}\ \     " file type
+set statusline+=%7*\ %(%l:%c%V%)\                     " line:character (column)
+set statusline+=%8*\ %<%P\                            " curr position as % of file
 
 " gui options
 set guioptions-=T                               " hide toolbar
@@ -438,9 +452,6 @@ if !has("patch-8.2.1066")
         set conceallevel=2 concealcursor=i
     endif
 
-    " enable snipmate compatibility feature.  TODO: remove, causes prob with tab completion
-    "let g:neosnippet#enable_snipmate_compatibility = 1
-
     " user defined snippets
     let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
@@ -611,8 +622,8 @@ nnoremap <Leader>qa :bufdo :Bdelete<CR>
 autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
 
 " for pull request templates
-nmap <leader>X :%sj/\[ \]/\[x\]/<CR>
-nmap <leader>xx :%sj/\[x\]/\[ \]/<CR>
+nmap <leader>X :%s/\[ \]/\[x\]/<CR>
+nmap <leader>xx :%s/\[x\]/\[ \]/<CR>
 
 
 "\_____________________________________________________________________________
@@ -665,3 +676,4 @@ autocmd FocusLost * :wa
 
 set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
 set secure  " disallows shell and write commands from cwd rc files
+
