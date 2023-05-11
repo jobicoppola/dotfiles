@@ -8,6 +8,7 @@
 # should totally do something about that
 #
 #=-----------------------------------------------------------------------------
+#
 
 # functions
 #
@@ -35,7 +36,10 @@ fi
 # if there are no existing sessions, let's create a new session, then detach
 tmux new-session -d -s $session
 
+#
 # TODO: rework this whole setup; it is far too brittle and mixes personal/work
+#
+
 # vars to help setup the panes
 company='aidentified'
 repos=~/git
@@ -51,42 +55,42 @@ venvs_enabled=false
 one_title=infra
 one_repo=$repos_company/terraform-aidentified-foundation
 one_path=${one_repo:-$github}
-
+#
 two_title=aws
 two_repo=$repos_company/terraform-aidentified-compliance
 two_path=${two_repo:-$github}
-
+#
 three_title=ansible
 three_repo=$repos_company/aidentified-ops
 three_path=${three_repo:-$github}
-
+#
 four_title=api
 four_repo=$repos_company/coredata-api
 four_path=${four_repo:-$github}
-
+#
 five_title=aidrc
 five_repo=$repos_company/aidentifiedrc
 five_path=${five_repo:-$github}
-
+#
 six_title=dotfiles
 six_repo=$repo_dotfiles
 six_path=${six_repo:-$github}
-
+#
 seven_title=scratch
 seven_repo=""
 seven_path=${seven_repo:-~}
-
+#
 eight_title=misc
 eight_repo=""
 eight_path=${eight_repo:-~}
-
+#
 nine_title=home
 nine_repo=""
 nine_path=${nine_repo:-~}
 
 # create directories if necessary
 for dir in ${repos} ${github} ${bitbucket} ${venvs}; do
-    [ ! -d "${dir}" ] && mkdir -p ${dir}
+    [ ! -d "${dir}" ] && mkdir -p "${dir}"
 done
 
 # open initial windows
