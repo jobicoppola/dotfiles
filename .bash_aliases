@@ -27,7 +27,7 @@ alias venvs='cd ~/venvs/'
 # vi
 alias vi='vim'
 alias vif='vi "$(fzf)"'
-alias vifp='vi "$(fzf -m --preview="bat --theme=Dracula --color=always {}")"'
+alias vifp='vi "$(fzf -m --preview="bat --color=always --theme=zenburn {}")"'
 alias sbash=". ~/.bashrc"
 alias vbash="vi ~/git/github/dotfiles/.bashrc"
 alias jcc="vi ~/Dropbox/sync/shell/legacy/jc3"
@@ -121,7 +121,7 @@ alias rga='rg --no-ignore --hidden --ignore-case'
 
 # fzf
 alias fzh='fzf --preview "head -100 {}"'
-alias fzp='fzf --preview="bat --theme=Dracula --color=always {}"'
+alias fzp='fzf --preview="bat --color=always --theme=zenburn {}"'
 
 # fd fast find
 alias fdh='fd --hidden'
