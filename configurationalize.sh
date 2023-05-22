@@ -3,11 +3,18 @@
 
 [ -n "$1" ] && update=1 || update=0
 
-cd "$(dirname $0)"
+cd "$(dirname $0)" || exit
 
-emoji="\xE2\x9D\x97"
+RRED='\e[7;31m' # red
+EC='\e[0m' # end color
 
-echo -e "$emoji WARNING: This script can/will dropkick existing files in $HOME"
+warn(){
+    local text="$1"
+    [[ -z "$1" ]] && text=WARNING
+    echo -e "${RRED} ${text} ${EC}"
+}
+
+echo -e "$(warn) This script can/will dropkick existing files in $HOME"
 read -rp "Ok to proceed? (y/n) " yaynay
 
 STAMP=$(date +"%Y%m%d-%H%M%S")
@@ -29,12 +36,11 @@ if [[ $yaynay == y* ]]; then
     if [ ${update} -eq 1 ]; then
         echo -e "\nUpdating vundle bundles"
         vim -c VundleUpdate -c quitall
+
+        echo -e "\nTuning user prefs and conf files for OS friendliness"
+        [[ $(uname) == Linux ]] && bin/tune-linux
+        [[ $(uname) == Darwin ]] && bin/tune-osx
     fi
-
-    echo -e "\nTuning user prefs and conf files for OS friendliness"
-
-    [[ $(uname) == Linux ]] && bin/tune-linux
-    [[ $(uname) == Darwin ]] && bin/tune-osx
 fi
 
 . ~/.bashrc

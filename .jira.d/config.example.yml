@@ -44,6 +44,7 @@ custom-commands:
               --query "resolution = unresolved
                        and status not in (Closed, Done)
                        and assignee=currentuser()
+                       and sprint in openSprints()
                        and project = $JIRA_PROJECT
                        ORDER BY priority desc, created"
       else
@@ -55,6 +56,7 @@ custom-commands:
               --query "resolution = unresolved
                        and status not in (Closed, Done)
                        and assignee=currentuser()
+                       and sprint in openSprints()
                        ORDER BY priority desc, created"
       fi
 

@@ -1,4 +1,5 @@
 #\_____________________________________________________________________________
+#
 # ~/.gitconfig
 #
 [user]
@@ -7,15 +8,20 @@
 
 #\_____________________________________________________________________________
 #
+[delta]
+    side-by-side = true
+    syntax-theme = TwoDark
+    hunk-header-style = plain
+
+#\_____________________________________________________________________________
+#
 [init]
 	defaultBranch = main
 [core]
     excludesfile = ~/.gitignore-global
-    pager = BAT_PAGER='less -iRFX' delta --dark --hunk-header-style=plain --syntax-theme='Dracula'
+    pager = delta
 [push]
     default = current
-[pull]
-    rebase = true
 [alias]
     co = checkout
     st = status
@@ -28,7 +34,6 @@
 [pretty]
     jobi = format:%C(yellow)%h%Creset %C(cyan)%d%Creset %s %Cred%aN%Creset %Cgreen%cr%Creset
     jobi-nonames = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset
-    pager = BAT_PAGER='less -iRFX' delta --dark --hunk-header-style=plain --syntax-theme='DarkNeon'
 [color]
     ui = auto
     diff = auto
@@ -36,7 +41,8 @@
     interactive = auto
     branch = auto
 [credential]
-	helper = osxkeychain
+    #helper = osxkeychain
+    #helper = /usr/local/share/gcm-core/git-credential-manager
 
 #\_____________________________________________________________________________
 #
@@ -50,6 +56,8 @@
 [heroku]
     user = jobicoppola
     email = <email-here>
+[credential "https://dev.azure.com"]
+	useHttpPath = true
 
 #\_____________________________________________________________________________
 #

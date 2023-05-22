@@ -1,4 +1,20 @@
+"/
+"\_____________________________________________________________________________
+"
 " ~/.vimrc :: jcopp.cfxd.net
+"
+" reminder on quickly creating macros - to start recording, type:
+"
+" `qm`   - m just an id for the register it will save to, can be any letter
+" `derp` - run whatever commands you want to be in the macro, then:
+" `q`    - to stop recording
+" `@m`   - execute the macro
+" `5@m`  - run the macro 5 times in a row
+" `@@`   - repeat the last macro again
+"
+"\_____________________________________________________________________________
+"/"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 
 "\_____________________________________________________________________________
 " vundle
@@ -148,7 +164,7 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 " colors
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-syntax on                               " syntax highlighting
+syntax on  " syntax highlighting
 
 " we want to use catppuccin-mocha with transparent background
 " so we have to load in config overrides via lua
@@ -166,6 +182,7 @@ lua << EOF
 require("catppuccin").setup {
     flavour = "mocha",
     transparent_background = true,
+    no_bold = true,
     highlight_overrides = {
         mocha = function(C)
             return {

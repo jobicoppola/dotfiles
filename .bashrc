@@ -31,6 +31,10 @@ shopt -s globstar
 HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
 
+# for using `rg` and `fd` instead of grep and find
+fd=$(which fd) fd="${fd:-find}"
+rg=$(which rg) rg="${rg:-grep}"
+
 #
 # export some vars
 #=-----------------------------------------------------------------------------
@@ -119,7 +123,7 @@ export GOBIN="${gobin}"
 export GOENV="${goenv}"
 
 #
-# virtualenv
+# python, virtualenv
 #=-----------------------------------------------------------------------------
 #`
 vepy=$(which python)
@@ -139,6 +143,9 @@ export VIRTUALENVWRAPPER_SCRIPT=${vepy_wrapper}
 # prompt setup
 #=-----------------------------------------------------------------------------
 #`
+
+# functions for displaying git info in the prompt
+#
 get_venv(){
     [ "${VIRTUAL_ENV}" ] && echo "$(basename "$VIRTUAL_ENV"):"
 }
@@ -183,24 +190,34 @@ get_git_status(){
 # bring in named colors
 [ -f ~/.bash_colors ] && . ~/.bash_colors
 
-# manually set user section of prompt on macs
-user_mac='jcopp@macbot'
+# shellcheck disable=SC2154
+CLOCK_COLOR="$COLOR_71"
+PIPE_COLOR="$GRAY"
+VENV_COLOR="$GREEN"
+USER_COLOR="$COLOR_132"
+user_mac='jcopp@macbot' # manually set user section of prompt on macs
+CWD_COLOR="$COLOR_72"
+BRANCH_COLOR="$COLOR_173"
+STATUS_COLOR="$COLOR_149"
+DOLLAR_COLOR="$COLOR_244" # force gray to override any theme
 
 # shellcheck disable=SC2154
-PS1_TIME="\n${CLOCK_COLOR}\t${BLUE}"
-PS1_VENV="${BOLD}${VENV_COLOR}\$(get_venv)"
-PS1_USER="\u@\h${BWHITE}\w${BYELLOW}"
-PS1_USER_MAC="${EC}${USER_COLOR}${user_mac}"
-PS1_CWD="${BOLD}${CWD_COLOR}\w"
-PS1_GIT="${BRANCH_COLOR}\$(get_git_branch_current_for_prompt)${BGREEN}\$(get_git_status)${EC}"
-PS1_END="\n${EC}${GRAY}$ ${EC}"
-PS1_END_MAC="\n${BOLD}${DOLLAR_COLOR}$ ${EC}"
+PS1_TIME="\n${CLOCK_COLOR}\t${PIPE_COLOR}"
+PS1_VENV="${VENV_COLOR}\$(get_venv)"
+PS1_USER="\u@\h${BWHITE}\w${BYELLOW}" # linux
+PS1_USER_MAC="${EC}${USER_COLOR}${user_mac}" # mac
+PS1_CWD="${CWD_COLOR}\w"
+PS1_GIT="${BRANCH_COLOR}\$(get_git_branch_current_for_prompt)"
+PS1_GIT+="${STATUS_COLOR}\$(get_git_status)${EC}"
+PS1_END="\n${EC}${GRAY}$ ${EC}" # linux
+PS1_END_MAC="\n${DOLLAR_COLOR}$ ${EC}" # mac
 
 # now actually set the prompt
 if [[ "$OS" == Darwin ]] && [[ "$(hostname)" != *bot ]]; then
-    # override ugly hostname on macs / work machines
+    # macos
     PS1="${PS1_TIME}|${PS1_VENV}${PS1_USER_MAC}${PS1_CWD}${PS1_GIT}${PS1_END_MAC}"
 else
+    # linux
     PS1="${PS1_TIME}$GRAY|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
@@ -258,7 +275,7 @@ if [[ "$OS" == Darwin ]]; then
 fi
 
 #
-# rg and fzf
+# rg, fzf, fasd
 #=-----------------------------------------------------------------------------
 #`
 rg_command='rg --column --line-number --no-heading --fixed-strings '
@@ -269,11 +286,14 @@ rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "alw
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
 
 #
-# rg and fzf functions - some custom, some from fzf wiki examples
+# rg, fzf, fasd functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
 #`
 sf(){
+    # search for files, open selected files in default editor
+    #
     local files
+    #
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
     files=$(eval "$rg_command" "$search" \
@@ -284,7 +304,10 @@ sf(){
 }
 
 sd(){
+    # search for directories to open in default editor
+    #
     local directories
+    #
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
     directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files -l \
@@ -295,13 +318,14 @@ sd(){
 }
 
 sfd(){
+    # search for files and directories to open in default editor
+    #
     local files directories fd all
+    #
     if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
     printf -v search "%q" "$*"
-
     files=$(eval "$rg_command" "$search" | awk -F ':' '{print $1":"$2":"$3}')
     directories=$(eval "$rg_command_dirs" -g "*$search*" --files | sort -u)
-
     fd=( "${directories[@]}" "${files[@]}" )
     all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
     # shellcheck disable=SC2086
@@ -310,7 +334,9 @@ sfd(){
 
 fco(){
     # checkout git branch/tag
+    #
     local tags branches target
+    #
     tags=$(git tag \
            | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
     branches=$(git branch --all \
@@ -327,16 +353,23 @@ fco(){
 
 fcoc(){
     # checkout git commit
+    #
     local commits commit
+    #
     commits=$(git log --pretty=oneline --abbrev-commit --reverse)
-    commit=$(echo "$commits" | fzf --tac +s +m --exact)  # +s --no-sort; +m --no-multi; --tac "reverse order of input"
+    # +s --no-sort
+    # +m --no-multi
+    # --tac "reverse order of input"
+    commit=$(echo "$commits" | fzf --tac +s +m --exact)
     # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
 fcor(){
     # checkout git branch (incl remote), sorted by most recent commit, limit n
+    #
     local branches branch limit=50
+    #
     branches=$(git for-each-ref \
                --count=$limit \
                --sort=-committerdate \
@@ -350,7 +383,9 @@ fcor(){
 
 fcs(){
     # checkout commit sha
+    #
     local commits commit
+    #
     commits=$(git log --color=always \
               --pretty=oneline --abbrev-commit --reverse)
     commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse)
@@ -358,25 +393,9 @@ fcs(){
     git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
 }
 
-cdf(){
-    # fzf also provides similar functionality for many commands, with **
-    # e.g. `cd **<TAB>` or `vi **<TAB>`
-    local dir fd
-    fd=$(which fd)
-    fd="${fd:-find}"
-
-    if [[ "$fd" == find ]]; then
-        dir=$(find "${1:-.}" -path '*/\.*' -prune -o -type d -print \
-                2>/dev/null | fzf +m) \
-            && cd "$dir" || return
-    else
-        dir=$($fd --prune --type d "${1:-.}" 2>/dev/null | fzf +m) \
-            && cd "$dir" || return
-    fi
-}
-
 fshow(){
     # git commit browser
+    #
     git log --graph --color=always \
         --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
         | fzf --ansi --no-sort --reverse --tiebreak=index \
@@ -388,6 +407,94 @@ fshow(){
 FZF-EOF"
 }
 
+cdf(){
+    # cd into selected dir from fzf list
+    #
+    # fzf also provides similar functionality for many commands, with **
+    # e.g. `cd **<TAB>` or `vi **<TAB>`
+    #
+    local dir fd
+    #
+    fd=$(which fd)
+    fd="${fd:-find}"
+    #
+    if [[ "$fd" == find ]]; then
+        dir=$($fd "${1:-.}" -path '*/\.*' -prune -o -type d -print 2>/dev/null \
+            | fzf --no-multi) \
+            && cd "$dir" || return
+    else
+        dir=$($fd --prune --type d "${1:-.}" 2>/dev/null \
+            | fzf --no-multi) \
+            && cd "$dir" || return
+    fi
+}
+
+cdff(){
+    # cd into `fasd` 'frecency' dir, show preview of directory tree
+    #
+    # https://www.devdoc.net/web/developer.mozilla.org/en-US/docs/The_Places_frecency_algorithm.html
+    #
+    local dir
+    #
+    # --select-1 "auto select if only one match; do not start finder"
+    dir="$(fasd -dl \
+        | fzf \
+            --tac \
+            --reverse \
+            --no-sort \
+            --select-1 \
+            --no-multi \
+            --tiebreak=index \
+            --query "$*" \
+            --preview='tree -C {} | head -n $FZF_PREVIEW_LINES' \
+            --preview-window='right,40%:wrap' \
+    )" || return
+    cd "$dir" || return
+}
+
+cdfd(){
+    # cd into dir of selected file
+    #
+    local file fzf_preview_cmd
+    #
+    fzf_preview_cmd='bat --color=always --theme=zenburn {}'
+    #
+    # +m --no-multi "disable multi select"
+    file="$(fzf \
+        --no-multi \
+        --query="$*" \
+        --preview="${fzf_preview_cmd}" \
+        --preview-window='right:60%:nowrap' \
+    )"
+    cd "$(dirname "$file")" || return
+}
+
+viff(){
+    # vi fzf finder, open selected file in default editor (vim)
+    #
+    # also see similar aliases `vif`, `vifp`, `fzh`, `fzp`
+    #
+    local IFS=$'\n'
+    local files=()
+    local fzf_preview_cmd
+    #
+    fzf_preview_cmd='bat --color=always --theme=zenburn {}'
+    #
+    # --exit-0   "exit if no match for initial query"
+    # --select-1 "auto select if only one match; do not start finder"
+    files=(
+        "$(fzf \
+            --multi \
+            --exit-0 \
+            --select-1 \
+            --query="$*" \
+            --preview="${fzf_preview_cmd}" \
+            --preview-window='right:60%:nowrap' \
+        )"
+    ) || return
+    "${EDITOR:-vim}" "${files[@]}"
+}
+
 #
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
@@ -397,12 +504,12 @@ ftpane(){
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
     current_pane=$(tmux display-message -p '#I:#P')
     current_window=$(tmux display-message -p '#I')
-
+    #
     target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
-
+    #
     target_window=$(echo "$target" | awk 'BEGIN{FS=":|-"} {print$1}')
     target_pane=$(echo "$target" | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
-
+    #
     if [[ $current_window -eq $target_window ]]; then
         tmux select-pane -t "${target_window}.${target_pane}"
     else
@@ -441,6 +548,12 @@ getpass(){
         security find-generic-password -a "$group" -s "$id" -w
     fi
 }
+
+#
+# initialize fasd, without aliases
+#=-----------------------------------------------------------------------------
+#`
+eval "$(fasd --init bash-hook bash-ccomp bash-ccomp-install)"
 
 #
 # work setup
