@@ -550,6 +550,22 @@ getpass(){
 }
 
 #
+# string helpers
+#=-----------------------------------------------------------------------------
+#`
+lower(){
+    cat |tr '[:upper:]' '[:lower:]'
+}
+
+upper(){
+    cat |tr '[:lower:]' '[:upper:]'
+}
+
+capitalize(){
+    cat |perl -ne 'print lc' |perl -ane 'print join " ", map {ucfirst} @F'
+}
+
+#
 # initialize fasd, without aliases
 #=-----------------------------------------------------------------------------
 #`
