@@ -429,6 +429,23 @@ cdf(){
     fi
 }
 
+cdd(){
+    # cd into dir of selected file
+    #
+    local file fzf_preview_cmd
+    #
+    fzf_preview_cmd='bat --color=always --theme=zenburn {}'
+    #
+    # +m --no-multi "disable multi select"
+    file="$(fzf \
+        --no-multi \
+        --query="$*" \
+        --preview="${fzf_preview_cmd}" \
+        --preview-window='right:60%:nowrap' \
+    )"
+    cd "$(dirname "$file")" || return
+}
+
 cdff(){
     # cd into `fasd` 'frecency' dir, show preview of directory tree
     #
@@ -450,23 +467,6 @@ cdff(){
             --preview-window='right,40%:wrap' \
     )" || return
     cd "$dir" || return
-}
-
-cdd(){
-    # cd into dir of selected file
-    #
-    local file fzf_preview_cmd
-    #
-    fzf_preview_cmd='bat --color=always --theme=zenburn {}'
-    #
-    # +m --no-multi "disable multi select"
-    file="$(fzf \
-        --no-multi \
-        --query="$*" \
-        --preview="${fzf_preview_cmd}" \
-        --preview-window='right:60%:nowrap' \
-    )"
-    cd "$(dirname "$file")" || return
 }
 
 viff(){
