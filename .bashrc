@@ -452,7 +452,7 @@ cdff(){
     cd "$dir" || return
 }
 
-cdfd(){
+cdd(){
     # cd into dir of selected file
     #
     local file fzf_preview_cmd
