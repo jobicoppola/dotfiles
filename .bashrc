@@ -2,9 +2,9 @@
 #
 #>=-</.|.\>=-------------------------------------------------------------------
 #
-#  ~/.bashrc :: jcopp.cfxd.net
-#
-#>=----------------------------------------------------------------------------
+#-
+# ~/.bashrc :: jcopp.cfxd.net
+#=-----------------------------------------------------------------------------
 #`
 [ -z "$PS1" ] && return  # only proceed for interactive shells
 
@@ -122,7 +122,7 @@ export GOENV="${goenv}"
 
 # python and virtualenvwrapper paths
 vepy=$(which python)
-vepy_version=$(python -V |awk '{print $2}' |cut -d. -f1-2)
+vepy_version=$(python -V | awk '{print $2}' | cut -d. -f1-2)
 vepy_path=/Users/$(whoami)/Library/Python/${vepy_version}
 vepy_wrapper=${vepy_path}/bin/virtualenvwrapper.sh
 #
@@ -161,7 +161,7 @@ get_git_branch_current_for_prompt(){
 get_git_branch_default(){
     local ref
     ref=$(git symbolic-ref --short refs/remotes/origin/HEAD 2> /dev/null) || return
-    echo "$ref" |awk -F/ '{print $2}'
+    echo "$ref" | awk -F/ '{print $2}'
 }
 
 get_git_status(){
@@ -170,13 +170,13 @@ get_git_status(){
     SMSG='Changes not staged for commit'
     UMSG='nothing added to commit but untracked files present'
     GSTAT=$(git status 2> /dev/null) || return
-    if [[ $(echo "${GSTAT}" |grep -c "${SMSG}") -gt 0 ]]; then
+    if [[ $(echo "${GSTAT}" | grep -c "${SMSG}") -gt 0 ]]; then
         echo '?'
-    elif [[ $(echo "${GSTAT}" |grep -c "${TMSG}") -gt 0 ]]; then
+    elif [[ $(echo "${GSTAT}" | grep -c "${TMSG}") -gt 0 ]]; then
         echo '!'
-    elif [[ $(echo "${GSTAT}" |grep -c "${UMSG}") -gt 0 ]]; then
+    elif [[ $(echo "${GSTAT}" | grep -c "${UMSG}") -gt 0 ]]; then
         echo 'u'
-    elif [[ $(echo "${GSTAT}" |grep -c "${CMSG}") -gt 0 ]]; then
+    elif [[ $(echo "${GSTAT}" | grep -c "${CMSG}") -gt 0 ]]; then
         echo '¬'
     else
         echo 'f'
@@ -276,6 +276,7 @@ fi
 # rg, fzf, fasd
 #=-----------------------------------------------------------------------------
 #`
+#
 rg_command='rg --column --line-number --no-heading --fixed-strings '
 rg_command+='--ignore-case --no-ignore --hidden --color "always" --glob "!.git"'
 rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "always"'
@@ -288,8 +289,10 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "
 # rg, fzf, fasd functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
 #`
+#
 sf(){
-    # search for files, open selected files in default editor
+    # search for files matching provided string
+    # open selected files in default editor
     #
     local files
     #
@@ -303,7 +306,8 @@ sf(){
 }
 
 sd(){
-    # search for directories to open in default editor
+    # search for directories matching provided string
+    # open selected dirs in default editor
     #
     local directories
     #
@@ -317,7 +321,8 @@ sd(){
 }
 
 sfd(){
-    # search for files and directories to open in default editor
+    # search for files and directories matching provided string
+    # open selected in default editor
     #
     local files directories fd all
     #
@@ -486,8 +491,8 @@ fshow(){
     git log --graph --color=always \
         --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
         | fzf --ansi --no-sort --reverse --tiebreak=index \
-        --bind=ctrl-s:toggle-sort \
-        --bind "ctrl-m:execute:
+            --bind=ctrl-s:toggle-sort \
+            --bind "ctrl-m:execute:
             (grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
             {}
@@ -556,15 +561,15 @@ getpass(){
 #=-----------------------------------------------------------------------------
 #`
 lower(){
-    cat |tr '[:upper:]' '[:lower:]'
+    cat | tr '[:upper:]' '[:lower:]'
 }
 
 upper(){
-    cat |tr '[:lower:]' '[:upper:]'
+    cat | tr '[:lower:]' '[:upper:]'
 }
 
 capitalize(){
-    cat |perl -ne 'print lc' |perl -ane 'print join " ", map {ucfirst} @F'
+    cat | perl -ne 'print lc' | perl -ane 'print join " ", map {ucfirst} @F'
 }
 
 
