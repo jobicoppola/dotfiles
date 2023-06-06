@@ -1,24 +1,25 @@
 # shellcheck shell=bash
-#.
+#
 #>=-</.|.\>=-------------------------------------------------------------------
 #
 #  ~/.bashrc :: jcopp.cfxd.net
-#.
-#|\>=--------------------------------------------------------------------------
+#
+#>>=---------------------------------------------------------------------------
 #`
+#
 [ -z "$PS1" ] && return  # only proceed for interactive shells
 
-#
+#-
 # set some vars
 #=-----------------------------------------------------------------------------
 #`
 OS=$(uname)  # determine os
 
 # command history
-HISTCONTROL=ignoreboth      # ignore duplicates and cmds starting with spaces
-shopt -s histappend         # append to history
-PROMPT_COMMAND="history -a" # write history from current shell every prompt
-HISTSIZE=99999              # set history length
+HISTCONTROL=ignoreboth       # ignore duplicates and cmds starting with spaces
+shopt -s histappend          # append to history
+PROMPT_COMMAND="history -a"  # write history from current shell every prompt
+HISTSIZE=99999               # set history length
 HISTFILESIZE=$HISTSIZE
 
 # case-insensitive tab-completion for paths
@@ -35,7 +36,8 @@ shopt -s hostcomplete
 fd=$(which fd) fd="${fd:-find}"
 rg=$(which rg) rg="${rg:-grep}"
 
-#
+
+#-
 # export some vars
 #=-----------------------------------------------------------------------------
 #`
@@ -51,7 +53,8 @@ export GIT_MERGE_AUTOEDIT=no
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BAT_CONFIG_PATH=~/.batconfig
 
-#
+
+#-
 # path setup
 #=-----------------------------------------------------------------------------
 #`
@@ -69,7 +72,8 @@ else
     export PATH=$P1:$P2
 fi
 
-#
+
+#-
 # ssh setup
 #=-----------------------------------------------------------------------------
 #`
@@ -83,8 +87,9 @@ if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
-#
-# ruby
+
+#-
+# ruby, nodejs, go, python, virtualenvwrapper
 #=-----------------------------------------------------------------------------
 #`
 export RUBYOPT=rubygems
@@ -105,32 +110,22 @@ alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
 
-#
-# node.js
-#=-----------------------------------------------------------------------------
-#`
+# node path
 export NODE_PATH=/usr/local/lib/node_modules
 export PATH=$PATH:$HOME/node_modules/.bin
 
-#
-# go
-#=-----------------------------------------------------------------------------
-#`
-gobin=~/go/bin
-goenv=~/go/env
+# go dirs
+gobin=~/go/bin goenv=~/go/env
 [ -d "$goenv" ] || mkdir -p "$goenv"
 export GOBIN="${gobin}"
 export GOENV="${goenv}"
 
-#
-# python, virtualenv
-#=-----------------------------------------------------------------------------
-#`
+# python and virtualenvwrapper paths
 vepy=$(which python)
 vepy_version=$(python -V |awk '{print $2}' |cut -d. -f1-2)
 vepy_path=/Users/$(whoami)/Library/Python/${vepy_version}
 vepy_wrapper=${vepy_path}/bin/virtualenvwrapper.sh
-
+#
 export PATH=$PATH:${vepy_path}/bin
 export WORKON_HOME=$HOME/venvs
 export VIRTUALENVWRAPPER_PYTHON=${vepy}
@@ -139,7 +134,8 @@ export VIRTUALENVWRAPPER_SCRIPT=${vepy_wrapper}
 # check for virtualenvwrapper
 [ -f "$VIRTUALENVWRAPPER_SCRIPT" ] && . "$VIRTUALENVWRAPPER_SCRIPT" || echo 'No VIRTUALENVWRAPPER'
 
-#
+
+#-
 # prompt setup
 #=-----------------------------------------------------------------------------
 #`
@@ -195,11 +191,11 @@ CLOCK_COLOR="$COLOR_71"
 PIPE_COLOR="$GRAY"
 VENV_COLOR="$GREEN"
 USER_COLOR="$COLOR_132"
-user_mac='jcopp@macbot' # manually set user section of prompt on macs
 CWD_COLOR="$COLOR_72"
 BRANCH_COLOR="$COLOR_173"
 STATUS_COLOR="$COLOR_149"
 DOLLAR_COLOR="$COLOR_244" # force gray to override any theme
+user_mac='jcopp@macbot' # manually set user section of prompt on macs
 
 # shellcheck disable=SC2154
 PS1_TIME="\n${CLOCK_COLOR}\t${PIPE_COLOR}"
@@ -407,8 +403,8 @@ fshow(){
 FZF-EOF"
 }
 
-cdf(){
-    # cd into selected dir from fzf list
+cdfd(){
+    # cd via fzf - cd into dir selected from fzf list
     #
     # fzf also provides similar functionality for many commands, with **
     # e.g. `cd **<TAB>` or `vi **<TAB>`
@@ -429,8 +425,8 @@ cdf(){
     fi
 }
 
-cdd(){
-    # cd into dir of selected file
+cdff(){
+    # cd via fzf - select file from fzf list and cd into dir containing the file
     #
     local file fzf_preview_cmd
     #
@@ -446,8 +442,8 @@ cdd(){
     cd "$(dirname "$file")" || return
 }
 
-cdff(){
-    # cd into `fasd` 'frecency' dir, show preview of directory tree
+cdfa(){
+    # cd via fzf - cd into `fasd` 'frecency' dir, show preview of directory tree
     #
     # https://www.devdoc.net/web/developer.mozilla.org/en-US/docs/The_Places_frecency_algorithm.html
     #
@@ -470,7 +466,7 @@ cdff(){
 }
 
 viff(){
-    # vi fzf finder, open selected file in default editor (vim)
+    # vi via fzf - from fzf list of files in `pwd`, open selected file in default editor (vim)
     #
     # also see similar aliases `vif`, `vifp`, `fzh`, `fzp`
     #
