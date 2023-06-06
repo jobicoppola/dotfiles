@@ -4,10 +4,10 @@
 #
 #  ~/.bashrc :: jcopp.cfxd.net
 #
-#>>=---------------------------------------------------------------------------
+#>=----------------------------------------------------------------------------
 #`
-#
 [ -z "$PS1" ] && return  # only proceed for interactive shells
+
 
 #-
 # set some vars
@@ -217,7 +217,8 @@ else
     PS1="${PS1_TIME}$GRAY|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
 fi
 
-#
+
+#-
 # source aliases, completions and other custom config files
 #=-----------------------------------------------------------------------------
 #`
@@ -270,7 +271,8 @@ if [[ "$OS" == Darwin ]]; then
     [ -f "$kubectl_completions" ] && . "$kubectl_completions"
 fi
 
-#
+
+#-
 # rg, fzf, fasd
 #=-----------------------------------------------------------------------------
 #`
@@ -281,7 +283,8 @@ rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "alw
 # set default - also used by vim
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
 
-#
+
+#-
 # rg, fzf, fasd functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
 #`
@@ -326,81 +329,6 @@ sfd(){
     all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
     # shellcheck disable=SC2086
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
-}
-
-fco(){
-    # checkout git branch/tag
-    #
-    local tags branches target
-    #
-    tags=$(git tag \
-           | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
-    branches=$(git branch --all \
-               | grep -v HEAD \
-               | sed "s/.* //" \
-               | sed "s#remotes/[^/]*/##" \
-               | sort -u \
-               | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
-    target=$( (echo "$tags"; echo "$branches") \
-               | fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
-    # shellcheck disable=SC2001,SC2046
-    git checkout $(echo "$target" | awk '{print $2}')
-}
-
-fcoc(){
-    # checkout git commit
-    #
-    local commits commit
-    #
-    commits=$(git log --pretty=oneline --abbrev-commit --reverse)
-    # +s --no-sort
-    # +m --no-multi
-    # --tac "reverse order of input"
-    commit=$(echo "$commits" | fzf --tac +s +m --exact)
-    # shellcheck disable=SC2001,SC2046
-    git checkout $(echo "$commit" | sed "s/ .*//")
-}
-
-fcor(){
-    # checkout git branch (incl remote), sorted by most recent commit, limit n
-    #
-    local branches branch limit=50
-    #
-    branches=$(git for-each-ref \
-               --count=$limit \
-               --sort=-committerdate \
-               refs/heads/ \
-               --format="%(refname:short)")
-    branch=$(echo "$branches" \
-             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)
-    # shellcheck disable=SC2001,SC2046
-    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-}
-
-fcs(){
-    # checkout commit sha
-    #
-    local commits commit
-    #
-    commits=$(git log --color=always \
-              --pretty=oneline --abbrev-commit --reverse)
-    commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse)
-    # shellcheck disable=SC2001,SC2046
-    git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
-}
-
-fshow(){
-    # git commit browser
-    #
-    git log --graph --color=always \
-        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
-        | fzf --ansi --no-sort --reverse --tiebreak=index \
-        --bind=ctrl-s:toggle-sort \
-        --bind "ctrl-m:execute:
-            (grep -o '[a-f0-9]\{7\}' | head -1 |
-            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-            {}
-FZF-EOF"
 }
 
 cdfd(){
@@ -491,7 +419,83 @@ viff(){
     "${EDITOR:-vim}" "${files[@]}"
 }
 
-#
+fco(){
+    # checkout git branch/tag
+    #
+    local tags branches target
+    #
+    tags=$(git tag \
+           | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+    branches=$(git branch --all \
+               | grep -v HEAD \
+               | sed "s/.* //" \
+               | sed "s#remotes/[^/]*/##" \
+               | sort -u \
+               | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+    target=$( (echo "$tags"; echo "$branches") \
+               | fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+    # shellcheck disable=SC2001,SC2046
+    git checkout $(echo "$target" | awk '{print $2}')
+}
+
+fcoc(){
+    # checkout git commit
+    #
+    local commits commit
+    #
+    commits=$(git log --pretty=oneline --abbrev-commit --reverse)
+    # +s --no-sort
+    # +m --no-multi
+    # --tac "reverse order of input"
+    commit=$(echo "$commits" | fzf --tac +s +m --exact)
+    # shellcheck disable=SC2001,SC2046
+    git checkout $(echo "$commit" | sed "s/ .*//")
+}
+
+fcor(){
+    # checkout git branch (incl remote), sorted by most recent commit, limit n
+    #
+    local branches branch limit=50
+    #
+    branches=$(git for-each-ref \
+               --count=$limit \
+               --sort=-committerdate \
+               refs/heads/ \
+               --format="%(refname:short)")
+    branch=$(echo "$branches" \
+             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)
+    # shellcheck disable=SC2001,SC2046
+    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+
+fcs(){
+    # checkout commit sha
+    #
+    local commits commit
+    #
+    commits=$(git log --color=always \
+              --pretty=oneline --abbrev-commit --reverse)
+    commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse)
+    # shellcheck disable=SC2001,SC2046
+    git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
+}
+
+fshow(){
+    # git commit browser
+    #
+    git log --graph --color=always \
+        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
+        | fzf --ansi --no-sort --reverse --tiebreak=index \
+        --bind=ctrl-s:toggle-sort \
+        --bind "ctrl-m:execute:
+            (grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+            {}
+FZF-EOF"
+}
+
+
+#-
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
 #`
@@ -514,7 +518,8 @@ ftpane(){
     fi
 }
 
-#
+
+#-
 # try to securely deal with passwords
 #=-----------------------------------------------------------------------------
 #`
@@ -545,7 +550,8 @@ getpass(){
     fi
 }
 
-#
+
+#-
 # string helpers
 #=-----------------------------------------------------------------------------
 #`
@@ -561,13 +567,15 @@ capitalize(){
     cat |perl -ne 'print lc' |perl -ane 'print join " ", map {ucfirst} @F'
 }
 
-#
+
+#-
 # initialize fasd, without aliases
 #=-----------------------------------------------------------------------------
 #`
 eval "$(fasd --init bash-hook bash-ccomp bash-ccomp-install)"
 
-#
+
+#-
 # work setup
 #=-----------------------------------------------------------------------------
 #`
