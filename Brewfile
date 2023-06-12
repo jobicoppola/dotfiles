@@ -29,6 +29,7 @@ brew 'rust'
 # handy improvers of life
 brew 'awscli'
 brew 'bat'
+brew 'btop'
 brew 'cfn-lint'
 brew 'choose-rust'
 brew 'colordiff'
