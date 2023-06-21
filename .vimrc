@@ -1,4 +1,3 @@
-"/
 "\_____________________________________________________________________________
 "
 " ~/.vimrc :: jcopp.cfxd.net
@@ -13,12 +12,14 @@
 " `@@`   - repeat the last macro again
 "
 "\_____________________________________________________________________________
-"/"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"//"`\||/`"\\""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 
 "\_____________________________________________________________________________
 " vundle
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 set nocompatible
 filetype off
@@ -66,6 +67,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'groovy.vim'
 Plugin 'catppuccin/nvim'
 Plugin 'itchyny/vim-gitbranch'
+Plugin 'rizzatti/dash.vim'
 
 " plugins required by deoplete
 "
@@ -104,6 +106,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 "\_____________________________________________________________________________
 " initial keybindings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " disable arrow keys etc
 map <up> <nop>
@@ -140,6 +143,7 @@ let mapleader = ","
 "\_____________________________________________________________________________
 " code completion
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " autocompletion
 "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -163,6 +167,7 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "\_____________________________________________________________________________
 " colors
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 syntax on  " syntax highlighting
 
@@ -213,6 +218,7 @@ colorscheme catppuccin
 "\_____________________________________________________________________________
 " settings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " tab settings
 set tabstop=4                           " how many spaces a tab counts for
@@ -290,6 +296,7 @@ highlight CursorLineNR cterm=none
 "\_____________________________________________________________________________
 " syntastic
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " allow shellcheck to follow source files
 let g:syntastic_sh_shellcheck_args = "-x"
@@ -298,6 +305,7 @@ let g:syntastic_sh_shellcheck_args = "-x"
 "\_____________________________________________________________________________
 " python ropevim and jedi-vim
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " use ropevim and jedi-vim together for auto completion
 let ropevim_extended_complete = 1
@@ -334,6 +342,7 @@ let g:jedi#rename_command_keep_name = ""
 "\_____________________________________________________________________________
 " vim-closetag
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " use for these filetypes
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
@@ -342,6 +351,7 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 "\_____________________________________________________________________________
 " nerdtree
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " show hidden files
 let g:NERDTreeShowHidden=1
@@ -373,6 +383,7 @@ autocmd BufEnter * if (winnr("$") == 1
 "\_____________________________________________________________________________
 " vim-surround
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " use v or # to get a variable interpolation (inside of a string)}
 " ysiw#   Wrap the token under the cursor in #{}
@@ -389,6 +400,7 @@ let g:surround_61 = "<%= \r %>"   " =
 "\_____________________________________________________________________________
 " deoplete
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option({
@@ -402,6 +414,7 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 "\_____________________________________________________________________________
 " neocomplete
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " use neocomplete for older versions of vim
 " see https://github.com/vim/vim/commit/bd84617d1a6766efd59c94aabebb044bef805b99
@@ -454,6 +467,7 @@ endif
 "\_____________________________________________________________________________
 " neosnippet
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " use neosnippet for older versions of vim
 " see https://github.com/vim/vim/commit/bd84617d1a6766efd59c94aabebb044bef805b99
@@ -478,6 +492,7 @@ endif
 "\_____________________________________________________________________________
 " supertab
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " reverse default tabbing direction
 let g:SuperTabMappingForward = '<S-TAB>'
@@ -487,6 +502,7 @@ let g:SuperTabMappingBackward = '<TAB>'
 "\_____________________________________________________________________________
 " minibufexplorer settings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 let g:miniBufExplSplitBelow = 0         " put window at top
 let g:miniBufExplMapWindowNavVim = 1    " use [hjkl] for window nav
@@ -498,6 +514,7 @@ let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 "\_____________________________________________________________________________
 " vim-terraform
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " run `terraform fmt` when saving *.tf and *.tfvars files
 let g:terraform_fmt_on_save=1
@@ -509,6 +526,7 @@ let g:terraform_align=1
 "\_____________________________________________________________________________
 " vim-markdown-toc
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 map <leader>toc :GenTocGFM<CR>
 let g:vmt_auto_update_on_save = 1
@@ -520,6 +538,7 @@ let g:vmt_fence_closing_text = '/TOC'
 "\_____________________________________________________________________________
 " vim-gitgutter
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " default is 4000 milliseconds, which is way too slow for sign updates
 set updatetime=150
@@ -544,6 +563,7 @@ highlight GitGutterDelete ctermfg=196
 "\_____________________________________________________________________________
 " vim-fugitive
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 map <leader>gb :Gblame<CR>
 map <leader>gc :Gcommit<CR>
@@ -555,6 +575,7 @@ map <leader>gw :Gwrite<CR>
 "\_____________________________________________________________________________
 " editorconfig-vim
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
@@ -562,6 +583,7 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 "\_____________________________________________________________________________
 " ansible-vim
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " reset indentation after 2 newlines in insert mode
 let g:ansible_unindent_after_newline = 1
@@ -570,6 +592,7 @@ let g:ansible_unindent_after_newline = 1
 "\_____________________________________________________________________________
 " ansible-vault
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 let g:ansible_vault_password_file = $ANSIBLE_VAULT_PASSWORD_FILE
 nmap <leader>i :call InlineEncrypt()<CR>
@@ -599,11 +622,19 @@ endfunction
 "\_____________________________________________________________________________
 " fzf
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " bring up fzf
 nnoremap <leader>z :FZF<CR>
 nnoremap <leader>f :Rg<CR>
-let g:fzf_layout = { 'down': '~25%' }
+
+" open fzf on bottom third
+let g:fzf_layout = { 'down': '~33%' }
+
+" hide pointless fzf statusline
+autocmd! FileType fzf
+autocmd  FileType fzf set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 " below we override the default :Rg to search hidden files (but not .git),
 " disregard any ignore files, not follow symlinks, and not search filenames,
@@ -612,10 +643,47 @@ let g:fzf_layout = { 'down': '~25%' }
 "
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.git' --glob '!venv' --no-follow --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
+" fzf is now opened in a terminal buffer by vim and nvim, and our colorscheme
+" is not applied to the filename segment of the matches, so below we override
+" the default ANSI colors
+"
+" https://github.com/junegunn/fzf/blob/master/README-VIM.md#explanation-of-gfzf_colors
+"
+" from example there, below are the terminal colors for seoul256 color scheme
+" these actually work pretty well with catppuccin and kitty theme but could
+" be further customized later
+"
+if has('nvim')
+    " may try to switch later so leaving here for now
+    let g:terminal_color_0 = '#4e4e4e'
+    let g:terminal_color_1 = '#d68787'
+    let g:terminal_color_2 = '#5f865f'
+    let g:terminal_color_3 = '#d8af5f'
+    let g:terminal_color_4 = '#85add4'
+    let g:terminal_color_5 = '#d7afaf'
+    let g:terminal_color_6 = '#87afaf'
+    let g:terminal_color_7 = '#d0d0d0'
+    let g:terminal_color_8 = '#626262'
+    let g:terminal_color_9 = '#d75f87'
+    let g:terminal_color_10 = '#87af87'
+    let g:terminal_color_11 = '#ffd787'
+    let g:terminal_color_12 = '#add4fb'
+    let g:terminal_color_13 = '#ffafaf'
+    let g:terminal_color_14 = '#87d7d7'
+    let g:terminal_color_15 = '#e4e4e4'
+else
+    let g:terminal_ansi_colors = [
+        \ '#4e4e4e', '#d68787', '#5f865f', '#d8af5f',
+        \ '#85add4', '#d7afaf', '#87afaf', '#d0d0d0',
+        \ '#626262', '#d75f87', '#87af87', '#ffd787',
+        \ '#add4fb', '#ffafaf', '#87d7d7', '#e4e4e4' ]
+endif
+
 
 "\_____________________________________________________________________________
 " vim-easy-align
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
@@ -624,6 +692,7 @@ nmap ga <Plug>(EasyAlign)
 "\_____________________________________________________________________________
 " bdelete
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " remap :bd to use the superior functionality of bbye's :Bdelete
 cnoremap <expr> bd (getcmdtype() == ':' ? 'Bdelete<CR>' : 'bd')
@@ -634,6 +703,7 @@ nnoremap <Leader>qa :bufdo :Bdelete<CR>
 "\_____________________________________________________________________________
 " git
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " always go to top of commit messages
 autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
@@ -646,6 +716,7 @@ nmap <leader>xx :%s/\[x\]/\[ \]/<CR>
 "\_____________________________________________________________________________
 " more keybindings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
@@ -690,6 +761,7 @@ autocmd FocusLost * :wa
 "\_____________________________________________________________________________
 " functions
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " trim git branch name for statusline
 function! TrimName(str)
@@ -716,6 +788,7 @@ endfunction
 "\_____________________________________________________________________________
 " projects
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
 set secure  " disallows shell and write commands from cwd rc files
