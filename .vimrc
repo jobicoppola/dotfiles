@@ -714,6 +714,18 @@ nmap <leader>xx :%s/\[x\]/\[ \]/<CR>
 
 
 "\_____________________________________________________________________________
+" dash.app
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+
+" search for word under cursor using current keyword setup for docset to search
+nmap <silent> <leader>s <Plug>DashSearch
+
+" search for word under cursor in all docsets
+nmap <silent> <leader>S <Plug>DashGlobalSearch
+
+
+"\_____________________________________________________________________________
 " more keybindings
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
