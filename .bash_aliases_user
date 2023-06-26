@@ -30,7 +30,6 @@ alias viquotes='vi ~/Dropbox/files/notes/quotes.md'
 alias vlans='~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py'
 
 # weather
-[ -f ~/bin/wttr ] && . ~/bin/wttr
 alias wttr='WTTR_PARAMS=0 bash ~/bin/wttr'
 alias wttr1='WTTR_PARAMS=1Fq bash ~/bin/wttr'
 
