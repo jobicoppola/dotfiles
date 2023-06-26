@@ -1,0 +1,34 @@
+# shellcheck shell=bash
+#
+#=<//<=<<<|•|>>>=>\\>=---------------------------------------------------------
+#
+#-
+# $repo/share/functions.misc :: source this file for some handy functions
+#=-----------------------------------------------------------------------------
+#`
+# temporary file while moving functions out of other bash files
+#
+emoc(){
+    # find emoji and copy first match to clipboard
+    #
+    local item="$1"
+    #
+    emojify --list | grep "$item" | awk '{print $2}' | tr -d '\n' | pbcopy
+}
+
+vimk(){
+    # create subdirs in given filepath, then open file in vi
+    #
+    local filepath="$1" vi=''
+    #
+    vi=$(which vim)
+    [ -z "$filepath" ] && exit 1
+    mkdir -p "$(dirname "$filepath")" && $vi "$filepath"
+}
+
+ansible_vault_encrypt_oneline_string(){
+    # use `ansible-vault` to encrypt a single line string
+    #
+    read -r x
+    echo -n "$x" | ansible-vault encrypt_string | sed -E 's/^[ \t]+//g' 2>/dev/null
+}

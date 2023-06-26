@@ -576,6 +576,12 @@ capitalize(){
 
 
 #-
+# bring in shared functions
+#=-----------------------------------------------------------------------------
+#`
+[ -f ~/share/functions.tmp ] && . ~/share/functions.tmp
+
+#-
 # initialize fasd, without aliases
 #=-----------------------------------------------------------------------------
 #`
