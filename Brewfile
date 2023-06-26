@@ -69,6 +69,10 @@ brew 'terraform-docs'
 brew 'tfenv'
 brew 'tflint'
 
+# k8s
+brew 'kubernetes-cli'
+brew 'kubectx'
+
 # completions
 brew 'bash-completion@2'
 brew 'django-completion'
