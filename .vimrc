@@ -370,10 +370,10 @@ autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
 
 " toggles nerdtree
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+map <leader>t :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " show current file in tree; extra cr moves focus back to the file
-map <leader>F :NERDTreeFind<CR><CR>
+map <leader>T :NERDTreeFind<CR><CR>
 
 " close nerdtree when it is the last window
 autocmd BufEnter * if (winnr("$") == 1
@@ -565,11 +565,11 @@ highlight GitGutterDelete ctermfg=196
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
-map <leader>gb :Gblame<CR>
-map <leader>gc :Gcommit<CR>
-map <leader>gp :Gpull<SPACE>
-map <leader>gs :Gstatus<CR><C-w>20+
-map <leader>gw :Gwrite<CR>
+map <leader>gb :Git blame<CR>
+map <leader>gc :Git commit<CR>
+map <leader>gp :Git pull<SPACE>
+map <leader>gP :Git push<CR>
+map <leader>gs :Git<CR>
 
 
 "\_____________________________________________________________________________
@@ -625,7 +625,12 @@ endfunction
 "
 
 " bring up fzf
-nnoremap <leader>z :FZF<CR>
+nnoremap <leader>c :BCommits<CR>
+nnoremap <leader>C :Commits<CR>
+nnoremap <leader>G :GFiles?<CR>
+nnoremap <leader>B :Buffers<CR>
+nnoremap <leader>F :Lines<CR>
+nnoremap <leader>z :Files<CR>
 nnoremap <leader>f :Rg<CR>
 
 " open fzf on bottom third
@@ -642,6 +647,10 @@ autocmd  FileType fzf set laststatus=0 noshowmode noruler
 " https://github.com/junegunn/fzf.vim/issues/346
 "
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --no-ignore --hidden --glob '!.git' --glob '!venv' --no-follow --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
+
+" also customize the Files command
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
 " fzf is now opened in a terminal buffer by vim and nvim, and our colorscheme
 " is not applied to the filename segment of the matches, so below we override

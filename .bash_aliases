@@ -31,8 +31,6 @@ alias venvs='cd ~/venvs/'
 
 # vi
 alias vi='vim'
-alias vif='vi "$(fzf)"'
-alias vifp='vi "$(fzf -m --preview="bat --color=always --theme=zenburn {}")"'
 alias sbash=". ~/.bashrc"
 alias vbash="vi ~/git/github/dotfiles/.bashrc"
 alias jcc="vi ~/Dropbox/sync/shell/legacy/jc3"
@@ -123,10 +121,6 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 
 # rg aka ripgrep
 alias rga='rg --no-ignore --hidden --ignore-case'
-
-# fzf
-alias fzh='fzf --preview "head -100 {}"'
-alias fzp='fzf --preview="bat --color=always --theme=zenburn {}"'
 
 # fd fast find
 alias fdh='fd --hidden'
