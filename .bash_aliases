@@ -121,6 +121,8 @@ alias ansibleupdate='git pull --rebase && git submodule update --init --recursiv
 
 # rg aka ripgrep
 alias rga='rg --no-ignore --hidden --ignore-case'
+alias rgi="rg --no-ignore --hidden --smart-case -g='!.git' -g='!site-packages/'"
+alias rgblanks="rga -g='!.git' -g='!venv/' '[[:blank:]]$' ."
 
 # fd fast find
 alias fdh='fd --hidden'
