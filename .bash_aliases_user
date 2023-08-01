@@ -28,6 +28,7 @@ alias ybat='bat -p --theme="gruvbox-dark" -l yaml'
 alias vioneliners='vi ~/Dropbox/sync/shell/one-liners'
 alias viquotes='vi ~/Dropbox/files/notes/quotes.md'
 alias vlans='~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py'
+alias tagsort='git tag |sort -V'
 
 # weather
 alias wttr='WTTR_PARAMS=0 bash ~/bin/wttr'
