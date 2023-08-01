@@ -765,9 +765,12 @@ nnoremap <leader>J :%!jq --indent 4 .<CR>
 nnoremap <leader>nlo o<ESC>
 nnoremap <leader>nll O<ESC>
 
-" highlight end of line whitespace
+" highlight end of line / trailing whitespace
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
+
+" remove end of line / trailing whitespace upon save
+autocmd BufWritePre * :%s/\s\+$//e
 
 " returns to where you were the last time you edited the file
 autocmd BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
@@ -813,5 +816,4 @@ endfunction
 
 set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
 set secure  " disallows shell and write commands from cwd rc files
-
 
