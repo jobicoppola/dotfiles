@@ -369,11 +369,11 @@ autocmd VimEnter * wincmd p
 autocmd FileType nerdtree setlocal norelativenumber
 autocmd FileType taglist setlocal norelativenumber
 
-" toggles nerdtree
-map <leader>t :execute 'NERDTreeToggle ' . getcwd()<CR>
+" toggles nerdtree; use <leader>t to bring it back
+map <leader>T :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " show current file in tree; extra cr moves focus back to the file
-map <leader>T :NERDTreeFind<CR><CR>
+map <leader>t :NERDTreeFind<CR><CR>
 
 " close nerdtree when it is the last window
 autocmd BufEnter * if (winnr("$") == 1
