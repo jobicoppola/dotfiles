@@ -1,4 +1,13 @@
-# ~/.bash_colors :: http://bit.ly/nDwexP
+# shellcheck shell=bash
+#
+#=-----------------------------------------------------------------------------
+#
+# ~/.bash_colors :: used to build custom prompt
+#
+# prompt customization reference - http://bit.ly/nDwexP
+#
+#=-----------------------------------------------------------------------------
+#`
 
 # Attributes
 EC='\[\e[0m\]'              # End Color / Text Reset
