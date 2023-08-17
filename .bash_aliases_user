@@ -2,8 +2,8 @@
 #
 #*+=<|>+=+<|>=+*---------------------------------------------------------------
 #
-#-
 # ~/.bash_aliases_user :: jcopp.cfxd.net
+#
 #=-----------------------------------------------------------------------------
 #`
 
@@ -17,6 +17,10 @@ alias cdansible='cd ~/projects/ansible'
 alias cdsync='cd ~/Dropbox/sync'
 alias cdsyncsh='cd ~/Dropbox/sync/shell'
 alias cdnotes='cd ~/Dropbox/files/notes'
+alias cdu='cd ../'
+alias cdu2='cd ../../'
+alias cdu3='cd ../../../'
+alias cdu4='cd ../../../../'
 
 # k8s
 alias k='kubectl'
