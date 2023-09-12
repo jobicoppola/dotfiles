@@ -86,6 +86,7 @@ Plugin 'rizzatti/dash.vim'
 Plugin 'Shougo/deoplete.nvim'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
+Plugin 'deoplete-plugins/deoplete-jedi'
 
 " shared plugins
 Plugin 'L9'
