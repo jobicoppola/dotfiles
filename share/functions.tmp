@@ -2,12 +2,18 @@
 #
 #=<//<=<<<|•|>>>=>\\>=---------------------------------------------------------
 #
-#-
 # $repo/share/functions.misc :: source this file for some handy functions
+#
+# NOTE: temporary file while moving functions out of other bash files
+#
 #=-----------------------------------------------------------------------------
 #`
-# temporary file while moving functions out of other bash files
-#
+
+
+#--
+# misc functions
+#=-----------------------------------------------------------------------------
+#`
 emoc(){
     # find emoji and copy first match to clipboard
     #
@@ -32,3 +38,27 @@ ansible_vault_encrypt_oneline_string(){
     read -r x
     echo -n "$x" | ansible-vault encrypt_string | sed -E 's/^[ \t]+//g' 2>/dev/null
 }
+
+
+#--
+# quick date formats
+#=-----------------------------------------------------------------------------
+#`
+# added these date helpers after TypeIt4Me stopped working, August 2023
+#
+# functions are named so all can easily be seen by typing `jd<tab>`
+#
+# equivalents of these functions are also in Alfred snippets but named slightly
+# differently, as the Alfred snippets will auto-expand upon typing, e.g.
+#
+# `aadash` -> 2023-3-12
+#
+# - http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
+# - https://strftime.org/
+#
+jdday(){ date "+%A, %B %e, %Y"; }
+jddash(){ date +"%Y-%m-%d"; }
+jddate(){ date +"%Y%m%d"; }
+jddtime(){ date +"%H:%M:%S"; }
+jddstamp(){ date +"%Y%m%d-%H%M%S"; }
+
