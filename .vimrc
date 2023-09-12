@@ -21,9 +21,11 @@
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
+" required for vundle
 set nocompatible
 filetype off
 
+" set runtime path
 set rtp+=~/.vim/bundle/vundle/
 call vundle#begin()
 
@@ -96,6 +98,7 @@ endif
 " plugins must be listed above this line
 call vundle#end()
 
+" required for vundle
 filetype plugin indent on
 
 " for deoplete, specify where python binaries are
@@ -146,7 +149,6 @@ let mapleader = ","
 "
 
 " autocompletion
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -161,7 +163,6 @@ autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
 autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
 autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
-"autocmd BufRead,BufNewFile *.jinja,*.jinja2,*.j2 set ft=jinja
 
 
 "\_____________________________________________________________________________
@@ -169,7 +170,8 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
-syntax on  " syntax highlighting
+" syntax highlighting
+syntax on
 
 " we want to use catppuccin-mocha with transparent background
 " so we have to load in config overrides via lua
@@ -221,56 +223,55 @@ colorscheme catppuccin
 "
 
 " tab settings
-set tabstop=4                           " how many spaces a tab counts for
-set shiftwidth=4                        " spaces to use per indent step
-set softtabstop=4                       " when editing, num spaces in a tab
-set expandtab                           " use spaces to insert a tab
-set modelines=0                         " stop exploits
-set listchars=tab:▸\ ,eol:¬             " use tm symbols for tabstops/eols
-set pastetoggle=<F2>                    " put vim into paste mode
-set clipboard=unnamed                   " put yanks onto system clipboard
-set t_Co=256                            " max terminal colors
+set tabstop=4                   " number of spaces that a <Tab> counts for
+set softtabstop=4               " when editing, number of spaces a <Tab> counts for
+set shiftwidth=4                " how many spaces to use per indent step
+set expandtab                   " use spaces to insert a <Tab>
+set listchars=tab:▸\ ,eol:¬     " use these symbols for tabstops/eols
 
 " misc settings
-set encoding=utf-8                      " default encoding type
-set scrolloff=4                         " some breathing room at the bottom
-set autoindent
-set showmode
-set showcmd
-set hidden
-set wildmenu
-set wildmode=list:longest
-set visualbell
-set ttyfast
-set ruler
-set backspace=indent,eol,start
-set number                              " show current line number instead of 0
-set relativenumber                      " show line nums relative to cur pos
-set cursorline                          " highlight current line
-set nofoldenable                        " no code folding
-set backupdir=~/tmp,/tmp                " backups (~)
-set directory=~/tmp,/tmp                " swap files
-set backup                              " enable backups
-set wrap                                " handle long lines proper-like
-set textwidth=79
-set formatoptions=qrn1
-set colorcolumn=80                      " new in 7.3
-set switchbuf=useopen                   " keep window layout for existing bffrs
-set regexpengine=1                      " fix slow scrolling in perl files issue
+set encoding=utf-8              " default encoding type
+set scrolloff=4                 " min number of lines to keep above and below cursor
+set autoindent                  " copy indent of current line when starting new line
+set showmode                    " put message on last line if in Insert/Replace/Visual mode
+set showcmd                     " show partial command on last line of screen (:w)
+set hidden                      " hide abandoned buffers
+set wildmenu                    " enable enhanced completion
+set wildmode=list:longest       " completion mode settings
+set visualbell                  " use a visual bell instead of beeping
+set ttyfast                     " improve smoothness of redrawing
+set ruler                       " show line and column number of cursor position
+set number                      " show current line number instead of 0
+set relativenumber              " show line nums relative to cur pos
+set cursorline                  " highlight current line with CursorLine `hl-CursorLine`
+set nofoldenable                " no code folding, can be toggled with `zi`
+set backup                      " enable backups
+set backupdir=~/tmp,/tmp        " where to save backups (~)
+set directory=~/tmp,/tmp        " directories for swap files
+set wrap                        " handle long lines proper-like
+set textwidth=79                " max width of text being inserted (but not for paste)
+set colorcolumn=80              " screen columns to highlight, with ColorColumn `hl-ColorColumn`
+set switchbuf=useopen           " keep window layout for existing buffrs
+set regexpengine=1              " fix slow scrolling in perl files issue
+set clipboard=unnamed           " put yanks onto system clipboard
+set pastetoggle=<F2>            " put vim into paste mode
+set modelines=0                 " stop exploits by not checking lines for set commands
+set t_Co=256                    " max number of terminal colors
 
-" search options
-nnoremap / /\v
-vnoremap / /\v
-set ignorecase
-set smartcase
-set gdefault
-set incsearch
-set showmatch
-set hlsearch
+" backspacing settings
+set backspace=indent,eol,start  " indent: allow backspacing over autoindent
+                                " eol: allow backspacing over line breaks (join lines)
+                                " start: allow backspacing over the start of insert
 
-" status line
-" used in conjunction with User* colors
-" see the catppuccin lua section above
+" automatic formatting settings
+set formatoptions=q,r,n,1       " q: allow formatting comments with `gq`
+                                " r: continue comment on next line after hitting <Enter>
+                                " n: recognize numbered lists when formatting text
+                                " 1: don't break a line after a one-letter word
+
+" status line settings
+" used in conjunction with `User*` colors (see catppuccin lua section above)
+"
 set laststatus=2                                       " always show the status line
 set statusline=                                        " initialize status string
 set statusline+=%1*\ %<%{TrimName(gitbranch#name())}\  " current git branch
@@ -283,10 +284,26 @@ set statusline+=%6*\ %{strlen(&ft)?&ft:'none'}\ \      " file type
 set statusline+=%7*\ %(%l:%c%V%)\                      " line:character (column)
 set statusline+=%8*\ %<%P\                             " curr position as % of file
 
-" gui options
-set guioptions-=T                               " hide toolbar
-set guioptions-=r                               " remove right scrollbar
-set guioptions-=L                               " remove left scrollbar vsplits
+" search settings
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set smartcase
+set gdefault
+set incsearch
+set showmatch
+set hlsearch
+
+" gui settings
+set guioptions-=T  " hide toolbar
+set guioptions-=r  " remove right scrollbar
+set guioptions-=L  " remove left scrollbar vsplits
+
+
+"\_____________________________________________________________________________
+" visual fixes
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
 
 " remove underline
 highlight clear CursorLine
