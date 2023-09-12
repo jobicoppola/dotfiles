@@ -37,8 +37,7 @@ Plugin 'preservim/nerdtree'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'preservim/nerdcommenter'
 Plugin 'fholgado/minibufexpl.vim'
-Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets'
+Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'python-rope/ropevim'
@@ -94,6 +93,8 @@ Plugin 'L9'
 " version conditional plugins
 if !has("patch-8.2.1066")
     Plugin 'Shougo/neocomplete.vim'
+    Plugin 'Shougo/neosnippet.vim'
+    Plugin 'Shougo/neosnippet-snippets'
 endif
 
 " plugins must be listed above this line
@@ -505,6 +506,18 @@ if !has("patch-8.2.1066")
     let g:neosnippets#snippets_directory = '~/.vim/bundle/vim-snippets/snippets'
 
 endif
+
+
+"\_____________________________________________________________________________
+" ultisnips
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+
+" trigger configuration
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsSnippetDirectories=["snips"]
 
 
 "\_____________________________________________________________________________
