@@ -15,6 +15,7 @@ alias lsh="ll -S"
 alias lshr="ll -Sr"
 alias ltr="ll -tr"
 alias latr="ll -atr"
+alias lld="ll --group-directories-first"
 
 # cd
 alias dl="cd ~/downloads"
