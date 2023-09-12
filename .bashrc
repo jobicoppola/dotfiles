@@ -238,15 +238,16 @@ fi
 if [[ "$OS" == Darwin ]]; then
     [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
 
-    # homebrew paths
-    brewpath=$(brew --prefix)
-    brewconf=${brewpath}/etc
-
-    # homebrew completions
-    bash_completions=${brewconf}/profile.d/bash_completion.sh
-    git_completions=${brewconf}/bash_completion.d/git-completion.bash
-    grc_completions=${brewconf}/grc.bashrc
-    [ -L "$bash_completions" ] && . "$bash_completions"
+    # homebrew paths and completions
+    brew_prefix=$(brew --prefix)
+    brew_conf=${brew_prefix}/etc
+    brew_bash_completions_dir=${brew_conf}/bash_completion.d
+    #
+    bash_profile_completions=${brew_conf}/profile.d/bash_completion.sh
+    git_completions=${brew_bash_completions_dir}/git-completion.bash
+    grc_completions=${brew_conf}/grc.bashrc
+    #
+    [ -L "$bash_profile_completions" ] && . "$bash_profile_completions"
     [ -f "$grc_completions" ] && . "$grc_completions"
     [ -f "$git_completions" ] && . "$git_completions"
 
@@ -254,7 +255,7 @@ if [[ "$OS" == Darwin ]]; then
     [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 
     # fzf installer
-    "${brewpath}/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1
+    "${brew_prefix}/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1
 
     # fzf completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
