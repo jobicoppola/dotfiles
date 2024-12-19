@@ -2,25 +2,32 @@
 #
 #>=-</.|.\>=-------------------------------------------------------------------
 #
-#-
 # ~/.bashrc :: jcopp.cfxd.net
+#
 #=-----------------------------------------------------------------------------
 #`
+
 [ -z "$PS1" ] && return  # only proceed for interactive shells
 
 
-#-
-# set some vars
+#--
+# configure shell
 #=-----------------------------------------------------------------------------
-#`
-OS=$(uname)  # determine os
 
 # command history
+#
 HISTCONTROL=ignoreboth       # ignore duplicates and cmds starting with spaces
 shopt -s histappend          # append to history
-PROMPT_COMMAND="history -a"  # write history from current shell every prompt
-HISTSIZE=99999               # set history length
-HISTFILESIZE=$HISTSIZE
+#
+# try unlimited history
+# https://superuser.com/questions/137438/how-to-unlimited-bash-shell-history
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTTIMEFORMAT="[%F %T] "
+export HISTFILE=~/.bash_history_forever
+#
+# write history from current shell every prompt
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # case-insensitive tab-completion for paths
 shopt -s nocaseglob
@@ -32,53 +39,157 @@ shopt -s globstar
 HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
 
+
+#--
+# set some vars
+#=-----------------------------------------------------------------------------
+
+os=$(uname)  # determine os
+
+# differentiate between intel macs and newer macs with apple silicon chips
+# previously these dotfiles synced right into home dir, and for now we
+# want to just let old macs keep doing it that way
+#
+silicon=false
+arch="$(uname -m)"
+[[ "$arch" == 'arm64' ]] && silicon=true
+
+# path to where dotfiles repo is synced to (see `configurationalize.sh`)
+# (let old macs keep syncing to home dir instead of ~/.config)
+#
+# TODO use `dotconf` var set in `.bashrc.skel` instead of $config
+#
+if [[ "$silicon" == 'true' ]]; then
+    config=~/.config/$(whoami)/dotfiles
+else
+    config=$HOME
+fi
+
+# customize platform vars as needed
+mac='' linux='' hostname='' user=''
+
+# macos
+if [[ "$os" == 'Darwin' ]]; then
+    mac=true
+    hostname=$(hostname |cut -d . -f 1)  # remove .lan or .local
+    user="$(whoami)@$hostname"
+fi
+
+# linux
+if [[ "$os" == 'linux' ]]; then
+    linux=true
+    hostname=$(hostname)
+    user="$(whoami)@$hostname"
+fi
+
 # for using `rg` and `fd` instead of grep and find
 fd=$(which fd) fd="${fd:-find}"
 rg=$(which rg) rg="${rg:-grep}"
 
+# also see corresponding exported vars after path is set
+rbenv_bin=$HOME/.rbenv/bin       # rbenv
+gem_bin=$HOME/gems/bin           # rubygems
+node_bin=$HOME/node_modules/.bin # nodejs
+cargo_bin=$HOME/.cargo/bin       # rust
+go_bin=~/go/bin                  # go
+go_env=~/go/env                  # go
 
-#-
-# export some vars
-#=-----------------------------------------------------------------------------
-#`
-export ARCHFLAGS="-arch x86_64" # make compilers behave
+# create go dirs if they don't exist
+[ -d "$go_env" ] || mkdir -p "$go_env"
 
-# set editor vars
-VIM=$(which vim)
-export EDITOR="${VIM}"
-export GIT_EDITOR="${VIM}"
-export GIT_MERGE_AUTOEDIT=no
-
-# use `bat` as manpage formatter
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-
-# bat config file path
-export BAT_CONFIG_PATH=~/.batconfig
+# kitten is not added to /opt/homebrew/bin; specify here and add to path below
+kitty_bin=/Applications/kitty.app/Contents/MacOS
 
 
-#-
+#--
 # path setup
 #=-----------------------------------------------------------------------------
-#`
-if [[ "$OS" == Darwin ]]; then
-    COREUTILS=/usr/local/opt/coreutils/libexec/gnubin
-    GREP=/usr/local/opt/grep/libexec/gnubin
-    PY=/usr/local/opt/python/libexec/bin
-    P1=$PY:$COREUTILS:$GREP
-    P2=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
-    P3=$HOME/bin:$HOME/go/bin:$HOME/.cargo/bin
-    export PATH=$P1:$P2:$P3
+
+if [[ "$mac" == true ]]; then
+    #
+    # try to make path vars easier to reorganize later if necessary
+    #
+    rbenvbin=$rbenv_bin
+    gembin=$gem_bin
+    nodebin=$node_bin
+    gobin=$go_bin
+    cargobin=$cargo_bin
+    #
+    homebrew=/opt/homebrew
+    brewbin=$homebrew/bin
+    brewsbin=$homebrew/sbin
+    coreutilsbin=$homebrew/Cellar/coreutils/9.5/bin
+    grepbin=$homebrew/Cellar/grep/3.11/bin
+    javabin=$homebrew/opt/openjdk/bin
+    #
+    pybin=$HOME/Library/Python/3.12/bin
+    fasdbin=$HOME/bin/fasd/bin
+    dotfilesbin=$HOME/.config/$(whoami)/dotfiles/bin
+    homebin=$HOME/bin
+    #
+    kittybin=$kitty_bin
+    #
+    systembins=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+    #
+    prebin=$rbenvbin
+    #
+    path=$prebin:$brewbin:$brewsbin:$coreutilsbin:$grepbin:$javabin
+    path+=:$gembin:$nodebin:$gobin:$cargobin
+    path+=:$pybin:$fasdbin:$dotfilesbin:$homebin:$kittybin
+    path+=:$systembins
+    export PATH=$path
+elif [[ "$linux" == true ]]; then
+    path=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
+    path+=:$HOME/bin
+    export PATH=$path
 else
-    P1=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/sbin:/sbin
-    P2=$HOME/bin
-    export PATH=$P1:$P2
+    echo "Failed to update path - not on mac or linux - reported OS is $os"
+    export PATH=$PATH
 fi
 
 
-#-
+#--
+# export some vars
+#=-----------------------------------------------------------------------------
+
+ARCHFLAGS="-arch x86_64"                            # make compilers behave; intel
+[[ "$arch" == 'arm64' ]] && ARCHFLAGS="-arch $arch" # apple silicon
+export ARCHFLAGS=$ARCHFLAGS
+
+# set editor vars
+vim=$(which vim)
+export EDITOR="$vim"
+export GIT_EDITOR="$vim"
+export GIT_MERGE_AUTOEDIT=no
+
+# use `bat` as manpage formatter
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'sed -r \"s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g\" | col -bx | bat -l man -p'"
+
+# bat config file path
+export BAT_CONFIG_PATH="$config/.batconfig"
+
+# java needed for stackhawk cli
+export JAVA_HOME=/opt/homebrew/opt/openjdk/bin
+
+# ruby
+export RUBYOPT=rubygems
+export GEM_HOME=$HOME/gems  # also see $gem_bin
+export RUBYPATH=$GEM_HOME
+export GEM_PATH=$GEM_HOME
+
+# node path
+export NODE_PATH=/usr/local/lib/node_modules
+
+# go dirs
+export GOBIN="${go_bin}"
+export GOENV="${go_env}"
+
+
+#--
 # ssh setup
 #=-----------------------------------------------------------------------------
-#`
+
 if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   rm -f "$SSH_AUTH_SOCK"
   SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
@@ -90,57 +201,9 @@ if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
 fi
 
 
-#-
-# ruby, nodejs, go, python, virtualenvwrapper
-#=-----------------------------------------------------------------------------
-#`
-export RUBYOPT=rubygems
-export GEM_HOME=$HOME/gems
-export RUBYPATH=$GEM_HOME
-export GEM_PATH=$GEM_HOME
-export PATH=$PATH:$GEM_HOME/bin
-
-# use rbenv to manage ruby versions
-export PATH=$HOME/.rbenv/bin:$PATH
-eval "$(rbenv init -)"
-
-# use bundler to manage ruby applications
-alias b="bundle"
-alias bi="b install --path vendor"
-alias bil="bi --local"
-alias bu="b update"
-alias be="b exec"
-alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
-
-# node path
-export NODE_PATH=/usr/local/lib/node_modules
-export PATH=$PATH:$HOME/node_modules/.bin
-
-# go dirs
-gobin=~/go/bin goenv=~/go/env
-[ -d "$goenv" ] || mkdir -p "$goenv"
-export GOBIN="${gobin}"
-export GOENV="${goenv}"
-
-# python and virtualenvwrapper paths
-vepy=$(which python)
-vepy_version=$(python -V | awk '{print $2}' | cut -d. -f1-2)
-vepy_path=/Users/$(whoami)/Library/Python/${vepy_version}
-vepy_wrapper=${vepy_path}/bin/virtualenvwrapper.sh
-#
-export PATH=$PATH:${vepy_path}/bin
-export WORKON_HOME=$HOME/venvs
-export VIRTUALENVWRAPPER_PYTHON=${vepy}
-export VIRTUALENVWRAPPER_SCRIPT=${vepy_wrapper}
-
-# check for virtualenvwrapper
-[ -f "$VIRTUALENVWRAPPER_SCRIPT" ] && . "$VIRTUALENVWRAPPER_SCRIPT" || echo 'No VIRTUALENVWRAPPER'
-
-
-#-
+#--
 # prompt setup
 #=-----------------------------------------------------------------------------
-#`
 
 # functions for displaying git info in the prompt
 #
@@ -167,119 +230,133 @@ get_git_branch_default(){
 }
 
 get_git_status(){
-    CMSG='nothing to commit'
-    TMSG='Changes to be committed'
-    SMSG='Changes not staged for commit'
-    UMSG='nothing added to commit but untracked files present'
-    GSTAT=$(git status 2> /dev/null) || return
-    if [[ $(echo "${GSTAT}" | grep -c "${SMSG}") -gt 0 ]]; then
+    local cmsg tmsg smsg umsg gstat
+    cmsg='nothing to commit'
+    tmsg='Changes to be committed'
+    smsg='Changes not staged for commit'
+    umsg='nothing added to commit but untracked files present'
+    gstat=$(git status 2> /dev/null) || return
+    if [[ $(echo "$gstat" | grep -c "$smsg") -gt 0 ]]; then
         echo '?'
-    elif [[ $(echo "${GSTAT}" | grep -c "${TMSG}") -gt 0 ]]; then
+    elif [[ $(echo "$gstat" | grep -c "$tmsg") -gt 0 ]]; then
         echo '!'
-    elif [[ $(echo "${GSTAT}" | grep -c "${UMSG}") -gt 0 ]]; then
+    elif [[ $(echo "$gstat" | grep -c "$umsg") -gt 0 ]]; then
         echo 'u'
-    elif [[ $(echo "${GSTAT}" | grep -c "${CMSG}") -gt 0 ]]; then
+    elif [[ $(echo "$gstat" | grep -c "$cmsg") -gt 0 ]]; then
         echo '¬'
     else
         echo 'f'
     fi
 }
 
-# bring in named colors
-[ -f ~/.bash_colors ] && . ~/.bash_colors
+# bring in named colors to customize prompt
+[ -f "$config/.bash_colors" ] && . "$config/.bash_colors"
 
-# shellcheck disable=SC2154
-CLOCK_COLOR="$COLOR_71"
-PIPE_COLOR="$GRAY"
-VENV_COLOR="$GREEN"
-USER_COLOR="$COLOR_132"
-CWD_COLOR="$COLOR_72"
-BRANCH_COLOR="$COLOR_173"
-STATUS_COLOR="$COLOR_149"
-DOLLAR_COLOR="$COLOR_244" # force gray to override any theme
-user_mac='jcopp@macbot' # manually set user section of prompt on macs
+# bring in and customize kube_ps1 to display k8s info in prompt
+kube_ps1_path=/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh
+[ -f "$kube_ps1_path" ] && . "$kube_ps1_path"
+export KUBE_PS1_PREFIX=''
+export KUBE_PS1_SUFFIX=''
+export KUBE_PS1_SYMBOL_COLOR=27
+export KUBE_PS1_CTX_COLOR=39
+export KUBE_PS1_NS_COLOR=81
 
-# shellcheck disable=SC2154
-PS1_TIME="\n${CLOCK_COLOR}\t${PIPE_COLOR}"
-PS1_VENV="${VENV_COLOR}\$(get_venv)"
-PS1_USER="\u@\h${BWHITE}\w${BYELLOW}" # linux
-PS1_USER_MAC="${EC}${USER_COLOR}${user_mac}" # mac
-PS1_CWD="${CWD_COLOR}\w"
-PS1_GIT="${BRANCH_COLOR}\$(get_git_branch_current_for_prompt)"
-PS1_GIT+="${STATUS_COLOR}\$(get_git_status)${EC}"
-PS1_END="\n${EC}${GRAY}$ ${EC}" # linux
-PS1_END_MAC="\n${DOLLAR_COLOR}$ ${EC}" # mac
+# set color vars
+ec="$EC"
+clock_color="$COLOR_71"
+pipe_color="$GRAY"
+venv_color="$GREEN"
+host_color="$BWHITE"
+path_color="$BYELLOW"
+user_color="$COLOR_132"
+cwd_color="$COLOR_72"
+branch_color="$COLOR_173"
+status_color="$COLOR_149"
+dollar_color="$COLOR_244" # force gray to override any theme
+
+# prompt vars
+ps1_kube="\n\$(kube_ps1)${pipe_color}"
+ps1_time="\n${clock_color}\t${pipe_color}"
+ps1_venv="${venv_color}\$(get_venv)"
+ps1_user="\u@\h${host_color}\w${path_color}" # linux
+ps1_user_mac="${ec}${user_color}${user}" # mac
+ps1_cwd="${cwd_color}\w" # original, \W returns only basename of cwd
+ps1_git="${branch_color}\$(get_git_branch_current_for_prompt)"
+ps1_git+="${status_color}\$(get_git_status)${ec}"
+ps1_end="\n${ec}${GRAY}$ ${ec}" # linux
+ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
+
+# set ps1_kube to empty string if not in aws-vault session
+[ -z "$AWS_VAULT" ] && ps1_kube=""
 
 # now actually set the prompt
-if [[ "$OS" == Darwin ]] && [[ "$(hostname)" != *bot ]]; then
+if [[ "$mac" == 'true' ]]; then
     # macos
-    PS1="${PS1_TIME}|${PS1_VENV}${PS1_USER_MAC}${PS1_CWD}${PS1_GIT}${PS1_END_MAC}"
+    PS1="${ps1_kube}${ps1_time}|${ps1_venv}${ps1_user_mac}${ps1_cwd}${ps1_git}${ps1_end_mac}"
 else
     # linux
-    PS1="${PS1_TIME}$GRAY|${PS1_VENV}${PS1_USER}${PS1_GIT}${PS1_END}"
+    PS1="${ps1_time}$GRAY|${ps1_venv}${ps1_user}${ps1_git}${ps1_end}"
 fi
 
 
-#-
-# source aliases, completions and other custom config files
+#--
+# source aliases, completions and other custom config files TODO
 #=-----------------------------------------------------------------------------
-#`
+
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
-[ -f ~/.bash_aliases_user ] && . ~/.bash_aliases_user
-[ -f ~/.bash_sensible ] && . ~/.bash_sensible
-[ -f ~/.miscrc ] && . ~/.miscrc
-[ -f ~/.awsrc ] && . ~/.awsrc
 
 # http status codes
-[ -f ~/.http-status-codes ] && . ~/.http-status-codes
+[ -f "$config/.http-status-codes" ] && . "$config/.http-status-codes"
 
 # mac specific
-if [[ "$OS" == Darwin ]]; then
-    [ -f ~/.bash_aliases_osx ] && . ~/.bash_aliases_osx
+if [[ "$mac" == true ]]; then
+    [ -f "$config/.bash_aliases_osx" ] && . "$config/.bash_aliases_osx"
 
-    # homebrew paths and completions
+    # homebrew bash completions
+    #
+    # completion files are in:
+    # /opt/homebrew/etc/bash_completion.d/*
+    #
+    # NOTE: may need to run `brew completions link` after the below
+    #
     brew_prefix=$(brew --prefix)
     brew_conf=${brew_prefix}/etc
     brew_bash_completions_dir=${brew_conf}/bash_completion.d
     #
-    bash_profile_completions=${brew_conf}/profile.d/bash_completion.sh
+    brew_bash_profile_completions=${brew_conf}/profile.d/bash_completion.sh
+    grc_completions=${brew_conf}/grc.sh
     git_completions=${brew_bash_completions_dir}/git-completion.bash
-    grc_completions=${brew_conf}/grc.bashrc
     #
-    [ -L "$bash_profile_completions" ] && . "$bash_profile_completions"
-    [ -f "$grc_completions" ] && . "$grc_completions"
+    # export var to fix completions for brew itself not working
+    # see https://github.com/orgs/Homebrew/discussions/4227
+    #
+    homebrew_repo="$(brew --prefix)"
+    export HOMEBREW_REPOSITORY="$homebrew_repo"
+    #
+    [ -r "$brew_bash_profile_completions" ] && . "$brew_bash_profile_completions"
+    [ -f "$grc_completions" ] && GRC_ALIASES=true . "$grc_completions"
     [ -f "$git_completions" ] && . "$git_completions"
 
     # awscli completions
     [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 
-    # fzf installer
+    # fzf installer, writes completions to home dir
     "${brew_prefix}/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1
-
-    # fzf completions
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
 
-    # ssh completions
-    [ -f ~/bash_completion.d/ssh ] && . ~/bash_completion.d/ssh
+    # make completions work for kubectl when invoked via alias `k`
+    complete -F __start_kubectl k
 
-    # terraform completions `terraform-docs completion bash`
-    terraform_completions=~/bash_completion.d/terraform
-    terraform_docs_completions=~/bash_completion.d/terraform-docs
-    [ -f "$terraform_completions" ] && . "$terraform_completions"
-    [ -f "$terraform_docs_completions" ] && . "$terraform_docs_completions"
-
-    # kubectl completions `kubectl completion bash`
-    kubectl_completions=~/bash_completion.d/kubectl
-    [ -f "$kubectl_completions" ] && . "$kubectl_completions"
+    # helm chart releaser
+    . <(cr completion bash)
 fi
 
 
-#-
-# rg, fzf, fasd
+#--
+# rg and fzf commands
 #=-----------------------------------------------------------------------------
-#`
-#
+
 rg_command='rg --column --line-number --no-heading --fixed-strings '
 rg_command+='--ignore-case --no-ignore --hidden --color "always" --glob "!.git"'
 rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "always"'
@@ -288,11 +365,10 @@ rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "alw
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
 
 
-#-
+#--
 # rg, fzf, fasd functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
-#`
-#
+
 sf(){
     # search for files matching provided string
     # open selected files in default editor
@@ -488,7 +564,7 @@ fcs(){
     git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
 }
 
-fshow(){
+fcb(){
     # git commit browser
     #
     git log --graph --color=always \
@@ -503,10 +579,10 @@ FZF-EOF"
 }
 
 
-#-
+#--
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
-#`
+
 ftpane(){
     local panes current_window current_pane target target_window target_pane
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
@@ -527,10 +603,10 @@ ftpane(){
 }
 
 
-#-
+#--
 # try to securely deal with passwords
 #=-----------------------------------------------------------------------------
-#`
+
 readpass(){
     local was
     echo -n >&2 "Password: "
@@ -544,7 +620,7 @@ readpass(){
 
 setpass(){
     local id="$1" group="$2" pw=""
-    if [[ "$OS" == Darwin ]]; then
+    if [[ "$os" == Darwin ]]; then
         pw=$(readpass)
         security delete-generic-password -a "$group" -s "$id" 2> /dev/null
         security add-generic-password -a "$group" -s "$id" -w "$pw"
@@ -553,16 +629,16 @@ setpass(){
 
 getpass(){
     local id="$1" group="$2"
-    if [[ "$OS" == Darwin ]]; then
+    if [[ "$os" == Darwin ]]; then
         security find-generic-password -a "$group" -s "$id" -w
     fi
 }
 
 
-#-
+#--
 # string helpers
 #=-----------------------------------------------------------------------------
-#`
+
 lower(){
     cat | tr '[:upper:]' '[:lower:]'
 }
@@ -575,22 +651,28 @@ capitalize(){
     cat | perl -ne 'print lc' | perl -ane 'print join " ", map {ucfirst} @F'
 }
 
+trim(){
+    cat | perl -ne 's/^\s+|\s+$//g; print $_'
+}
 
-#-
+
+#--
 # bring in shared functions
 #=-----------------------------------------------------------------------------
-#`
-[ -f ~/share/functions.tmp ] && . ~/share/functions.tmp
 
-#-
-# initialize fasd, without aliases
+[ -f "$config/share/functions.tmp" ] && . "$config/share/functions.tmp"
+
+
+#--
+# initialize rbenv and fasd without aliases
 #=-----------------------------------------------------------------------------
-#`
+
+eval "$(rbenv init -)"
 eval "$(fasd --init bash-hook bash-ccomp bash-ccomp-install)"
 
 
-#-
-# work setup
+#--
+# source work setup
 #=-----------------------------------------------------------------------------
-#`
-[ -f ~/.workrc ] && . ~/.workrc
+
+[ -f "$config/.workrc" ] && . "$config/.workrc"

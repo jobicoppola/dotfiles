@@ -1,4 +1,0 @@
-# ~/.bash_aliases_linux :: jcopp.cfxd.net
-#
-# aliases
-alias vagrant='/opt/vagrant/bin/vagrant'

@@ -1,8 +1,17 @@
+# files
 .viminfo
 .awsrc
-.bash_aliases_jc
 .miscrc
+.workrc-*
+.gitconfig-*
+
+# dirs
+tmp/
 
 # ignore homebrew lock file; we don't really care about saving a working config
 # more info here: https://github.com/Homebrew/homebrew-bundle/pull/552
 Brewfile.lock.json
+
+# ignore python virtual envs
+venv/
+.venv/

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# shellcheck disable=SC2035
+readarray -t voices < <(say -v ? |rga en_us |awk -F'en_US' '{print $1}')
+
+for voice in "${voices[@]}"; do
+    echo "==> $voice"
+    v=$(echo "$voice" |python -c 'import sys; print(sys.stdin.read().strip())')
+    say -v "$v" testing
+done

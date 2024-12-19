@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+#=-----------------------------------------------------------------------------
+#
+# ~/.bashrc
+#
+# to use, either copy this file into your home dir as ~/.bashrc, or paste its
+# contents at the bottom of an existing ~/.bashrc
+#
+# below we source the `.bashrc` file in the specified dotfiles directory
+#
+#=-----------------------------------------------------------------------------
+#`
+
+dotconf=~/.config/"$(whoami)"/dotfiles
+bashrc="$dotconf/.bashrc"
+
+if [ -f "$bashrc" ]; then
+    [[ "$DEBUG" ]] && echo "[SUCCESS] found $bashrc"
+    . "$bashrc" && export dotconf="$dotconf"
+else
+    echo "[FAIL] can't find $bashrc"
+fi

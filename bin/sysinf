@@ -16,18 +16,19 @@ os_uname=$(uname)
 usage(){
     local pre="\nUsage:"
     local msg="\n
-    -a|all          Show all system info
-    -b|battery      Information about system batteries (laptop)
-    -d|display      Details of system displays and graphics cards
-    -e|ethernet     Ethernet information
-    -H|hw|hardware  Display an overview of the system hardware
-    -m|memory       Info about ystem memory slots
-    -n|network      Networking hardware info
-    -N|nvme|ssd     Fast storage info
-    -p|power        System power and battery info
-    -S|sw|software  Short overview of system software
-    -s|storage      Local disk and volume info
-    -u|usb          USB port and controller details
+    -a|all           Show all system info
+    -b|battery       Information about system batteries (laptop)
+    -d|display       Details of system displays and graphics cards
+    -e|ethernet      Ethernet information
+    -g|gpu|graphics  GPU and graphics card info
+    -H|hw|hardware   Display an overview of the system hardware
+    -m|memory        Info about ystem memory slots
+    -n|network       Networking hardware info
+    -N|nvme|ssd      Fast storage info
+    -p|power         System power and battery info
+    -S|sw|software   Short overview of system software
+    -s|storage       Local disk and volume info
+    -u|usb           USB port and controller details
     "
     printf "%b %s %-b" "$pre" "$0" "$msg"
     exit 2
@@ -91,6 +92,17 @@ ethernet_macos(){
 }
 ethernet_linux(){
     echo "TODO: linux ethernet hardware report command"
+}
+
+#
+gpu(){
+    ethernet_${os_nick}
+}
+gpu_macos(){
+    system_profiler SPDisplaysDataType  # also includes info about displays
+}
+gpu_linux(){
+    echo "TODO: linux gpu / graphics hardware report command"
 }
 
 #
@@ -175,27 +187,28 @@ storage_linux(){
 usb(){
     usb_${os_nick}
 }
-storage_macos(){
+usb_macos(){
     system_profiler SPUSBDataType
 }
-storage_linux(){
+usb_linux(){
     echo "TODO: linux usb report command"
 }
 
 # do the things
 #
 case "$1" in
-    -a|all)        all       ;;
-    -b|bat*)       battery   ;;
-    -d|display*)   display   ;;
-    -e|eth*)       ethernet  ;;
-    -H|hw|hard*)   hardware  ;;
-    -m|mem*)       memory    ;;
-    -n|network)    network   ;;
-    -N|nvme|ssd)   nvme      ;;
-    -p|power)      power     ;;
-    -S|sw|soft*)   software  ;;
-    -s|stor*)      storage   ;;
-    -u|usb)        usb       ;;
+    -a|all)           all      ;;
+    -b|bat*)          battery  ;;
+    -d|display*)      displays ;;
+    -e|eth*)          ethernet ;;
+    -g|gpu*|graphic*) gpu      ;;
+    -H|hw|hard*)      hardware ;;
+    -m|mem*)          memory   ;;
+    -n|network)       network  ;;
+    -N|nvme|ssd)      nvme     ;;
+    -p|power)         power    ;;
+    -S|sw|soft*)      software ;;
+    -s|stor*)         storage  ;;
+    -u|usb)           usb      ;;
     *) usage
 esac

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# this is for the initial setup of homebrew, generally on a new machine
+#
+
+install_homebrew(){
+    /bin/bash -c \
+        "$(curl -fsSL \
+           https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
+install_homebrew
