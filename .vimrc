@@ -17,58 +17,52 @@
 
 
 "\_____________________________________________________________________________
-" vundle
+" vim-plug
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
-" required for vundle
-set nocompatible
-filetype off
-
-" set runtime path
-set rtp+=~/.vim/bundle/vundle/
-call vundle#begin()
-
-" let vundle manage vundle
-Plugin 'VundleVim/Vundle.vim'
+" download plugins to ~/.vim/plugged
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
 " plugins on github
-Plugin 'preservim/nerdtree'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'preservim/nerdcommenter'
-Plugin 'fholgado/minibufexpl.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'python-rope/ropevim'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'moll/vim-bbye'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-endwise'
-Plugin 'alvan/vim-closetag'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'ervandew/supertab'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'jobicoppola/vim-json-bundle'
-Plugin 'pearofducks/ansible-vim'
-Plugin 'b4b4r07/vim-ansible-vault'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'wellle/targets.vim'
-Plugin 'fatih/vim-go'
-Plugin 'kopischke/vim-fetch'
-Plugin 'hashivim/vim-terraform'
-Plugin 'aquasecurity/vim-tfsec'
-Plugin 'thanethomson/vim-jenkinsfile'
-Plugin 'mzlogin/vim-markdown-toc'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'groovy.vim'
-Plugin 'catppuccin/nvim'
-Plugin 'itchyny/vim-gitbranch'
-Plugin 'rizzatti/dash.vim'
+Plug 'preservim/nerdtree'
+Plug 'vim-syntastic/syntastic'
+Plug 'preservim/nerdcommenter'
+Plug 'fholgado/minibufexpl.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'dense-analysis/ale'
+Plug 'davidhalter/jedi-vim'
+Plug 'python-rope/ropevim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'moll/vim-bbye'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-endwise'
+Plug 'alvan/vim-closetag'
+Plug 'jiangmiao/auto-pairs'
+Plug 'ervandew/supertab'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'jobicoppola/vim-json-bundle'
+Plug 'pearofducks/ansible-vim'
+Plug 'b4b4r07/vim-ansible-vault'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'wellle/targets.vim'
+Plug 'fatih/vim-go'
+Plug 'kopischke/vim-fetch'
+Plug 'hashivim/vim-terraform'
+Plug 'aquasecurity/vim-tfsec'
+Plug 'thanethomson/vim-jenkinsfile'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'airblade/vim-gitgutter'
+Plug 'itchyny/vim-gitbranch'
+Plug 'rizzatti/dash.vim'
+Plug 'github/copilot.vim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+
 
 " plugins required by deoplete
 "
@@ -82,13 +76,29 @@ Plugin 'rizzatti/dash.vim'
 "
 "       `/usr/local/opt/python@3.10/bin/pip3.10 install pynvim`
 "
-Plugin 'Shougo/deoplete.nvim'
-Plugin 'roxma/nvim-yarp'
-Plugin 'roxma/vim-hug-neovim-rpc'
-Plugin 'deoplete-plugins/deoplete-jedi'
-
-" shared plugins
-Plugin 'L9'
+"   - for python 3.12 (see PEP 688):
+"
+"       `/usr/local/opt/python@3.12/bin/pip3.12 install \
+"            --break-system-packages \
+"            --user 'pynvim @ git+https://github.com/neovim/pynvim'`
+"
+"     or (newer homebrew path):
+"
+"       `/opt/homebrew/Cellar/python@3.12/3.12.3/bin/pip3.12 install \
+"            --break-system-packages \
+"            --user 'pynvim @ git+https://github.com/neovim/pynvim'`
+"
+"   - update: the above commands have been added to a script
+"   - the `vim-fixes.sh` script will install `pynvim` and `jedi` `ropevim`
+"   - which will sort the deoplete issues here and the ropevim / jedi issues
+"     listed further down in this file
+"
+"       `bash vim-fixes.sh`
+"
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'deoplete-plugins/deoplete-jedi'
 
 " version conditional plugins
 if !has("patch-8.2.1066")
@@ -97,15 +107,12 @@ if !has("patch-8.2.1066")
     Plugin 'Shougo/neosnippet-snippets'
 endif
 
-" plugins must be listed above this line
-call vundle#end()
-
-" required for vundle
-filetype plugin indent on
+" end vim-plug
+call plug#end()
 
 " for deoplete, specify where python binaries are
 let g:python_host_prog = '/usr/bin/python2.7'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python3_host_prog = '/opt/homebrew/bin/python3'
 
 
 "\_____________________________________________________________________________
@@ -160,7 +167,6 @@ autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
 autocmd FileType javascript,ruby,yaml,markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType groovy set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
 autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
@@ -182,6 +188,8 @@ syntax on
 " see github issue:
 "
 "   https://github.com/vim/vim/issues/11277
+"
+" then see/run fix in `vim-fixes.sh`
 "
 " for `C.<color-name>` below see catppuccin nvim repo:
 "
@@ -300,6 +308,7 @@ set hlsearch
 set guioptions-=T  " hide toolbar
 set guioptions-=r  " remove right scrollbar
 set guioptions-=L  " remove left scrollbar vsplits
+set termguicolors
 
 
 "\_____________________________________________________________________________
@@ -310,6 +319,10 @@ set guioptions-=L  " remove left scrollbar vsplits
 " remove underline
 highlight clear CursorLine
 highlight CursorLineNR cterm=none
+
+" remove bold
+" e.g. terraform has too many Identifiers and thus too much bold
+highlight Identifier cterm=none
 
 
 "\_____________________________________________________________________________
@@ -327,6 +340,22 @@ let g:syntastic_sh_shellcheck_args = "-x"
 "
 
 " use ropevim and jedi-vim together for auto completion
+"
+" note: may need to manually run pip install to get ropevim, e.g.
+"
+"    `/opt/homebrew/opt/python@3.12/bin/pip3.12 install \
+"        --break-system-packages \
+"        --user jedi ropevim`
+"
+" also see notes toward top of this file regarding deoplete plugin and pynvim
+"
+" update: the above commands have been added to script `vim-python-fix.sh`
+"
+" so to sort the vim python deoplete jedi ropevim issues detailed here and
+" above earlier in this file just run:
+"
+"    `bash vim-fixes.sh`
+"
 let ropevim_extended_complete = 1
 let ropevim_enable_autoimport = 1
 let g:ropevim_autoimport_modules = ["os.*","traceback","django.*"]
@@ -356,6 +385,16 @@ let g:jedi#rename_command = ""
 
 "<leader>R"
 let g:jedi#rename_command_keep_name = ""
+
+
+"\_____________________________________________________________________________
+" ale - asynchronous lint engine
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+
+" use virtualenv or poetry vars
+let g:ale_python_auto_virtualenv = 1
+let g:ale_python_auto_poetry = 1
 
 
 "\_____________________________________________________________________________
@@ -531,7 +570,7 @@ let g:SuperTabMappingBackward = '<TAB>'
 
 
 "\_____________________________________________________________________________
-" minibufexplorer settings
+" minibufexplorer
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
@@ -748,8 +787,10 @@ nnoremap <Leader>qa :bufdo :Bdelete<CR>
 " always go to top of commit messages
 autocmd BufReadPost COMMIT_EDITMSG exec "normal! gg"
 
-" for pull request templates
-nmap <leader>X :%s/\[ \]/\[x\]/<CR>
+" for checking and unchecking the boxes in pull request templates
+" leader-X checks emptry boxes from current line down to bottom of file
+" leader-xx unchecks all
+nmap <leader>X :.,$s/\[ \]/\[x\]/<CR>
 nmap <leader>xx :%s/\[x\]/\[ \]/<CR>
 
 
@@ -839,6 +880,21 @@ function! TrimName(str)
   endif
 endfunction
 
+" highlight helm / go template files
+" https://www.reddit.com/r/kubernetes/comments/ehpr5z/syntax_highlighting_for_helm_templates_in_vim/
+function HelmSyntax()
+  set filetype=yaml
+  unlet b:current_syntax
+  syn include @yamlGoTextTmpl syntax/gotexttmpl.vim
+  let b:current_syntax = "yaml"
+  syn region goTextTmpl start=/{{/ end=/}}/ contains=@gotplLiteral,gotplControl,gotplFunctions,gotplVariable,goTplIdentifier containedin=ALLBUT,goTextTmpl keepend
+  hi def link goTextTmpl PreProc
+endfunction
+augroup helm_syntax
+  autocmd!
+  autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl call HelmSyntax()
+augroup END
+
 
 "\_____________________________________________________________________________
 " projects
@@ -847,4 +903,3 @@ endfunction
 
 set exrc    " allows reading of .vimrc, .exrc, .gvimrc in the cwd
 set secure  " disallows shell and write commands from cwd rc files
-

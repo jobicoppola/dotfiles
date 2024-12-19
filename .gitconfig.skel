@@ -16,12 +16,16 @@
 #\_____________________________________________________________________________
 #
 [init]
-	defaultBranch = main
+    defaultBranch = main
 [core]
     excludesfile = ~/.gitignore-global
     pager = delta
 [push]
     default = current
+[diff]
+    algorithm = histogram
+[merge]
+    conflictStyle = zdiff3
 [alias]
     co = checkout
     st = status
@@ -57,7 +61,7 @@
     user = jobicoppola
     email = <email-here>
 [credential "https://dev.azure.com"]
-	useHttpPath = true
+    useHttpPath = true
 
 #\_____________________________________________________________________________
 #

@@ -26,12 +26,12 @@ GRAY='\033[2m'
 WHITE='\033[37m'
 DEFAULT='\033[0m'
 
-export readonly LOG_COLOR_DEFAULT="${DEFAULT}"
-export readonly LOG_COLOR_DEBUG="${DEBUGGRAY}"
-export readonly LOG_COLOR_INFO="${INFOBLUE}"
-export readonly LOG_COLOR_WARN="${WARNYELLOW}"
-export readonly LOG_COLOR_ERROR="${ERRORRED}"
-export readonly LOG_COLOR_SUCCESS="${SUCCESSGREEN}"
+export LOG_COLOR_DEFAULT="${DEFAULT}"
+export LOG_COLOR_DEBUG="${DEBUGGRAY}"
+export LOG_COLOR_INFO="${INFOBLUE}"
+export LOG_COLOR_WARN="${WARNYELLOW}"
+export LOG_COLOR_ERROR="${ERRORRED}"
+export LOG_COLOR_SUCCESS="${SUCCESSGREEN}"
 
 # logging
 #

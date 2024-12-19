@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# run any manual installs that need to be done outside of brew
+#
+
+
+# allow individual installs
+case "$1" in
+    -a|all)  install_all=1                          ;;  # install all
+    fasd)    install_fasd=1                         ;;  # install fasd
+    rbenv)   install_rbenv=1                        ;;  # install rbenv
+    tpm)     install_tpm=1                          ;;  # install tpm
+    *)       echo -e "\n💥AYAYAYYY💥\n\n" && usage  ;;
+esac
+
+
+usage(){
+    echo "Usage: $0 {fasd|rbenv|tpm|all}"
+    exit 2
+}
+
+install_fasd(){
+    if [[ "$install_fasd" -eq 1 ]] || [[ "$install_all" -eq 1 ]]; then
+        ./bin/install-fasd
+    fi
+}
+
+install_rbenv(){
+    if [[ "$install_rbenv" -eq 1 ]] || [[ "$install_all" -eq 1 ]]; then
+        ./bin/install-rbenv
+    fi
+}
+
+install_tpm(){
+    if [[ "$install_tpm" -eq 1 ]] || [[ "$install_all" -eq 1 ]]; then
+        ./bin/install-tpm
+    fi
+}
+
+main(){
+    install_fasd
+    install_rbenv
+    install_tpm
+}
+
+main

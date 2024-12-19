@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# install fasd manually
+#
+
+install_fasd(){
+    # note that original `fasd` repo now deprecated
+    # but homebrew still not pointing to new forked repo
+    #
+    # https://github.com/whjvenyl/fasd
+    #
+    local install_dir repo_dir fasd
+    #
+    install_dir=$HOME/bin/fasd
+    fasd_repo_dest=$HOME/git/github/fasd
+    fasd_src=git@github.com:whjvenyl/fasd.git
+
+    if [ ! -d "$fasd_repo_dest" ]; then
+        echo "fasd not installed, cloning fasd repo into $fasd_repo_dest"
+        git clone "$fasd_src" "$fasd_repo_dest"
+    fi
+
+    cd "$fasd_repo_dest" || exit
+
+    if ! command -v fasd >/dev/null 2>&1; then
+        echo "Installing fasd"
+        PREFIX=$install_dir make install
+    fi
+
+    cd - || exit
+
+    echo "Done."
+}
+
+main(){
+    install_fasd
+}
+
+main

@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+#
+# vim fixes for:
+#
+# - python
+# - lua
+# - deoplete
+#
+
+pyvv=3.13.0_1
+pyv=3.13
+py=/opt/homebrew/Cellar/python@"$pyv"/"$pyvv"
+pip="$py"/bin/pip"$pyv"
+
+
+#=-<<>>-=----------------------------------------------------------------------
+# python
+#
+
+pip_install_pynvim(){
+    $pip install \
+        --break-system-packages \
+        --user 'pynvim @ git+https://github.com/neovim/pynvim'
+}
+
+pip_install_others(){
+    $pip install \
+        --break-system-packages \
+        --user jedi ropevim
+}
+
+pip_installs_run(){
+    pip_install_pynvim
+    pip_install_others
+}
+
+
+#=-<<>>-=----------------------------------------------------------------------
+# lua
+#
+
+lua_syntax_fix(){
+    local github nvim_lua_url vim_version brew_lua_vim
+    #
+    github="https://raw.githubusercontent.com"
+    nvim_lua_url="${github}/neovim/neovim/v0.7.2/runtime/syntax/lua.vim"
+    vim_version=91 # vim current version, 9.1
+    brew_lua_vim="/opt/homebrew/share/vim/vim${vim_version}/syntax/lua.vim"
+
+    cp -p "$brew_lua_vim" "$brew_lua_vim.orig" \
+        && curl -sS "$nvim_lua_url" > "$brew_lua_vim"
+}
+
+
+#=-<<>>-=----------------------------------------------------------------------
+# deoplete
+#
+
+deoplete_fix(){
+    /opt/homebrew/bin/pip"$pyv" install \
+        --break-system-packages \
+        --user 'pynvim @ git+https://github.com/neovim/pynvim'
+}
+
+main(){
+    pip_installs_run
+    lua_syntax_fix
+    #deoplete_fix # may no longer be needed
+}
+
+main

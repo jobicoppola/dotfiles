@@ -1,6 +1,10 @@
+# shellcheck shell=bash
 #
-# source additional work configs
+# source additional work configs and aliases
 #._____________________________________________________________________________
 #`
 
-[ -f ~/.workrc-"$(whoami)" ] && . ~/.workrc-"$(whoami)"
+config=~/.config/"$(whoami)"/dotfiles
+
+[ -f "$config/.workrc-$(whoami)" ] && . "$config/.workrc-$(whoami)"
+[ -f "$config/.workrc-$(whoami)-aliases" ] && . "$config/.workrc-$(whoami)-aliases"

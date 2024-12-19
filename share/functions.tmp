@@ -7,19 +7,19 @@
 # NOTE: temporary file while moving functions out of other bash files
 #
 #=-----------------------------------------------------------------------------
-#`
+#
 
 
 #--
 # misc functions
 #=-----------------------------------------------------------------------------
-#`
+#
 emoc(){
     # find emoji and copy first match to clipboard
     #
     local item="$1"
     #
-    emojify --list | grep "$item" | awk '{print $2}' | tr -d '\n' | pbcopy
+    emojify --list | $grep "$item" | awk '{print $2}' | tr -d '\n' | pbcopy
 }
 
 vimk(){
@@ -43,7 +43,7 @@ ansible_vault_encrypt_oneline_string(){
 #--
 # quick date formats
 #=-----------------------------------------------------------------------------
-#`
+#
 # added these date helpers after TypeIt4Me stopped working, August 2023
 #
 # functions are named so all can easily be seen by typing `jd<tab>`
@@ -62,3 +62,13 @@ jddate(){ date +"%Y%m%d"; }
 jddtime(){ date +"%H:%M:%S"; }
 jddstamp(){ date +"%Y%m%d-%H%M%S"; }
 
+
+
+#--
+# misc helpers
+#=-----------------------------------------------------------------------------
+#
+# use ripgrep in place of grep if possible
+#
+rg="$(which rg)"
+grep="${rg:-$(which grep)}"

@@ -1,21 +1,58 @@
 #!/usr/bin/env bash
+#
+# this script is basically only for use when setting up brand new machine,
+# and specifically one running macos
+#
+# TODO test this script as this version has not yet been used
+#
 
-brew_bash=/usr/local/bin/bash
+brew_installed(){
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "Please install brew as it could not be found. Exiting."
+        exit 1
+    fi
+}
+
+brew_bash_installed(){
+    if ! command -v "$brew_bash" >/dev/null 2>&1; then
+        echo "Please install bash via homebrew as it could not be found. Exiting."
+        exit 1
+    fi
+}
 
 brew_list_bash(){
-    local installed=$(brew list bash)
-    echo $?
+    if ! brew list bash; then
+        echo "Unable to list files installed by homebrew bash formula. Exiting."
+    fi
+}
+
+bash_in_etc_shells(){
+    grep -c "$brew_bash" /etc/shells
 }
 
 use_brew_bash(){
-    if [ -L ${brew_bash} ] && [[ "$(brew_list_bash)" == 0 ]]; then
+    if [[ -L "$brew_bash" ]]; then
+        if [[ "$(bash_in_etc_shells)" -ne 0 ]]; then
+            echo "Adding $brew_bash to /etc/shells"
+            cp -pi /etc/shells /tmp/etc-shells-backup
+            echo -e "\n\n# homebrew bash\n$brew_bash" >> /etc/shells
+            echo -e "Contents of /etc/shells\n\n"
+            cat /etc/shells
+        fi
         echo "Changing login shell to: $brew_bash"
-        chsh -s ${brew_bash}
+        chsh -s "$brew_bash"
     else
         echo "Login shell unchanged."
     fi
 }
 
-use_brew_bash
+main(){
+    brew_bash=/opt/homebrew/bin/bash #/usr/local/bin/bash
 
-exit $?
+    brew_installed
+    brew_bash_installed
+    brew_list_bash
+    use_brew_bash
+}
+
+main

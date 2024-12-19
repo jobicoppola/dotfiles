@@ -13,9 +13,14 @@
 # functions
 #
 agent_id_check(){
-    ~/bin/ssh-start
-    read -p "Do we need to add identities to ssh-agent? " addids
-    [[ "$addids" == y* ]] && ~/bin/ssh-start now
+    local ssh_start dotfiles
+    #
+    dotfiles=~/.config/$(whoami)/dotfiles
+    ssh_start=$dotfiles/bin/ssh-start
+    #
+    $ssh_start
+    read -r -p "Do we need to add identities to ssh-agent? " addids
+    [[ "$addids" == y* ]] && $ssh_start now
 }
 
 # first check if we need to add identities to ssh-agent
@@ -25,8 +30,7 @@ agent_id_check
 session=0
 
 # if there is a session already, attach to it and exit
-tmux has-session -t $session
-if [ $? -eq 0 ]; then
+if tmux has-session -t $session; then
     echo "Session $session already exists so let's attach to it..."
     sleep .5
     tmux attach -t $session
@@ -47,7 +51,7 @@ venvs=~/venvs
 github=$repos/github
 bitbucket=$repos/bitbucket
 repos_company=$github/$company
-repo_dotfiles=$github/dotfiles
+repo_dotfiles=$github/jobicoppola/dotfiles
 venv_default=copptop
 venvs_enabled=false
 
