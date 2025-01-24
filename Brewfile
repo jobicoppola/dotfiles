@@ -96,6 +96,7 @@ brew 'xsv'
 
 # terraform - use tfenv to manage binaries
 # e.g. `tfenv install 1.5.5 && tfenv use 1.5.5`
+brew 'iam-policy-json-to-terraform'
 brew 'terraform-docs'
 brew 'tfenv'
 brew 'tfk8s'
