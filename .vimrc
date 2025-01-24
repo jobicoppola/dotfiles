@@ -72,26 +72,11 @@ Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 "   - in vim, run `:pythonx import sys; print(sys.path)`
 "   - if python paths differ from expected, deps likely need to be reinstalled
 "   - install deps such as `pynvim` via the appropriate pip executable path
-"   - for example:
-"
-"       `/usr/local/opt/python@3.10/bin/pip3.10 install pynvim`
-"
-"   - for python 3.12 (see PEP 688):
-"
-"       `/usr/local/opt/python@3.12/bin/pip3.12 install \
-"            --break-system-packages \
-"            --user 'pynvim @ git+https://github.com/neovim/pynvim'`
-"
-"     or (newer homebrew path):
-"
-"       `/opt/homebrew/Cellar/python@3.12/3.12.3/bin/pip3.12 install \
-"            --break-system-packages \
-"            --user 'pynvim @ git+https://github.com/neovim/pynvim'`
-"
-"   - update: the above commands have been added to a script
-"   - the `vim-fixes.sh` script will install `pynvim` and `jedi` `ropevim`
-"   - which will sort the deoplete issues here and the ropevim / jedi issues
-"     listed further down in this file
+"   - the required commands have been moved into a script
+"     - the `vim-fixes.sh` script will install `pynvim` and `jedi` `ropevim`
+"     - this sorts the deoplete issues here and the ropevim / jedi issues
+"       listed further down in this file
+"   - run script from terminal
 "
 "       `bash vim-fixes.sh`
 "
@@ -341,17 +326,13 @@ let g:syntastic_sh_shellcheck_args = "-x"
 
 " use ropevim and jedi-vim together for auto completion
 "
-" note: may need to manually run pip install to get ropevim, e.g.
+" note: may need to manually run script to pip install ropevim, e.g.
 "
-"    `/opt/homebrew/opt/python@3.12/bin/pip3.12 install \
-"        --break-system-packages \
-"        --user jedi ropevim`
+"    `bash vim-fixes.sh`
 "
 " also see notes toward top of this file regarding deoplete plugin and pynvim
 "
-" update: the above commands have been added to script `vim-python-fix.sh`
-"
-" so to sort the vim python deoplete jedi ropevim issues detailed here and
+" to sort the vim python deoplete jedi ropevim issues detailed here and
 " above earlier in this file just run:
 "
 "    `bash vim-fixes.sh`
