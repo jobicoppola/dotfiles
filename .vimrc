@@ -377,6 +377,16 @@ let g:jedi#rename_command_keep_name = ""
 let g:ale_python_auto_virtualenv = 1
 let g:ale_python_auto_poetry = 1
 
+" custom colors for errors and warnings
+highlight ALEErrorSign ctermbg=DarkRed
+highlight ALEWarningSign ctermbg=Yellow ctermfg=Black
+
+" yamllint configs
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '≫≫'
+let g:ale_sign_warning = '≫≫'
+let g:ale_lint_on_text_changed = 'never'
+
 
 "\_____________________________________________________________________________
 " vim-closetag
