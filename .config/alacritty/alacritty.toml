@@ -1,0 +1,178 @@
+#._____________________________________________________________________________
+#`
+# Alacritty
+#
+# - https://alacritty.org/config-alacritty.html
+# - https://github.com/alacritty/alacritty
+#
+# Notes
+#
+# - Config items below aren't comprehensive
+# - Left out anything I didn't think I'd ever care about
+#
+# On MacOS this file is synced to:
+#
+# - $HOME/.config/alacritty/alacritty.toml
+#
+# See `../../configurationalize.sh`
+#._____________________________________________________________________________
+#`
+
+[general]
+#
+# https://alacritty.org/config-alacritty.html#general
+#
+# import = ["<string>",]
+#
+import = ["themes/dracula.toml"]
+
+
+[env]
+#
+# https://alacritty.org/config-alacritty.html#env
+#
+# WINIT_X11_SCALE_FACTOR = "1.0"
+#
+
+
+[window]
+#
+# https://alacritty.org/config-alacritty.html#window
+#
+# dimensions = { columns = <integer>, lines = <integer> }       ... [{ columns = 0, lines = 0 }]
+# padding = { x = <integer>, y = <integer> }                    ... [{ x = 0, y = 0 }] (in pixels)
+# dynamic_padding = true | false                                ... [false]
+# decorations = "Full" | "None" | "Transparent" | "Buttonless"  ... [Full]
+# opacity = <float>                                             ... [1.0]
+# blur = true | false # (works on macOS/KDE Wayland)            ... [false] (doesn't work on macos lol)
+# decorations_theme_variant = "Dark" | "Light" | "None"         ... [None]
+# resize_increments = true | false # (works on macOS/X11)       ... [false]
+#
+dimensions.columns = 100
+dimensions.lines = 36
+padding.x = 5
+padding.y = 5
+dynamic_padding = true
+opacity = 0.95
+
+
+[scrolling]
+#
+# https://alacritty.org/config-alacritty.html#scrolling
+#
+# history = <integer> ... [10000]
+#
+history = 99999
+
+
+[font]
+#
+# https://alacritty.org/config-alacritty.html#env
+#
+# normal = { family = "<string>", style = "<string>" }          ... [{ family = "Menlo", style = "Regular" }] (macos)
+# bold = { family = "<string>", style = "<string>" }            ... [{ style = "Bold" }]
+# italic = { family = "<string>", style = "<string>" }          ... [{ style = "Italic" }]
+# bold_italic = { family = "<string>", style = "<string>" }     ... [{ style = "Bold Italic" }]
+#
+normal.family = "Atkinson Hyperlegible Mono"
+normal.style = "Light"
+size = 24.0
+
+
+[colors]
+#
+# https://alacritty.org/config-alacritty.html#colors
+#
+# instead of setting here, add theme as config file in ./themes/<theme>.toml
+#
+
+
+[bell]
+#
+# https://alacritty.org/config-alacritty.html#bell
+#
+# duration = <integer> ... [0]
+#
+
+
+[selection]
+#
+# https://alacritty.org/config-alacritty.html#selection
+#
+# semantic_escape_chars = "<string>"    ... [",│`|:\"' ()[]{}<>\t"]
+# save_to_clipboard = true | false      ... [false]
+#
+
+
+[cursor]
+#
+# https://alacritty.org/config-alacritty.html#cursor
+#
+# style = { <shape>, <blinking> }                   ... [{"Block", "Off"}]
+# vi_mode_style = { <shape>, <blinking> } | "None"  ... [None]
+#
+
+
+[terminal]
+#
+# https://alacritty.org/config-alacritty.html#terminal
+#
+# shell = "<string>" | { program = "<string>", args = ["<string>",] }   ... [$SHELL] (macos)
+#
+
+
+[mouse]
+#
+# https://alacritty.org/config-alacritty.html#mouse
+#
+
+
+[hints]
+#
+# https://alacritty.org/config-alacritty.html#hints
+#
+# alphabet = "<string>" ... ["jfkdls;ahgurieowpq"]
+# enabled = [{ <regex>, <hyperlinks>, <post_processing>, <persist>, <action>, <command>, <binding>, <mouse> },] ... [see below]
+#
+# Default:
+#
+# [[hints.enabled]]
+# command = "open" # On macOS
+# command = { program = "cmd", args = [ "/c", "start", "" ] } # On Windows
+# hyperlinks = true
+# post_processing = true
+# persist = false
+# mouse.enabled = true
+# binding = { key = "O", mods = "Control|Shift" }
+# regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`\\\\]+"
+#
+
+
+[keyboard]
+#
+# https://alacritty.org/config-alacritty.html#keyboard
+#
+# bindings = [{ <key>, <mods>, <mode>, <command> | <chars> | <action> },]   ... [see link below]
+#
+# Default:
+# https://alacritty.org/config-alacritty-bindings.html
+#
+# Example:
+#
+# [keyboard]
+# bindings = [
+# { key = "N", mods = "Control|Shift", action = "CreateNewWindow" },
+# { key = "L", mods = "Control|Shift", chars = "l" },
+# ]
+#
+
+
+[debug]
+#
+# https://alacritty.org/config-alacritty.html#debug
+#
+# log_level = "Off" | "Error" | "Warn" | "Info" | "Debug" | "Trace"     ... ["Warn"]
+# print_events = true | false                                           ... [false]
+# highlight_damage = true | false                                       ... [false]
+# prefer_egl = true | false                                             ... [false]
+#

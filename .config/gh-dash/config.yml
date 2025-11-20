@@ -1,0 +1,102 @@
+#
+# gh-dash ✨
+#
+# A GitHub (gh) CLI extension to display a dashboard with
+# pull requests and issues by filters you care about.
+#
+# - https://github.com/dlvhdr/gh-dash
+#
+# Config documentation site
+# - https://dlvhdr.github.io/gh-dash/configuration/gh-dash/
+#
+# Additional example configs
+# - https://github.com/dlvhdr/gh-dash/blob/main/.gh-dash.yml
+# - https://github.com/dlvhdr/dotfiles/blob/main/nix/module/gh-dash/config/config.yml
+#
+# Notes:
+#
+# - gh installs extensions to `~/.local/share/gh/extensions/gh-dash`
+# - the tool never actually wrote out the default config file
+#
+# yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
+#
+
+prSections:
+  #
+  # https://dlvhdr.github.io/gh-dash/configuration/pr-section/
+  #
+  - filters: is:open author:@me
+    title: My Pull Requests
+  - filters: is:open review-requested:@me
+    title: Needs My Review
+  - filters: is:open involves:@me -author:@me
+    title: Involved
+
+issuesSections:
+  #
+  # https://dlvhdr.github.io/gh-dash/configuration/issue-section/
+  #
+  - title: Creator
+    filters: author:@me
+  - title: Commented
+    filters: is:open commenter:@me
+  - title: Assigned
+    filters: is:open assignee:@me
+
+pager:
+  #
+  # https://dlvhdr.github.io/gh-dash/configuration/gh-dash/#pager
+  #
+  diff: diffnav
+
+defaults:
+  #
+  # https://dlvhdr.github.io/gh-dash/configuration/defaults/
+  #
+  view: prs
+  refetchIntervalMinutes: 5
+  prApproveComment: # clear out default value of "LGTM"
+
+  layout:
+    prs:
+      repoName:
+        grow: true
+        width: 10
+        hidden: false
+      base:
+        hidden: true
+
+  preview:
+    open: true
+    width: 100 # default is allegedly 50
+
+  prsLimit: 20
+  issuesLimit: 20
+
+repoPaths:
+  #
+  # https://dlvhdr.github.io/gh-dash/configuration/gh-dash/#repopaths
+  #
+  aidentified-llc/*: ~/git/github/aidentified/*
+  jobicoppola/*: ~/git/github/jobicoppola/*
+
+keybindings:
+  #
+  # https://dlvhdr.github.io/gh-dash/getting-started/keybindings/
+  # https://dlvhdr.github.io/gh-dash/configuration/keybindings/prs/
+  #
+  # TODO get the keybindings below to actually work :)
+  #
+  prs:
+    - key: O
+      name: Open PR with `gh`
+      command: >
+        gh pr --repo {{.RepoName}} view {{.PrNumber}} -w &>/dev/null &
+    - key: C
+      name: Check out PR diff in new tmux win
+      command: >
+        cd {{.RepoPath}} &&
+        tmux new-window -c {{.RepoPath}} '
+          gh pr checkout {{.PrNumber}} &&
+          vi-pr-diff {{.HeadRefName}}
+        '
