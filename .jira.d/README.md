@@ -1,12 +1,29 @@
 # JIRA CLI
 
+---
+
+## DEPRECATED
+
+NOTE: to be removed
+
+Now using `jira-cli` instead, see:
+
+- `~/.config/.jira/.config.yml`
+- [github](https://github.com/ankitpokhrel/jira-cli)
+
+---
+
 This directory contains basically just a starter pack for using:
 
-[go-jira](https://github.com/go-jira/jira)
+- [go-jira fork](https://github.com/j-mcnally/jira.git)
+- [go-jira original](https://github.com/go-jira/jira)
+  - almost unmaintained as of Oct 2025
+  - doesn't appear to support Jira v3 API
+    - [docs](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/)
 
-which is a Jira command line tool.  Here we are simply providing some custom
-templates and commands to help anyone who would prefer to use cli instead of
-the browser to manage their Jira tickets.
+The `go-jira` above is a Jira command line tool.  Here we are simply providing
+some custom templates and commands to help anyone who would prefer to use cli
+instead of the browser to manage their Jira tickets.
 
 # Installation
 

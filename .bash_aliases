@@ -51,6 +51,7 @@ alias cdu='cd ../'
 alias cdu2='cd ../../'
 alias cdu3='cd ../../../'
 alias cdu4='cd ../../../../'
+alias cdu5='cd ../../../../../'
 
 # vi
 #
@@ -194,12 +195,13 @@ alias kx='kubectx'
 alias kn='kubens'
 alias ybat='bat -p --theme="gruvbox-dark" -l yaml'
 
-# jira
+# jira-cli
 #
-alias jb='jira browse'
-alias jms='jira mine --size small'
+alias jms='jira sprint list --current -a$(jira me) -s~Closed --order-by status --csv --no-headers --columns KEY,STATUS,SUMMARY |cut -c 1-$(( $(tput cols) - 10 )) |column -s "," -t'
+alias jmsi='jira sprint list --current -a$(jira me) -s~Closed --order-by status --columns KEY,STATUS,SUMMARY'
+alias jims='jira issue list -a$(jira me) -s~Done -s~Closed --columns KEY,STATUS,SUMMARY,LABELS'
 #
-eval "$(jira --completion-script-bash)" # jira cli completions
+eval "$(jira completion bash)"
 
 # use bundler to manage ruby applications
 #
