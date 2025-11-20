@@ -7,17 +7,27 @@
 # to use, either copy this file into your home dir as ~/.bashrc, or paste its
 # contents at the bottom of an existing ~/.bashrc
 #
-# below we source the `.bashrc` file in the specified dotfiles directory
+# below we just:
+#
+# - source the og `.bashrc` file from the specified dotfiles directory
+# - export env vars for use in shell or by other scripts
 #
 #=-----------------------------------------------------------------------------
 #`
 
-dotconf=~/.config/"$(whoami)"/dotfiles
-bashrc="$dotconf/.bashrc"
+jconf=~/.config/"$(whoami)"
+jconf_dotfiles="$jconf/dotfiles"
+jconf_bashrc="$jconf_dotfiles/.bashrc"
 
-if [ -f "$bashrc" ]; then
-    [[ "$DEBUG" ]] && echo "[SUCCESS] found $bashrc"
-    . "$bashrc" && export dotconf="$dotconf"
+if [ -f "$jconf_bashrc" ]; then
+    [[ "$DEBUG" ]] && echo "[SUCCESS] found $jconf_bashrc"
+    . "$jconf_bashrc"
+    export JCONF="$jconf"
+    export JCONF_DOTFILES="$jconf_dotfiles"
 else
-    echo "[FAIL] can't find $bashrc"
+    echo "[FAIL] can't find $jconf_bashrc"
 fi
+
+# shellcheck disable=SC1091
+# source uv env file early
+. "$HOME/.local/bin/env"
