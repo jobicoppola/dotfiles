@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# install packages listed in `Brewfile`
+#
+
+install_homebrew_bundle(){
+    brew bundle
+}
+
+main(){
+    install_homebrew_bundle
+}
+
+main
+

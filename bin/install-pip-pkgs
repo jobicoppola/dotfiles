@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-pip=$(which pip)
+pip=$(which pip3)
 requirements=../.pip-requirements.lst
 
-echo -e "\nInstalling pip requirements via ${pip}..."
-
-${pip} install --user -r ${requirements}
-rv=$?
-
-[ $rv -eq 0 ] && echo 'Done.' || echo "pip install exited with error: $rv"
+"$pip" install --user -r ${requirements}

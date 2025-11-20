@@ -1,1 +1,10 @@
 $(brew --prefix fzf)/install
+
+install_fzf_git(){
+    local src dest
+    src=git@github.com:junegunn/fzf-git.sh.git
+    dest=~/git/github/fzf-git.sh
+    git clone "$src" "$dest"
+}
+
+install_fzf_git

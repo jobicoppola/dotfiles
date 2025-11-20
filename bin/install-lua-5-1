@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+lua_version=5.1.5
+lua_major=5.1
+lv="$lua_version"
+lvm="$lua_major"
+
+wget https://www.lua.org/ftp/lua-"$lv".tar.gz
+tar -xvzf lua-"$lv".tar.gz
+cd lua-"$lv"
+make macosx
+mkdir ~/opt
+make INSTALL_TOP=$HOME/opt/lua@"$lvm" install
+mkdir -p ~/.local/bin
+ln -s ~/opt/lua@"$lvm"/bin/lua ~/.local/bin/lua"$lvm"

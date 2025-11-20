@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# this is for the initial setup of homebrew, generally on a new machine
+# performs initial setup of homebrew, generally on a new machine
+# run from base of repo (one dir up from this script)
 #
 
 install_homebrew(){
@@ -9,4 +10,89 @@ install_homebrew(){
            https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-install_homebrew
+install_homebrew_bundle(){
+    cd "$(dirname "$0")/../" || exit
+    brew bundle
+    cd - || exit
+}
+
+check_brew_installed(){
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "Please install brew as it could not be found. Exiting."
+        exit 1
+    fi
+}
+
+check_brew_list_bash(){
+    if ! brew list bash; then
+        echo "Unable to list files installed by homebrew bash formula. Exiting."
+    fi
+}
+
+check_brew_bash_installed(){
+    if ! command -v "$brew_bash" >/dev/null 2>&1; then
+        check_brew_list_bash
+        echo "Please install bash via homebrew as it could not be found. Exiting."
+        exit 1
+    fi
+}
+
+check_bash_in_etc_shells(){
+    grep -c "$brew_bash" /etc/shells
+}
+
+use_brew_bash(){
+    if [[ -L "$brew_bash" ]]; then
+        if [[ "$(check_bash_in_etc_shells)" -ne 0 ]]; then
+            echo "Adding $brew_bash to /etc/shells"
+            cp -pi /etc/shells /tmp/etc-shells-backup
+            echo -e "\n\n# homebrew bash\n$brew_bash" >> /etc/shells
+            echo -e "Contents of /etc/shells\n\n"
+            cat /etc/shells
+        fi
+        echo "Changing login shell to: $brew_bash"
+        chsh -s "$brew_bash"
+    else
+        echo "Login shell unchanged."
+    fi
+}
+
+get_brew_prefix(){
+    #
+    # default prefixes for homebrew listed here:
+    # https://docs.brew.sh/Installation
+    #
+    local brew_prefix brew_prefix_silicon brew_prefix_intel brew_prefix_linux
+    #
+    brew_prefix_silicon=/opt/homebrew
+    brew_prefix_intel=/usr/local
+    brew_prefix_linux=/home/linuxbrew/.linuxbrew
+    #
+    if [[ "$(uname)" == 'Darwin' ]]; then
+        if [[ "$(uname -m)" == 'arm64' ]]; then
+            brew_prefix="$brew_prefix_silicon"
+        else
+            brew_prefix="$brew_prefix_intel"
+        fi
+    elif [[ "$(uname)" == 'Linux' ]]; then
+        brew_prefix="$brew_prefix_linux"
+    else
+        echo "Something is awry! Not on macos or linux. Exiting."
+        exit 1
+    fi
+    echo "$brew_prefix"
+}
+
+main(){
+    local brew_bash
+    #
+    brew_bash="$(get_brew_prefix)/bin/bash"
+    #
+    install_homebrew
+    check_brew_installed
+    install_homebrew_bundle
+    check_brew_bash_installed
+    use_brew_bash
+}
+
+main

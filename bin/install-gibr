@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# installs `gibr` into ~/.local/
+#
+# $ which gibr
+# /Users/joecopp/.local/bin/gibr
+#
+
+uv tool install gibr[jira,github]
