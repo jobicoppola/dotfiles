@@ -62,6 +62,7 @@ Plug 'itchyny/vim-gitbranch'
 Plug 'rizzatti/dash.vim'
 Plug 'github/copilot.vim'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'jpwol/thorn.nvim', { 'as': 'thorn', 'branch': 'main' }
 
 
 " plugins required by deoplete
@@ -151,7 +152,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " settings for specific filetypes
-autocmd FileType javascript,ruby,yaml,markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType javascript,lua,markdown,ruby,yaml set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufRead,BufNewFile *nginx/*.conf set ft=nginx
 autocmd BufRead,BufNewFile *.wsdl set ft=xml
 autocmd BufNewFile,BufRead *templates/*.html set filetype=htmldjango
@@ -243,7 +244,7 @@ set nofoldenable                " no code folding, can be toggled with `zi`
 set backup                      " enable backups
 set backupdir=~/tmp,/tmp        " where to save backups (~)
 set directory=~/tmp,/tmp        " directories for swap files
-set wrap                        " handle long lines proper-like
+set nowrap                      " do not wrap long lines
 set textwidth=79                " max width of text being inserted (but not for paste)
 set colorcolumn=80              " screen columns to highlight, with ColorColumn `hl-ColorColumn`
 set switchbuf=useopen           " keep window layout for existing buffrs
@@ -406,7 +407,7 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 let g:NERDTreeShowHidden=1
 
 " set nerdtree window size
-let g:NERDTreeWinSize = 30
+let g:NERDTreeWinSize = 16
 
 " auto-open nerdtree file browser
 autocmd VimEnter * NERDTree
