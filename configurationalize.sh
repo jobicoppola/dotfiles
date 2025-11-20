@@ -7,7 +7,6 @@
 #|>=---------------------------------------------------------------------------
 #`
 
-#
 # functions
 #=-----------------------------------------------------------------------------
 #
@@ -29,13 +28,13 @@ warn(){
     printf "\n%s %s\n\n%s" "$red" "$msg" "$endcolor"
 }
 
-sync_home(){
+sync_into_home_dir(){
+    #
+    # TODO sync docker dir ~/.docker/
+    #
     local msg
     msg="Syncing specific files directly into home dir"
-    #
     output "$msg"
-    #
-    # TODO refactor sync functionality
     #
     files_to_sync=(
         .bash_aliases
@@ -47,36 +46,41 @@ sync_home(){
         .vim
         .vimrc
     )
-
-    # macos files to sync
+    files_to_sync_osx=(
+        .tmux-osx.conf
+    )
     if [[ $(uname) == Darwin ]]; then
-        files_to_sync+=(
-            .tmux-osx.conf
-        )
+        files_to_sync+=( "${files_to_sync_osx[@]}")
     fi
-
-    # print list of files that will sync directly to home dir
     [[ "$DEBUG" ]] && printf "%s\n\n" "${files_to_sync[*]}"
-
-    # kitty syncs separately
+    #
+    # dirs in ./.config/ sync separately, see `sync_dot_config_dir` function
     # rsync does not accept file list when quoted
     # shellcheck disable=SC2048,2086
-    rsync -av --exclude=kitty* ${files_to_sync[*]} ~/
+    #
+    rsync -av --exclude=.config* ${files_to_sync[*]} ~/
 }
 
-sync_kitty(){
-    # kitty has its own config dir so sync ./kitty dir to it
-    local msg
-    msg="Syncing kitty/ into ~/.config/kitty/"
+
+
+sync_dot_config_dir(){
     #
+    # many cli tools use ~/.config as well
+    # those custom configs in this repo are placed in ./.config/<tool-name>
+    # this function syncs those separately into their own dirs, e.g.
+    #
+    # ./.config/kitty/* into ~/.config/kitty/
+    #
+    local msg
+    msg="Syncing ./.config/ dirs into ~/.config/"
     output "$msg"
-    rsync -av kitty/ ~/.config/kitty/
+    #
+    rsync -av .config/ ~/.config/
 }
 
 yaynay(){
     local msg
     msg="$(warn)This script will update existing files in $target_dir\n"
-    #
     echo -e "$msg"
     read -rp "Ok to proceed? (y/n) " yaynay
     [[ "$yaynay" =~ n ]] && { echo "You have chosen not to proceed."; exit 2; }
@@ -94,13 +98,14 @@ checkdirs(){
 }
 
 backup_current(){
+    #
     # note: this function only backs up modified files, not entire dir
+    #
+    # there are some files that need to go directly into home dir though,
+    # see the `sync_into_home_dir` function for that
     #
     # TODO remove old excludes
     # no longer needed since we now sync into ~/.config instead of ~/
-    #
-    # there are some files that need to go directly into home dir though,
-    # see the `sync_home` function for that
     #
     #--exclude-from ".excludes/rsync" \
     #--exclude-from ".excludes/rsync-$(uname)" \
@@ -109,7 +114,6 @@ backup_current(){
     msg="Backing up modified files and syncing updates into ~/.config"
     #
     if [[ $yaynay == y* ]]; then
-        #
         [[ "$DEBUG" ]] && printf "\n%s\n%s\n" "$backup_dir" "$target_dir"
         output "$msg"
         #
@@ -128,24 +132,24 @@ backup_current(){
 vim_plug_install(){
     local msg
     msg="Installing vim plugins"
+    output "$msg"
     #
-    [[ "$DEBUG" ]] && output "$msg"
     vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 }
 
 vim_plug_update(){
     local msg
     msg="Updating vim plugins"
-    #
     output "$msg"
+    #
     vim -c "PlugUpdate" -c "qa"
 }
 
 os_tune(){
     local msg
     msg="Tuning user prefs and conf files for OS friendliness"
-    #
     output "$msg"
+    #
     [[ $(uname) == Linux ]] && bin/tune-linux
     [[ $(uname) == Darwin ]] && bin/tune-osx
 }
@@ -155,8 +159,8 @@ main(){
     checkdirs
     backup_current
     vim_plug_install
-    sync_home
-    sync_kitty
+    sync_into_home_dir
+    sync_dot_config_dir
 
     [ "$update" -eq 1 ] && vim_plug_update
     [ "$update" -eq 2 ] && os_tune

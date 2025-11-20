@@ -34,7 +34,7 @@ if tmux has-session -t $session; then
     echo "Session $session already exists so let's attach to it..."
     sleep .5
     tmux attach -t $session
-    exit 0;
+    exit 0
 fi
 
 # if there are no existing sessions, let's create a new session, then detach
@@ -112,7 +112,7 @@ tmux neww -t $session:9 -n $nine_title
 #
 for n in {1..9}; do
 
-    tmux splitw -h -t $session:$n  # split all windows horizontally
+    tmux splitw -h -t $session:$n # split all windows horizontally
 
     # configure each window; always select pane on right side
     #
@@ -132,7 +132,6 @@ for n in {1..9}; do
         tmux send -t $session:$n.1 "cd $two_path" C-m
         tmux send -t $session:$n.2 "cd $two_path && git status -sb" C-m
         tmux select-pane -t $session:$n.2
-
 
     # 3: ansible
     elif [ $n -eq 3 ]; then

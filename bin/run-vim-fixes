@@ -7,11 +7,11 @@
 # - deoplete
 #
 
-pyvv=3.13.0_1
-pyv=3.13
+# /opt/homebrew/Cellar/python@3.14/3.14.0_1/
+pyvv=3.14.0_1
+pyv=3.14
 py=/opt/homebrew/Cellar/python@"$pyv"/"$pyvv"
 pip="$py"/bin/pip"$pyv"
-
 
 #=-<<>>-=----------------------------------------------------------------------
 # python
@@ -34,7 +34,6 @@ pip_installs_run(){
     pip_install_others
 }
 
-
 #=-<<>>-=----------------------------------------------------------------------
 # lua
 #
@@ -47,10 +46,9 @@ lua_syntax_fix(){
     vim_version=91 # vim current version, 9.1
     brew_lua_vim="/opt/homebrew/share/vim/vim${vim_version}/syntax/lua.vim"
 
-    cp -p "$brew_lua_vim" "$brew_lua_vim.orig" \
-        && curl -sS "$nvim_lua_url" > "$brew_lua_vim"
+    cp -p "$brew_lua_vim" "$brew_lua_vim.orig" &&
+        curl -sS "$nvim_lua_url" >"$brew_lua_vim"
 }
-
 
 #=-<<>>-=----------------------------------------------------------------------
 # deoplete
