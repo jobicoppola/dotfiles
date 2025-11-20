@@ -44,7 +44,7 @@ shopt -s hostcomplete
 # set some vars
 #=-----------------------------------------------------------------------------
 
-os=$(uname)  # determine os
+os=$(uname)
 
 # differentiate between intel macs and newer macs with apple silicon chips
 # previously these dotfiles synced right into home dir, and for now we
@@ -122,7 +122,7 @@ if [[ "$mac" == true ]]; then
     grepbin=$homebrew/Cellar/grep/3.11/bin
     javabin=$homebrew/opt/openjdk/bin
     #
-    pybin=$HOME/Library/Python/3.12/bin
+    pybin=$HOME/Library/Python/3.14/bin
     fasdbin=$HOME/bin/fasd/bin
     dotfilesbin=$HOME/.config/$(whoami)/dotfiles/bin
     homebin=$HOME/bin
@@ -152,7 +152,8 @@ fi
 # export some vars
 #=-----------------------------------------------------------------------------
 
-ARCHFLAGS="-arch x86_64"                            # make compilers behave; intel
+# make compilers behave
+ARCHFLAGS="-arch x86_64"                            # intel
 [[ "$arch" == 'arm64' ]] && ARCHFLAGS="-arch $arch" # apple silicon
 export ARCHFLAGS=$ARCHFLAGS
 
@@ -305,14 +306,14 @@ fi
 
 [ -f ~/.alias ] && . ~/.alias
 [ -f ~/.bash_aliases ] && . ~/.bash_aliases
-
-# http status codes
+#
 [ -f "$config/.http-status-codes" ] && . "$config/.http-status-codes"
+#
+# source fzf git keybindings
+[ -f ~/git/github/fzf-git.sh/fzf-git.sh ] && . ~/git/github/fzf-git.sh/fzf-git.sh # TODO see `bin/install-fzf`
 
 # mac specific
 if [[ "$mac" == true ]]; then
-    [ -f "$config/.bash_aliases_osx" ] && . "$config/.bash_aliases_osx"
-
     # homebrew bash completions
     #
     # completion files are in:
@@ -341,7 +342,7 @@ if [[ "$mac" == true ]]; then
     # awscli completions
     [ -f "$(which aws_completer)" ] && complete -C "$(which aws_completer)" aws
 
-    # fzf installer, writes completions to home dir
+    # use fzf installer to write completions to home dir
     "${brew_prefix}/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null 2>&1
     [ -f ~/.fzf.bash ] && . ~/.fzf.bash
 
@@ -461,6 +462,7 @@ cdfa(){
     #
     local dir
     #
+    # shellcheck disable=SC2016 # don't need expression to expand here
     # --select-1 "auto select if only one match; do not start finder"
     dir="$(fasd -dl \
         | fzf \
@@ -478,9 +480,9 @@ cdfa(){
 }
 
 viff(){
-    # vi via fzf - from fzf list of files in `pwd`, open selected file in default editor (vim)
+    # vi via fzf
     #
-    # also see similar aliases `vif`, `vifp`, `fzh`, `fzp`
+    # list files in `pwd` and open selected file in default editor or vim
     #
     local IFS=$'\n'
     local files=()
@@ -503,7 +505,12 @@ viff(){
     "${EDITOR:-vim}" "${files[@]}"
 }
 
-fco(){
+
+#--
+# fzf git related functions
+#=-----------------------------------------------------------------------------
+
+fcob(){
     # checkout git branch/tag
     #
     local tags branches target
@@ -552,7 +559,7 @@ fcor(){
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
-fcs(){
+fcos(){
     # checkout commit sha
     #
     local commits commit
