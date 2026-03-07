@@ -253,13 +253,21 @@ get_git_status() {
     fi
 }
 
-short_branch_char='⋄'
-short_path_char='⋯'
-
 format_prompt_dynamic() {
+    #
+    # dynamically format prompt based on terminal width
+    #
+    # try to shorten segments until prompt width fits
+    #
+    # - first shorten the user + hostname string
+    # - second shorten the current git branch string
+    # - third shorten the current directory path string
+    # - if prompt width still too wide just accept there will be spillover
+    #
     local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     cols=${cols:-80}
 
+    local shortened_char='⋯'
     local raw_path="${PWD/#$HOME/\~}"
     local raw_branch="$_ps1_git_branch"
     local branch_display="" status_len=0
@@ -269,13 +277,17 @@ format_prompt_dynamic() {
     fi
 
     # fixed: time(8) + pipe(1) = 9
+    #
     local fixed=9
     local display_user="$user"
     local display_path="$raw_path"
     local display_branch="$branch_display"
     local total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
 
-    # --- Step 0: everything fits as-is ---
+    # step 0
+    #
+    # everything fits as-is
+    #
     if (( total <= cols )); then
         _ps1_display_user="$display_user"
         _ps1_display_path="$display_path"
@@ -283,7 +295,10 @@ format_prompt_dynamic() {
         return
     fi
 
-    # --- Step 1: drop hostname ---
+    # step 1
+    #
+    # drop hostname
+    #
     display_user="$short_user"
     total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
     if (( total <= cols )); then
@@ -293,7 +308,9 @@ format_prompt_dynamic() {
         return
     fi
 
-    # --- Step 2: shorten branch (remove segments from right) ---
+    # step 2
+    #
+    # shorten branch (remove segments from right)
     if [[ -n "$raw_branch" ]]; then
         local normalized="${raw_branch//[^a-zA-Z0-9-]/-}"
         local IFS='-'
@@ -307,7 +324,7 @@ format_prompt_dynamic() {
                 local IFS='-'
                 local try_branch="${segments[*]:0:try_count}"
                 unset IFS
-                try_branch+="-${short_branch_char}"
+                try_branch+="-${shortened_char}"
                 display_branch="(${try_branch})"
                 total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
                 if (( total <= cols )); then
@@ -321,7 +338,7 @@ format_prompt_dynamic() {
             local IFS='-'
             local min_branch="${segments[*]:0:2}"
             unset IFS
-            display_branch="(${min_branch}-${short_branch_char})"
+            display_branch="(${min_branch}-${shortened_char})"
         fi
 
         total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
@@ -333,7 +350,11 @@ format_prompt_dynamic() {
         fi
     fi
 
-    # --- Step 3, Phase A: collapse dirs left-to-right to 1 char ---
+    # step 3
+    #
+    # phase A
+    #
+    # collapse dirs left-to-right to 1 char
     local prefix="" rest="$raw_path"
     if [[ "$rest" == "~/"* ]]; then
         prefix="~"; rest="${rest#\~}"
@@ -370,8 +391,12 @@ format_prompt_dynamic() {
             fi
         done
 
-        # --- Step 3, Phase B: hard collapse ~/g/⋯/last-dir ---
-        display_path="${prefix}/${parts[0]:0:1}/${short_path_char}/${parts[n-1]}"
+        # step 3
+        #
+        # phase B
+        #
+        # hard collapse ~/g/⋯/last-dir
+        display_path="${prefix}/${parts[0]:0:1}/${shortened_char}/${parts[n-1]}"
     fi
 
     # accept spillover
