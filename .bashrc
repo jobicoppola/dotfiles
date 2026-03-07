@@ -7,8 +7,7 @@
 #=-----------------------------------------------------------------------------
 #`
 
-[ -z "$PS1" ] && return  # only proceed for interactive shells
-
+[ -z "$PS1" ] && return # only proceed for interactive shells
 
 #--
 # configure shell
@@ -16,8 +15,8 @@
 
 # command history
 #
-HISTCONTROL=ignoreboth       # ignore duplicates and cmds starting with spaces
-shopt -s histappend          # append to history
+HISTCONTROL=ignoreboth # ignore duplicates and cmds starting with spaces
+shopt -s histappend    # append to history
 #
 # try unlimited history
 # https://superuser.com/questions/137438/how-to-unlimited-bash-shell-history
@@ -38,7 +37,6 @@ shopt -s globstar
 # hostname completion
 HOSTFILE=~/.ssh/known_hosts
 shopt -s hostcomplete
-
 
 #--
 # set some vars
@@ -71,7 +69,7 @@ mac='' linux='' hostname='' user=''
 # macos
 if [[ "$os" == 'Darwin' ]]; then
     mac=true
-    hostname=$(hostname |cut -d . -f 1)  # remove .lan or .local
+    hostname=$(hostname | cut -d . -f 1) # remove .lan or .local
     user="$(whoami)@$hostname"
 fi
 
@@ -99,7 +97,6 @@ go_env=~/go/env                  # go
 
 # kitten is not added to /opt/homebrew/bin; specify here and add to path below
 kitty_bin=/Applications/kitty.app/Contents/MacOS
-
 
 #--
 # path setup
@@ -147,7 +144,6 @@ else
     export PATH=$PATH
 fi
 
-
 #--
 # export some vars
 #=-----------------------------------------------------------------------------
@@ -175,7 +171,7 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk/bin
 
 # ruby
 export RUBYOPT=rubygems
-export GEM_HOME=$HOME/gems  # also see $gem_bin
+export GEM_HOME=$HOME/gems # also see $gem_bin
 export RUBYPATH=$GEM_HOME
 export GEM_PATH=$GEM_HOME
 
@@ -186,21 +182,19 @@ export NODE_PATH=/usr/local/lib/node_modules
 export GOBIN="${go_bin}"
 export GOENV="${go_env}"
 
-
 #--
 # ssh setup
 #=-----------------------------------------------------------------------------
 
 if [ -s "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
-  rm -f "$SSH_AUTH_SOCK"
-  SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
-  export SSH_AUTH_SOCK="$SSH_AUTH_SOCK"
-  if [ ! -S "$SSH_AUTH_SOCK" ]; then
-    eval ssh-agent -a "$SSH_AUTH_SOCK" -s
-    ssh-add
-  fi
+    rm -f "$SSH_AUTH_SOCK"
+    SSH_AUTH_SOCK=/tmp/ssh-agent-$(hostname)
+    export SSH_AUTH_SOCK="$SSH_AUTH_SOCK"
+    if [ ! -S "$SSH_AUTH_SOCK" ]; then
+        eval ssh-agent -a "$SSH_AUTH_SOCK" -s
+        ssh-add
+    fi
 fi
-
 
 #--
 # prompt setup
@@ -208,35 +202,42 @@ fi
 
 # functions for displaying git info in the prompt
 #
-get_venv(){
-    [ "${VIRTUAL_ENV}" ] && echo "$(basename "$VIRTUAL_ENV"):"
+get_venv() {
+    local venv lsep rsep
+    lsep="𝓥 " rsep=""
+    if [ "${VIRTUAL_ENV}" ]; then
+        venv="$(basename "$VIRTUAL_ENV")"
+    else
+        venv=''
+    fi
+    [[ -n "$venv" ]] && echo -e "\n${lsep}${venv}${rsep}"
 }
 
-get_git_branch_current(){
+get_git_branch_current() {
     local ref
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    ref=$(git symbolic-ref HEAD 2>/dev/null) || return
     echo "${ref#refs/heads/}"
 }
 
-get_git_branch_current_for_prompt(){
+get_git_branch_current_for_prompt() {
     local ref
-    ref=$(get_git_branch_current 2> /dev/null) || return
+    ref=$(get_git_branch_current 2>/dev/null) || return
     echo "($ref)"
 }
 
-get_git_branch_default(){
+get_git_branch_default() {
     local ref
-    ref=$(git symbolic-ref --short refs/remotes/origin/HEAD 2> /dev/null) || return
+    ref=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null) || return
     echo "$ref" | awk -F/ '{print $2}'
 }
 
-get_git_status(){
+get_git_status() {
     local cmsg tmsg smsg umsg gstat
     cmsg='nothing to commit'
     tmsg='Changes to be committed'
     smsg='Changes not staged for commit'
     umsg='nothing added to commit but untracked files present'
-    gstat=$(git status 2> /dev/null) || return
+    gstat=$(git status 2>/dev/null) || return
     if [[ $(echo "$gstat" | grep -c "$smsg") -gt 0 ]]; then
         echo '?'
     elif [[ $(echo "$gstat" | grep -c "$tmsg") -gt 0 ]]; then
@@ -258,33 +259,44 @@ kube_ps1_path=/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh
 [ -f "$kube_ps1_path" ] && . "$kube_ps1_path"
 export KUBE_PS1_PREFIX=''
 export KUBE_PS1_SUFFIX=''
+export KUBE_PS1_SEPARATOR='|'
 export KUBE_PS1_SYMBOL_COLOR=27
 export KUBE_PS1_CTX_COLOR=39
 export KUBE_PS1_NS_COLOR=81
 
+# python virtualenv override default prompt
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 # set color vars
 ec="$EC"
-clock_color="$COLOR_71"
-pipe_color="$GRAY"
-venv_color="$GREEN"
+#clock_color="$COLOR_71" # OG
+clock_color="$COLOR_60"
+#pipe_color="$GRAY" # OG
+pipe_color="$COLOR_24"
 host_color="$BWHITE"
 path_color="$BYELLOW"
-user_color="$COLOR_132"
-cwd_color="$COLOR_72"
-branch_color="$COLOR_173"
-status_color="$COLOR_149"
+#user_color="$COLOR_132" # OG
+user_color="$COLOR_30"
+#cwd_color="$COLOR_72" # OG
+cwd_color="$COLOR_36"
+#branch_color="$COLOR_173" # OG
+branch_color="$COLOR_106" # hmm 142 or 106?
+#status_color="$COLOR_149" # OG
+status_color="$COLOR_154" # hmm 154 or 190?
+venv_color="$GREEN"
 dollar_color="$COLOR_244" # force gray to override any theme
 
 # prompt vars
-ps1_kube="\n\$(kube_ps1)${pipe_color}"
-ps1_time="\n${clock_color}\t${pipe_color}"
+ps1_pipe='|'
+ps1_kube="\n\$(kube_ps1)${ec}${pipe_color}"
 ps1_venv="${venv_color}\$(get_venv)"
+ps1_time="\n${ec}${clock_color}\t${pipe_color}"
 ps1_user="\u@\h${host_color}\w${path_color}" # linux
-ps1_user_mac="${ec}${user_color}${user}" # mac
-ps1_cwd="${cwd_color}\w" # original, \W returns only basename of cwd
+ps1_user_mac="${ec}${user_color}${user}"     # mac
+ps1_cwd="${cwd_color}\w"                     # original, \W returns only basename of cwd
 ps1_git="${branch_color}\$(get_git_branch_current_for_prompt)"
 ps1_git+="${status_color}\$(get_git_status)${ec}"
-ps1_end="\n${ec}${GRAY}$ ${ec}" # linux
+ps1_end="\n${ec}${GRAY}$ ${ec}"        # linux
 ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
 
 # set ps1_kube to empty string if not in aws-vault session
@@ -293,12 +305,11 @@ ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
 # now actually set the prompt
 if [[ "$mac" == 'true' ]]; then
     # macos
-    PS1="${ps1_kube}${ps1_time}|${ps1_venv}${ps1_user_mac}${ps1_cwd}${ps1_git}${ps1_end_mac}"
+    PS1="${ps1_kube}${ps1_venv}${ps1_time}${ps1_pipe}${ps1_user_mac}${ps1_cwd}${ps1_git}${ps1_end_mac}"
 else
     # linux
-    PS1="${ps1_time}$GRAY|${ps1_venv}${ps1_user}${ps1_git}${ps1_end}"
+    PS1="${ps1_time}$GRAY${ps1_pipe}${ps1_venv}${ps1_user}${ps1_git}${ps1_end}"
 fi
-
 
 #--
 # source aliases, completions and other custom config files TODO
@@ -353,7 +364,6 @@ if [[ "$mac" == true ]]; then
     . <(cr completion bash)
 fi
 
-
 #--
 # rg and fzf commands
 #=-----------------------------------------------------------------------------
@@ -365,58 +375,66 @@ rg_command_dirs='rg --no-heading --ignore-case --no-ignore --hidden --color "alw
 # set default - also used by vim
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --no-follow --glob "!.git"'
 
-
 #--
 # rg, fzf, fasd functions - some custom, some from fzf wiki examples
 #=-----------------------------------------------------------------------------
 
-sf(){
+sf() {
     # search for files matching provided string
     # open selected files in default editor
     #
     local files
     #
-    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
+    if [ "$#" -lt 1 ]; then
+        echo "Must provide search string"
+        return 1
+    fi
     printf -v search "%q" "$*"
-    files=$(eval "$rg_command" "$search" \
-            | fzf --ansi --multi --reverse \
-            | awk -F ':' '{print $1":"$2":"$3}')
+    files=$(eval "$rg_command" "$search" |
+        fzf --ansi --multi --reverse |
+        awk -F ':' '{print $1":"$2":"$3}')
     # shellcheck disable=SC2086
     [[ -n "$files" ]] && ${EDITOR:-vim} $files
 }
 
-sd(){
+sd() {
     # search for directories matching provided string
     # open selected dirs in default editor
     #
     local directories
     #
-    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
+    if [ "$#" -lt 1 ]; then
+        echo "Must provide search string"
+        return 1
+    fi
     printf -v search "%q" "$*"
-    directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files -l \
-                  | sort -u \
-                  | fzf --ansi --multi --reverse)
+    directories=$(eval "$rg_command_dirs" -g \"*"$search"*\" --files -l |
+        sort -u |
+        fzf --ansi --multi --reverse)
     # shellcheck disable=SC2086
     [[ -n "$directories" ]] && ${EDITOR:-vim} $directories
 }
 
-sfd(){
+sfd() {
     # search for files and directories matching provided string
     # open selected in default editor
     #
     local files directories fd all
     #
-    if [ "$#" -lt 1 ]; then echo "Must provide search string"; return 1; fi
+    if [ "$#" -lt 1 ]; then
+        echo "Must provide search string"
+        return 1
+    fi
     printf -v search "%q" "$*"
     files=$(eval "$rg_command" "$search" | awk -F ':' '{print $1":"$2":"$3}')
     directories=$(eval "$rg_command_dirs" -g "*$search*" --files | sort -u)
-    fd=( "${directories[@]}" "${files[@]}" )
+    fd=("${directories[@]}" "${files[@]}")
     all=$(printf '%s\n' "${fd[@]}" | fzf --ansi --multi --reverse)
     # shellcheck disable=SC2086
     [[ -n "$all" ]] && ${EDITOR:-vim} $all
 }
 
-cdfd(){
+cdfd() {
     # cd via fzf - cd into dir selected from fzf list
     #
     # fzf also provides similar functionality for many commands, with **
@@ -428,17 +446,17 @@ cdfd(){
     fd="${fd:-find}"
     #
     if [[ "$fd" == find ]]; then
-        dir=$($fd "${1:-.}" -path '*/\.*' -prune -o -type d -print 2>/dev/null \
-            | fzf --no-multi) \
-            && cd "$dir" || return
+        dir=$($fd "${1:-.}" -path '*/\.*' -prune -o -type d -print 2>/dev/null |
+            fzf --no-multi) &&
+            cd "$dir" || return
     else
-        dir=$($fd --prune --type d "${1:-.}" 2>/dev/null \
-            | fzf --no-multi) \
-            && cd "$dir" || return
+        dir=$($fd --prune --type d "${1:-.}" 2>/dev/null |
+            fzf --no-multi) &&
+            cd "$dir" || return
     fi
 }
 
-cdff(){
+cdff() {
     # cd via fzf - select file from fzf list and cd into dir containing the file
     #
     local file fzf_preview_cmd
@@ -446,16 +464,17 @@ cdff(){
     fzf_preview_cmd='bat --color=always --theme=zenburn {}'
     #
     # +m --no-multi "disable multi select"
-    file="$(fzf \
-        --no-multi \
-        --query="$*" \
-        --preview="${fzf_preview_cmd}" \
-        --preview-window='right:60%:nowrap' \
+    file="$(
+        fzf \
+            --no-multi \
+            --query="$*" \
+            --preview="${fzf_preview_cmd}" \
+            --preview-window='right:60%:nowrap'
     )"
     cd "$(dirname "$file")" || return
 }
 
-cdfa(){
+cdfa() {
     # cd via fzf - cd into `fasd` 'frecency' dir, show preview of directory tree
     #
     # https://www.devdoc.net/web/developer.mozilla.org/en-US/docs/The_Places_frecency_algorithm.html
@@ -464,22 +483,23 @@ cdfa(){
     #
     # shellcheck disable=SC2016 # don't need expression to expand here
     # --select-1 "auto select if only one match; do not start finder"
-    dir="$(fasd -dl \
-        | fzf \
-            --tac \
-            --reverse \
-            --no-sort \
-            --select-1 \
-            --no-multi \
-            --tiebreak=index \
-            --query "$*" \
-            --preview='tree -C {} | head -n $FZF_PREVIEW_LINES' \
-            --preview-window='right,40%:wrap' \
+    dir="$(
+        fasd -dl |
+            fzf \
+                --tac \
+                --reverse \
+                --no-sort \
+                --select-1 \
+                --no-multi \
+                --tiebreak=index \
+                --query "$*" \
+                --preview='tree -C {} | head -n $FZF_PREVIEW_LINES' \
+                --preview-window='right,40%:wrap'
     )" || return
     cd "$dir" || return
 }
 
-viff(){
+viff() {
     # vi via fzf
     #
     # list files in `pwd` and open selected file in default editor or vim
@@ -493,43 +513,46 @@ viff(){
     # --exit-0   "exit if no match for initial query"
     # --select-1 "auto select if only one match; do not start finder"
     files=(
-        "$(fzf \
-            --multi \
-            --exit-0 \
-            --select-1 \
-            --query="$*" \
-            --preview="${fzf_preview_cmd}" \
-            --preview-window='right:60%:nowrap' \
+        "$(
+            fzf \
+                --multi \
+                --exit-0 \
+                --select-1 \
+                --query="$*" \
+                --preview="${fzf_preview_cmd}" \
+                --preview-window='right:60%:nowrap'
         )"
     ) || return
     "${EDITOR:-vim}" "${files[@]}"
 }
 
-
 #--
 # fzf git related functions
 #=-----------------------------------------------------------------------------
 
-fcob(){
+fcob() {
     # checkout git branch/tag
     #
     local tags branches target
     #
-    tags=$(git tag \
-           | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
-    branches=$(git branch --all \
-               | grep -v HEAD \
-               | sed "s/.* //" \
-               | sed "s#remotes/[^/]*/##" \
-               | sort -u \
-               | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
-    target=$( (echo "$tags"; echo "$branches") \
-               | fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+    tags=$(git tag |
+        awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+    branches=$(git branch --all |
+        grep -v HEAD |
+        sed "s/.* //" |
+        sed "s#remotes/[^/]*/##" |
+        sort -u |
+        awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+    target=$( (
+        echo "$tags"
+        echo "$branches"
+    ) |
+        fzf-tmux -l50 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
     # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$target" | awk '{print $2}')
 }
 
-fcoc(){
+fcoc() {
     # checkout git commit
     #
     local commits commit
@@ -543,40 +566,40 @@ fcoc(){
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
-fcor(){
+fcor() {
     # checkout git branch (incl remote), sorted by most recent commit, limit n
     #
     local branches branch limit=50
     #
     branches=$(git for-each-ref \
-               --count=$limit \
-               --sort=-committerdate \
-               refs/heads/ \
-               --format="%(refname:short)")
-    branch=$(echo "$branches" \
-             | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)
+        --count=$limit \
+        --sort=-committerdate \
+        refs/heads/ \
+        --format="%(refname:short)")
+    branch=$(echo "$branches" |
+        fzf-tmux -d $((2 + $(wc -l <<<"$branches"))) +m)
     # shellcheck disable=SC2001,SC2046
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
-fcos(){
+fcos() {
     # checkout commit sha
     #
     local commits commit
     #
     commits=$(git log --color=always \
-              --pretty=oneline --abbrev-commit --reverse)
+        --pretty=oneline --abbrev-commit --reverse)
     commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse)
     # shellcheck disable=SC2001,SC2046
     git checkout $(echo -n $(echo "$commit" | sed "s/ .*//"))
 }
 
-fcb(){
+fcb() {
     # git commit browser
     #
     git log --graph --color=always \
-        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
-        | fzf --ansi --no-sort --reverse --tiebreak=index \
+        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+        fzf --ansi --no-sort --reverse --tiebreak=index \
             --bind=ctrl-s:toggle-sort \
             --bind "ctrl-m:execute:
             (grep -o '[a-f0-9]\{7\}' | head -1 |
@@ -585,12 +608,11 @@ fcb(){
 FZF-EOF"
 }
 
-
 #--
 # switch tmux pane (@george-b)
 #=-----------------------------------------------------------------------------
 
-ftpane(){
+ftpane() {
     local panes current_window current_pane target target_window target_pane
     panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
     current_pane=$(tmux display-message -p '#I:#P')
@@ -605,18 +627,17 @@ ftpane(){
         tmux select-pane -t "${target_window}.${target_pane}"
     else
         tmux select-pane -t "${target_window}.${target_pane}" &&
-        tmux select-window -t "$target_window"
+            tmux select-window -t "$target_window"
     fi
 }
-
 
 #--
 # try to securely deal with passwords
 #=-----------------------------------------------------------------------------
 
-readpass(){
+readpass() {
     local was
-    echo -n >&2 "Password: "
+    echo -n "Password: " >&2
     was="$(stty -a | grep -ow -e '-\?echo')" pass
     stty -echo
     read -r pass
@@ -625,50 +646,48 @@ readpass(){
     echo "$pass"
 }
 
-setpass(){
+setpass() {
     local id="$1" group="$2" pw=""
     if [[ "$os" == Darwin ]]; then
         pw=$(readpass)
-        security delete-generic-password -a "$group" -s "$id" 2> /dev/null
+        security delete-generic-password -a "$group" -s "$id" 2>/dev/null
         security add-generic-password -a "$group" -s "$id" -w "$pw"
     fi
 }
 
-getpass(){
+getpass() {
     local id="$1" group="$2"
     if [[ "$os" == Darwin ]]; then
         security find-generic-password -a "$group" -s "$id" -w
     fi
 }
 
-
 #--
 # string helpers
 #=-----------------------------------------------------------------------------
 
-lower(){
+lower() {
     cat | tr '[:upper:]' '[:lower:]'
 }
 
-upper(){
+upper() {
     cat | tr '[:lower:]' '[:upper:]'
 }
 
-capitalize(){
+capitalize() {
     cat | perl -ne 'print lc' | perl -ane 'print join " ", map {ucfirst} @F'
 }
 
-trim(){
+trim() {
     cat | perl -ne 's/^\s+|\s+$//g; print $_'
 }
 
-
 #--
-# bring in shared functions
+# bring in env vars and shared functions
 #=-----------------------------------------------------------------------------
 
+[ -f "$config/.env" ] && . "$config/.env"
 [ -f "$config/share/functions.tmp" ] && . "$config/share/functions.tmp"
-
 
 #--
 # initialize rbenv and fasd without aliases
@@ -676,7 +695,6 @@ trim(){
 
 eval "$(rbenv init -)"
 eval "$(fasd --init bash-hook bash-ccomp bash-ccomp-install)"
-
 
 #--
 # source work setup
