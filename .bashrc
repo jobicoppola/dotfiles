@@ -26,7 +26,7 @@ export HISTTIMEFORMAT="[%F %T] "
 export HISTFILE=~/.bash_history_forever
 #
 # write history from current shell every prompt
-PROMPT_COMMAND='_ps1_git_branch=$(git symbolic-ref --short HEAD 2>/dev/null); history -a'
+PROMPT_COMMAND='_ps1_git_branch=$(git symbolic-ref --short HEAD 2>/dev/null); format_prompt_dynamic; history -a'
 
 # case-insensitive tab-completion for paths
 shopt -s nocaseglob
@@ -64,13 +64,14 @@ else
 fi
 
 # customize platform vars as needed
-mac='' linux='' hostname='' user=''
+mac='' linux='' hostname='' user='' short_user=''
 
 # macos
 if [[ "$os" == 'Darwin' ]]; then
     mac=true
     hostname=$(hostname | cut -d . -f 1) # remove .lan or .local
     user="$(whoami)@$hostname"
+    short_user="$(whoami)"
 fi
 
 # linux
@@ -78,6 +79,7 @@ if [[ "$os" == 'linux' ]]; then
     linux=true
     hostname=$(hostname)
     user="$(whoami)@$hostname"
+    short_user="$(whoami)"
 fi
 
 # for using `rg` and `fd` instead of grep and find
@@ -251,122 +253,131 @@ get_git_status() {
     fi
 }
 
-shorten_path() {
+short_branch_char='⋄'
+short_path_char='⋯'
+
+format_prompt_dynamic() {
     local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     cols=${cols:-80}
-    # fixed overhead: time+hostname(25) + pipe(1) + user@host(${#user}) + status(1) + padding(2)
-    local overhead=$(( 25 + 1 + ${#user} + 1 + 2 ))
-    # account for displayed branch length (after truncation + parens)
-    local branch_len=0
-    if [[ -n "$_ps1_git_branch" ]]; then
-        local max_branch=$(( cols - overhead - 10 ))
-        (( max_branch < 8 )) && max_branch=8
-        if (( ${#_ps1_git_branch} <= max_branch )); then
-            branch_len=$(( ${#_ps1_git_branch} + 2 ))  # +2 for parens
-        else
-            branch_len=$(( max_branch + 2 ))
-        fi
+
+    local raw_path="${PWD/#$HOME/\~}"
+    local raw_branch="$_ps1_git_branch"
+    local branch_display="" status_len=0
+    if [[ -n "$raw_branch" ]]; then
+        branch_display="(${raw_branch})"
+        status_len=1
     fi
-    local max=$(( cols - overhead - branch_len ))
-    (( max < 1 )) && max=1
 
-    local p="${PWD/#$HOME/\~}"
+    # fixed: time(8) + pipe(1) = 9
+    local fixed=9
+    local display_user="$user"
+    local display_path="$raw_path"
+    local display_branch="$branch_display"
+    local total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
 
-    if (( ${#p} <= max )); then
-        printf '%s' "$p"
+    # --- Step 0: everything fits as-is ---
+    if (( total <= cols )); then
+        _ps1_display_user="$display_user"
+        _ps1_display_path="$display_path"
+        _ps1_display_branch="$display_branch"
         return
     fi
 
-    local prefix=""
-    local rest="$p"
+    # --- Step 1: drop hostname ---
+    display_user="$short_user"
+    total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
+    if (( total <= cols )); then
+        _ps1_display_user="$display_user"
+        _ps1_display_path="$display_path"
+        _ps1_display_branch="$display_branch"
+        return
+    fi
 
+    # --- Step 2: shorten branch (remove segments from right) ---
+    if [[ -n "$raw_branch" ]]; then
+        local normalized="${raw_branch//[^a-zA-Z0-9-]/-}"
+        local IFS='-'
+        local -a segments=($normalized)
+        unset IFS
+        local seg_count=${#segments[@]}
+
+        if (( seg_count > 2 )); then
+            local try_count
+            for (( try_count = seg_count - 1; try_count >= 2; try_count-- )); do
+                local IFS='-'
+                local try_branch="${segments[*]:0:try_count}"
+                unset IFS
+                try_branch+="-${short_branch_char}"
+                display_branch="(${try_branch})"
+                total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
+                if (( total <= cols )); then
+                    _ps1_display_user="$display_user"
+                    _ps1_display_path="$display_path"
+                    _ps1_display_branch="$display_branch"
+                    return
+                fi
+            done
+            # minimum: first 2 segments + indicator
+            local IFS='-'
+            local min_branch="${segments[*]:0:2}"
+            unset IFS
+            display_branch="(${min_branch}-${short_branch_char})"
+        fi
+
+        total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
+        if (( total <= cols )); then
+            _ps1_display_user="$display_user"
+            _ps1_display_path="$display_path"
+            _ps1_display_branch="$display_branch"
+            return
+        fi
+    fi
+
+    # --- Step 3, Phase A: collapse dirs left-to-right to 1 char ---
+    local prefix="" rest="$raw_path"
     if [[ "$rest" == "~/"* ]]; then
-        prefix="~"
-        rest="${rest#\~}"
+        prefix="~"; rest="${rest#\~}"
+    elif [[ "$rest" == "~" ]]; then
+        _ps1_display_user="$display_user"
+        _ps1_display_path="$display_path"
+        _ps1_display_branch="$display_branch"
+        return
     fi
 
     local IFS='/'
     local -a parts=($rest)
     unset IFS
     parts=("${parts[@]:1}")
-
     local n=${#parts[@]}
-    if (( n <= 1 )); then
-        # single component: just truncate the whole path
-        if (( max >= 8 )); then
-            local half=$(( (max - 3) / 2 ))
-            printf '%s...%s' "${p:0:half}" "${p: -half}"
-        else
-            printf '%s' "${p:0:max}"
-        fi
-        return
+
+    if (( n > 1 )); then
+        local -a collapsed=("${parts[@]}")
+        local i
+        for (( i = 0; i < n - 1; i++ )); do
+            collapsed[i]="${parts[i]:0:1}"
+            local try_path="$prefix"
+            local j
+            for (( j = 0; j < n; j++ )); do
+                try_path+="/${collapsed[j]}"
+            done
+            display_path="$try_path"
+            total=$(( fixed + ${#display_user} + ${#display_path} + ${#display_branch} + status_len ))
+            if (( total <= cols )); then
+                _ps1_display_user="$display_user"
+                _ps1_display_path="$display_path"
+                _ps1_display_branch="$display_branch"
+                return
+            fi
+        done
+
+        # --- Step 3, Phase B: hard collapse ~/g/⋯/last-dir ---
+        display_path="${prefix}/${parts[0]:0:1}/${short_path_char}/${parts[n-1]}"
     fi
 
-    # gradient shorten: dir i gets (i+1) chars
-    local i
-    for (( i = 0; i < n - 1; i++ )); do
-        local keep=$(( i + 1 ))
-        if (( ${#parts[i]} > keep )); then
-            parts[i]="${parts[i]:0:keep}"
-        fi
-    done
-
-    # rebuild
-    local result="$prefix"
-    for (( i = 0; i < n; i++ )); do
-        result+="/${parts[i]}"
-    done
-
-    if (( ${#result} <= max )); then
-        printf '%s' "$result"
-        return
-    fi
-
-    # middle-truncate last component
-    local stem="$prefix"
-    for (( i = 0; i < n - 1; i++ )); do
-        stem+="/${parts[i]}"
-    done
-    stem+="/"
-
-    local avail=$(( max - ${#stem} ))
-    local last="${parts[n-1]}"
-
-    if (( avail <= 0 )); then
-        # stem alone exceeds budget, truncate the whole result
-        if (( max >= 8 )); then
-            local half=$(( (max - 3) / 2 ))
-            printf '%s...%s' "${result:0:half}" "${result: -half}"
-        else
-            printf '%s' "${result:0:max}"
-        fi
-    elif (( avail >= 8 )); then
-        local half=$(( (avail - 3) / 2 ))
-        printf '%s%s...%s' "$stem" "${last:0:half}" "${last: -half}"
-    elif (( avail >= 4 )); then
-        printf '%s%s...' "$stem" "${last:0:$((avail - 3))}"
-    else
-        printf '%s%s' "$stem" "${last:0:avail}"
-    fi
-}
-
-shorten_branch() {
-    local branch="$_ps1_git_branch"
-    [[ -z "$branch" ]] && return
-
-    local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
-    cols=${cols:-80}
-    local overhead=$(( 25 + 1 + ${#user} + 1 + 2 ))
-    # reserve min 10 chars for path
-    local max_branch=$(( cols - overhead - 10 ))
-    (( max_branch < 8 )) && max_branch=8
-
-    if (( ${#branch} <= max_branch )); then
-        printf '(%s)' "$branch"
-    else
-        local half=$(( (max_branch - 3) / 2 ))
-        printf '(%s...%s)' "${branch:0:half}" "${branch: -half}"
-    fi
+    # accept spillover
+    _ps1_display_user="$display_user"
+    _ps1_display_path="$display_path"
+    _ps1_display_branch="$display_branch"
 }
 
 # bring in named colors to customize prompt
@@ -404,9 +415,9 @@ ps1_kube="\n\$(kube_ps1)${ec}${pipe_color}"
 ps1_venv="${venv_color}\$(get_venv)"
 ps1_time="\n${ec}${clock_color}\t${pipe_color}"
 ps1_user="\u@\h${host_color}\w${path_color}" # linux
-ps1_user_mac="${ec}${user_color}${user}"     # mac
-ps1_cwd="${cwd_color}\$(shorten_path)"        # gradient-shortened path (dynamic width)
-ps1_git="${branch_color}\$(shorten_branch)"
+ps1_user_mac="${ec}${user_color}\${_ps1_display_user}"     # mac
+ps1_cwd="${cwd_color}\${_ps1_display_path}"                # cascading-shortened path
+ps1_git="${branch_color}\${_ps1_display_branch}"
 ps1_git+="${status_color}\$(get_git_status)${ec}"
 ps1_end="\n${ec}${GRAY}$ ${ec}"        # linux
 ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
