@@ -254,11 +254,21 @@ get_git_status() {
 shorten_path() {
     local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     cols=${cols:-80}
-    # fixed overhead: time+hostname(25) + pipe(1) + user@host(${#user}) + parens(2) + status(1) + padding(2)
-    local overhead=$(( 25 + 1 + ${#user} + 2 + 1 + 2 ))
-    local branch_len=${#_ps1_git_branch}
+    # fixed overhead: time+hostname(25) + pipe(1) + user@host(${#user}) + status(1) + padding(2)
+    local overhead=$(( 25 + 1 + ${#user} + 1 + 2 ))
+    # account for displayed branch length (after truncation + parens)
+    local branch_len=0
+    if [[ -n "$_ps1_git_branch" ]]; then
+        local max_branch=$(( cols - overhead - 10 ))
+        (( max_branch < 8 )) && max_branch=8
+        if (( ${#_ps1_git_branch} <= max_branch )); then
+            branch_len=$(( ${#_ps1_git_branch} + 2 ))  # +2 for parens
+        else
+            branch_len=$(( max_branch + 2 ))
+        fi
+    fi
     local max=$(( cols - overhead - branch_len ))
-    (( max < 30 )) && max=30
+    (( max < 1 )) && max=1
 
     local p="${PWD/#$HOME/\~}"
 
@@ -282,7 +292,13 @@ shorten_path() {
 
     local n=${#parts[@]}
     if (( n <= 1 )); then
-        printf '%s' "$p"
+        # single component: just truncate the whole path
+        if (( max >= 8 )); then
+            local half=$(( (max - 3) / 2 ))
+            printf '%s...%s' "${p:0:half}" "${p: -half}"
+        else
+            printf '%s' "${p:0:max}"
+        fi
         return
     fi
 
@@ -316,13 +332,40 @@ shorten_path() {
     local avail=$(( max - ${#stem} ))
     local last="${parts[n-1]}"
 
-    if (( avail >= 8 )); then
+    if (( avail <= 0 )); then
+        # stem alone exceeds budget, truncate the whole result
+        if (( max >= 8 )); then
+            local half=$(( (max - 3) / 2 ))
+            printf '%s...%s' "${result:0:half}" "${result: -half}"
+        else
+            printf '%s' "${result:0:max}"
+        fi
+    elif (( avail >= 8 )); then
         local half=$(( (avail - 3) / 2 ))
         printf '%s%s...%s' "$stem" "${last:0:half}" "${last: -half}"
     elif (( avail >= 4 )); then
         printf '%s%s...' "$stem" "${last:0:$((avail - 3))}"
     else
         printf '%s%s' "$stem" "${last:0:avail}"
+    fi
+}
+
+shorten_branch() {
+    local branch="$_ps1_git_branch"
+    [[ -z "$branch" ]] && return
+
+    local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
+    cols=${cols:-80}
+    local overhead=$(( 25 + 1 + ${#user} + 1 + 2 ))
+    # reserve min 10 chars for path
+    local max_branch=$(( cols - overhead - 10 ))
+    (( max_branch < 8 )) && max_branch=8
+
+    if (( ${#branch} <= max_branch )); then
+        printf '(%s)' "$branch"
+    else
+        local half=$(( (max_branch - 3) / 2 ))
+        printf '(%s...%s)' "${branch:0:half}" "${branch: -half}"
     fi
 }
 
@@ -363,7 +406,7 @@ ps1_time="\n${ec}${clock_color}\t${pipe_color}"
 ps1_user="\u@\h${host_color}\w${path_color}" # linux
 ps1_user_mac="${ec}${user_color}${user}"     # mac
 ps1_cwd="${cwd_color}\$(shorten_path)"        # gradient-shortened path (dynamic width)
-ps1_git="${branch_color}\$([ -n \"\$_ps1_git_branch\" ] && echo \"(\$_ps1_git_branch)\")"
+ps1_git="${branch_color}\$(shorten_branch)"
 ps1_git+="${status_color}\$(get_git_status)${ec}"
 ps1_end="\n${ec}${GRAY}$ ${ec}"        # linux
 ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
