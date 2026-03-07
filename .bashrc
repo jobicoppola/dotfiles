@@ -251,6 +251,74 @@ get_git_status() {
     fi
 }
 
+shorten_path() {
+    local max=48
+    local p="${PWD/#$HOME/\~}"
+
+    if (( ${#p} <= max )); then
+        printf '%s' "$p"
+        return
+    fi
+
+    local prefix=""
+    local rest="$p"
+
+    if [[ "$rest" == "~/"* ]]; then
+        prefix="~"
+        rest="${rest#\~}"
+    fi
+
+    local IFS='/'
+    local -a parts=($rest)
+    unset IFS
+    parts=("${parts[@]:1}")
+
+    local n=${#parts[@]}
+    if (( n <= 1 )); then
+        printf '%s' "$p"
+        return
+    fi
+
+    # gradient shorten: dir i gets (i+1) chars
+    local i
+    for (( i = 0; i < n - 1; i++ )); do
+        local keep=$(( i + 1 ))
+        if (( ${#parts[i]} > keep )); then
+            parts[i]="${parts[i]:0:keep}"
+        fi
+    done
+
+    # rebuild
+    local result="$prefix"
+    for (( i = 0; i < n; i++ )); do
+        result+="/${parts[i]}"
+    done
+
+    if (( ${#result} <= max )); then
+        printf '%s' "$result"
+        return
+    fi
+
+    # middle-truncate last component
+    local stem="$prefix"
+    for (( i = 0; i < n - 1; i++ )); do
+        stem+="/${parts[i]}"
+    done
+    stem+="/"
+
+    local avail=$(( max - ${#stem} ))
+    local last="${parts[n-1]}"
+
+    if (( avail >= 8 )); then
+        local half=$(( (avail - 3) / 2 ))
+        printf '%s%s...%s' "$stem" "${last:0:half}" "${last: -half}"
+    elif (( avail >= 4 )); then
+        printf '%s%s...' "$stem" "${last:0:$((avail - 3))}"
+    else
+        printf '%s%s' "$stem" "${last:0:avail}"
+    fi
+}
+
 # bring in named colors to customize prompt
 [ -f "$config/.bash_colors" ] && . "$config/.bash_colors"
 
@@ -287,7 +355,7 @@ ps1_venv="${venv_color}\$(get_venv)"
 ps1_time="\n${ec}${clock_color}\t${pipe_color}"
 ps1_user="\u@\h${host_color}\w${path_color}" # linux
 ps1_user_mac="${ec}${user_color}${user}"     # mac
-ps1_cwd="${cwd_color}\w"                     # original, \W returns only basename of cwd
+ps1_cwd="${cwd_color}\$(shorten_path)"        # gradient-shortened path (max 48 chars)
 ps1_git="${branch_color}\$(get_git_branch_current_for_prompt)"
 ps1_git+="${status_color}\$(get_git_status)${ec}"
 ps1_end="\n${ec}${GRAY}$ ${ec}"        # linux
