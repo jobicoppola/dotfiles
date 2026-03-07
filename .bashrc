@@ -26,7 +26,7 @@ export HISTTIMEFORMAT="[%F %T] "
 export HISTFILE=~/.bash_history_forever
 #
 # write history from current shell every prompt
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+PROMPT_COMMAND='_ps1_git_branch=$(git symbolic-ref --short HEAD 2>/dev/null); history -a'
 
 # case-insensitive tab-completion for paths
 shopt -s nocaseglob
@@ -252,7 +252,14 @@ get_git_status() {
 }
 
 shorten_path() {
-    local max=48
+    local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
+    cols=${cols:-80}
+    # fixed overhead: time(8) + pipe(1) + user@host(${#user}) + parens(2) + status(1) + padding(2)
+    local overhead=$(( 8 + 1 + ${#user} + 2 + 1 + 2 ))
+    local branch_len=${#_ps1_git_branch}
+    local max=$(( cols - overhead - branch_len ))
+    (( max < 30 )) && max=30
+
     local p="${PWD/#$HOME/\~}"
 
     if (( ${#p} <= max )); then
@@ -355,8 +362,8 @@ ps1_venv="${venv_color}\$(get_venv)"
 ps1_time="\n${ec}${clock_color}\t${pipe_color}"
 ps1_user="\u@\h${host_color}\w${path_color}" # linux
 ps1_user_mac="${ec}${user_color}${user}"     # mac
-ps1_cwd="${cwd_color}\$(shorten_path)"        # gradient-shortened path (max 48 chars)
-ps1_git="${branch_color}\$(get_git_branch_current_for_prompt)"
+ps1_cwd="${cwd_color}\$(shorten_path)"        # gradient-shortened path (dynamic width)
+ps1_git="${branch_color}\$([ -n \"\$_ps1_git_branch\" ] && echo \"(\$_ps1_git_branch)\")"
 ps1_git+="${status_color}\$(get_git_status)${ec}"
 ps1_end="\n${ec}${GRAY}$ ${ec}"        # linux
 ps1_end_mac="\n${dollar_color}$ ${ec}" # mac
