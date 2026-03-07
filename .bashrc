@@ -269,20 +269,14 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # set color vars
 ec="$EC"
-#clock_color="$COLOR_71" # OG
 clock_color="$COLOR_60"
-#pipe_color="$GRAY" # OG
 pipe_color="$COLOR_24"
 host_color="$BWHITE"
 path_color="$BYELLOW"
-#user_color="$COLOR_132" # OG
 user_color="$COLOR_30"
-#cwd_color="$COLOR_72" # OG
 cwd_color="$COLOR_36"
-#branch_color="$COLOR_173" # OG
-branch_color="$COLOR_106" # hmm 142 or 106?
-#status_color="$COLOR_149" # OG
-status_color="$COLOR_154" # hmm 154 or 190?
+branch_color="$COLOR_106"
+status_color="$COLOR_154"
 venv_color="$GREEN"
 dollar_color="$COLOR_244" # force gray to override any theme
 
