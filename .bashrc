@@ -254,8 +254,8 @@ get_git_status() {
 shorten_path() {
     local cols=${COLUMNS:-$(tput cols 2>/dev/null)}
     cols=${cols:-80}
-    # fixed overhead: time(8) + pipe(1) + user@host(${#user}) + parens(2) + status(1) + padding(2)
-    local overhead=$(( 8 + 1 + ${#user} + 2 + 1 + 2 ))
+    # fixed overhead: time+hostname(25) + pipe(1) + user@host(${#user}) + parens(2) + status(1) + padding(2)
+    local overhead=$(( 25 + 1 + ${#user} + 2 + 1 + 2 ))
     local branch_len=${#_ps1_git_branch}
     local max=$(( cols - overhead - branch_len ))
     (( max < 30 )) && max=30
