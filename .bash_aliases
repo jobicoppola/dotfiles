@@ -12,8 +12,8 @@
 
 # ls
 #
-eval "$(gdircolors)"         # get `ls` to colorize orphaned links on macos
-alias ls="gls --color=auto"  # alias ls="ls --color"
+eval "$(gdircolors)"        # get `ls` to colorize orphaned links on macos
+alias ls="gls --color=auto" # alias ls="ls --color"
 alias ll="ls -lh"
 alias la="ll -a"
 alias lsh="ll -S"
@@ -52,6 +52,10 @@ alias cdu2='cd ../../'
 alias cdu3='cd ../../../'
 alias cdu4='cd ../../../../'
 alias cdu5='cd ../../../../../'
+alias cdtdev='cd accounts/dev/envs/live/us-west-2/'
+alias cdtstg='cd accounts/staging/envs/live/us-west-2/'
+alias cdtops='cd accounts/ops/envs/live/us-west-2/'
+alias cdtprd='cd accounts/prod/envs/live/us-west-2/'
 
 # vi
 #
@@ -71,7 +75,7 @@ alias vlans='~/venvs/vlans/bin/python ~/venvs/vlans/vlans.py'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias Grep='grep'
-alias getip='wget -qO - https://icanhazip.com'
+alias getip='wget -qO - https://ipv4.icanhazip.com'
 alias gi='gem install --no-rdoc --no-ri'
 alias gu='gem update --no-rdoc --no-ri'
 alias tail='grc tail'
