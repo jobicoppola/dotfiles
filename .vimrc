@@ -70,7 +70,8 @@ Plug 'mzlogin/vim-markdown-toc'
 Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/vim-gitbranch'
 Plug 'rizzatti/dash.vim'
-Plug 'github/copilot.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'BourgeoisBear/clrzr'
 
 
 " plugins required by deoplete
