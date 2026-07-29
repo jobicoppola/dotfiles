@@ -883,6 +883,43 @@ function! TrimName(str)
   endif
 endfunction
 
+" unwrap and reflow text, with proper bullet-list handling
+"
+" the unwrap and reflow key mappings below both use this `WithWidth` function,
+" which means that if you have a bunch of short lines you want to make longer,
+" you have multiple options:
+"
+" `160<leader>qq` - rewrap to 160 char lines
+" `<leader>qu`    - unwrap into one very long line
+"
+function! s:WithWidth(width, keys) abort
+  let save_tw  = &l:textwidth
+  let save_fo  = &l:formatoptions
+  let save_flp = &l:formatlistpat
+  let save_ai  = &l:autoindent
+  try
+    let &l:textwidth = a:width
+    setlocal autoindent            " required for the 'n' flag to work
+    setlocal formatoptions+=n      " recognize lists when formatting
+    " match '- ', '* ', '+ ' bullets and '1.' / '1)' numbered items
+    let &l:formatlistpat = '^\s*[-*+]\s\+\|^\s*\d\+[.)]\s\+'
+    execute 'normal! ' . a:keys
+  finally
+    let &l:textwidth     = save_tw
+    let &l:formatoptions = save_fo
+    let &l:formatlistpat = save_flp
+    let &l:autoindent    = save_ai
+  endtry
+endfunction
+
+" unwrap: paragraph/list-item under cursor -> single long lines
+nnoremap <silent> <leader>qu :<C-u>call <SID>WithWidth(9999, 'gwip')<CR>
+xnoremap <silent> <leader>qu :<C-u>call <SID>WithWidth(9999, 'gvgw')<CR>
+
+" reflow: to a width, default 80, or prefix a count e.g. 160<leader>qq
+nnoremap <silent> <leader>qq :<C-u>call <SID>WithWidth(v:count ? v:count : 80, 'gwip')<CR>
+xnoremap <silent> <leader>qq :<C-u>call <SID>WithWidth(v:count ? v:count : 80, 'gvgw')<CR>
+
 
 "\_____________________________________________________________________________
 " projects
