@@ -84,12 +84,13 @@ Plug 'BourgeoisBear/clrzr'
 "   - if python paths differ from expected, deps likely need to be reinstalled
 "   - install deps such as `pynvim` via the appropriate pip executable path
 "   - the required commands have been moved into a script
-"     - the `vim-fixes.sh` script will install `pynvim` and `jedi` `ropevim`
+"     - the `bin/run-vim-fixes` script will install:
+"       - `pynvim`, `jedi`, `ropevim`
 "     - this sorts the deoplete issues here and the ropevim / jedi issues
 "       listed further down in this file
 "   - run script from terminal
 "
-"       `bash vim-fixes.sh`
+"       `bash bin/run-vim-fixes`
 "
 Plug 'Shougo/deoplete.nvim'
 Plug 'roxma/nvim-yarp'
@@ -185,7 +186,7 @@ colorscheme reykjavik
 " we want to tell vim themes to use transparent background
 " this can cause problems like wonky highlighting, so if that happens,
 " you may have to load in config overrides via lua and/or revert `lua.vim`
-" see the `vim-fixes.sh` script for the revert; for more info see github issue
+" see `bin/run-vim-fixes` script for revert; for more info see github issue
 " https://github.com/vim/vim/issues/11277
 "
 " transparent bg
@@ -313,14 +314,14 @@ let g:syntastic_sh_shellcheck_args = "-x"
 "
 " note: may need to manually run script to pip install ropevim, e.g.
 "
-"    `bash vim-fixes.sh`
+"    `bash bin/run-vim-fixes`
 "
 " also see notes toward top of this file regarding deoplete plugin and pynvim
 "
 " to sort the vim python deoplete jedi ropevim issues detailed here and
 " above earlier in this file just run:
 "
-"    `bash vim-fixes.sh`
+"    `bash bin/run-vim-fixes`
 "
 let ropevim_extended_complete = 1
 let ropevim_enable_autoimport = 1
