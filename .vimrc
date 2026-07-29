@@ -71,8 +71,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/vim-gitbranch'
 Plug 'rizzatti/dash.vim'
 Plug 'github/copilot.vim'
-Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-Plug 'jpwol/thorn.nvim', { 'as': 'thorn', 'branch': 'main' }
 
 
 " plugins required by deoplete
@@ -177,50 +175,13 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 " syntax highlighting
 syntax on
 
-" we want to use catppuccin-mocha with transparent background
-" so we have to load in config overrides via lua
-" this causes highlighting to be wonky
-" thus also need to revert lua.vim
-" see github issue:
+" we want to tell vim themes to use transparent background
+" this can cause problems like wonky highlighting, so if that happens,
+" you may have to load in config overrides via lua and/or revert `lua.vim`
+" see the `vim-fixes.sh` script for the revert
+
+" for more info see github issue - https://github.com/vim/vim/issues/11277
 "
-"   https://github.com/vim/vim/issues/11277
-"
-" then see/run fix in `vim-fixes.sh`
-"
-" for `C.<color-name>` below see catppuccin nvim repo:
-"
-"   https://github.com/catppuccin/nvim (file /lua/catppuccin/palettes/mocha.lua)
-"
-lua << EOF
-require("catppuccin").setup {
-    flavour = "mocha",
-    transparent_background = true,
-    no_bold = true,
-    highlight_overrides = {
-        mocha = function(C)
-            return {
-                StatusLine = { bg = "#1f3320", fg = "#182319" },
-                StatusLineNC = { fg = "#182319", bg = "#1a2a1c" },
-                CursorLineNr = { fg = "#eaf584" },
-                LineNr = { fg = C.surface0 },
-                ColorColumn = { bg = "#191819" },
-                VertSplit = { fg = "#182319", bg = "#2f4e33" },
-                User1 = { bg = "#345638", fg = "#182319" },
-                User2 = { bg = "#1b2a1b", fg = "#76ac7b" },
-                User3 = { bg = "#182319", fg = "#2f4e33" },
-                User4 = { bg = "#182319", fg = "#2f4e33" },
-                User5 = { bg = "#182319", fg = "#2f4e33" },
-                User6 = { bg = "#182319", fg = "#2f4e33" },
-                User7 = { bg = "#1f3320", fg = "#528858" },
-                User8 = { bg = "#76ac7b", fg = "#1e3121" },
-                User9 = { bg = C.mantle, fg = C.pink },
-                User0 = { bg = C.crust, fg = C.red },
-            }
-        end,
-    },
-}
-EOF
-colorscheme catppuccin
 
 
 "\_____________________________________________________________________________
@@ -276,7 +237,7 @@ set formatoptions=q,r,n,1       " q: allow formatting comments with `gq`
                                 " 1: don't break a line after a one-letter word
 
 " status line settings
-" used in conjunction with `User*` colors (see catppuccin lua section above)
+" used in conjunction with `User*` colors
 "
 set laststatus=2                                       " always show the status line
 set statusline=                                        " initialize status string
@@ -731,7 +692,7 @@ command! -bang -nargs=? -complete=dir Files
 " https://github.com/junegunn/fzf/blob/master/README-VIM.md#explanation-of-gfzf_colors
 "
 " from example there, below are the terminal colors for seoul256 color scheme
-" these actually work pretty well with catppuccin and kitty theme but could
+" these actually work pretty well with e.g. kitty theme but could
 " be further customized later
 "
 if has('nvim')
