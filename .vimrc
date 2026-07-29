@@ -177,13 +177,21 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 " syntax highlighting
 syntax on
 
+" note: for colors in vim statusline see `.vim/colors/lightline-solarized.vim`
+"
+" reykjavik theme file is `.vim/colors/reykjavik.vim`
+colorscheme reykjavik
+
 " we want to tell vim themes to use transparent background
 " this can cause problems like wonky highlighting, so if that happens,
 " you may have to load in config overrides via lua and/or revert `lua.vim`
-" see the `vim-fixes.sh` script for the revert
+" see the `vim-fixes.sh` script for the revert; for more info see github issue
+" https://github.com/vim/vim/issues/11277
 "
-" for more info see github issue - https://github.com/vim/vim/issues/11277
-"
+" transparent bg
+autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
+" transparent bg, for Vim<8, replace EndOfBuffer by NonText
+autocmd vimenter * hi EndOfBuffer guibg=NONE ctermbg=NONE
 
 
 "\_____________________________________________________________________________
