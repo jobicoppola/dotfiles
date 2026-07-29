@@ -764,7 +764,10 @@ endif
 "\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 
-" start interactive EasyAlign for a motion/text object (e.g. gaip)
+" see repo for more examples
+" https://github.com/junegunn/vim-easy-align
+" start interactive EasyAlign for a motion/text object (e.g. `gaip`)
+" e.g. to align on `#` with left margin of 2 spaces, type `gaip⌃l2↵#`
 nmap ga <Plug>(EasyAlign)
 
 
