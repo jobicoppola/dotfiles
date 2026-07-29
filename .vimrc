@@ -70,6 +70,7 @@ Plug 'mzlogin/vim-markdown-toc'
 Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/vim-gitbranch'
 Plug 'rizzatti/dash.vim'
+Plug 'itchyny/lightline.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'BourgeoisBear/clrzr'
 
@@ -180,7 +181,7 @@ syntax on
 " this can cause problems like wonky highlighting, so if that happens,
 " you may have to load in config overrides via lua and/or revert `lua.vim`
 " see the `vim-fixes.sh` script for the revert
-
+"
 " for more info see github issue - https://github.com/vim/vim/issues/11277
 "
 
@@ -276,11 +277,14 @@ set termguicolors
 
 " remove underline
 highlight clear CursorLine
-highlight CursorLineNR cterm=none
+highlight CursorLineNR cterm=NONE
+
+" transparent line number column
+highlight LineNr ctermbg=NONE guibg=NONE
 
 " remove bold
 " e.g. terraform has too many Identifiers and thus too much bold
-highlight Identifier cterm=none
+highlight Identifier cterm=NONE
 
 
 "\_____________________________________________________________________________
@@ -543,6 +547,30 @@ let g:miniBufExplMapWindowNavVim = 1    " use [hjkl] for window nav
 let g:miniBufExplMapWindowNavArrows = 1 " use Ctrl + Arrows for nav
 let g:miniBufExplMapCTabSwitchBufs = 1  " enable ctrl-tab function mapping
 let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
+
+
+"\_____________________________________________________________________________
+" vim-lightline (for vim statusline)
+"\||/""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+
+" see `.vim/colors/lightline/solarized.vim`
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ 'separator': { 'left': '', 'right': ''  },
+      \ 'subseparator': { 'left': '❯', 'right': '‖'  },
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \ },
+      \ }
+
+" hide the '-- INSERT --' mode indicator
+" not necessary when using vim-lightline to manage vim statusline
+set noshowmode
 
 
 "\_____________________________________________________________________________
