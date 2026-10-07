@@ -68,7 +68,8 @@ Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'airblade/vim-gitgutter'
-Plug 'itchyny/vim-gitbranch'
+" below can be removed if happy after testing the `ShortenPath` function
+"Plug 'itchyny/vim-gitbranch'
 Plug 'rizzatti/dash.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'sheerun/vim-polyglot'
@@ -178,8 +179,7 @@ autocmd BufRead,BufNewFile */hosts/* set syntax=ansible_hosts
 " syntax highlighting
 syntax on
 
-" note: for colors in vim statusline see `.vim/colors/lightline-solarized.vim`
-"
+" note: for colors in vim statusline see `.vim/colors/lightline/solarized.vim`
 " reykjavik theme file is `.vim/colors/reykjavik.vim`
 colorscheme reykjavik
 
@@ -249,6 +249,7 @@ set formatoptions=q,r,n,1       " q: allow formatting comments with `gq`
 
 " status line settings
 " used in conjunction with `User*` colors
+" note: currently being overridden by vim lightline plugin
 "
 set laststatus=2                                       " always show the status line
 set statusline=                                        " initialize status string
@@ -564,16 +565,24 @@ let g:miniBufExplModSelTarget = 1       " if you use other buffer explorers
 "
 
 " see `.vim/colors/lightline/solarized.vim`
+"
+" dirpath is the current file's dir, which we shorten to fit the window,
+" basically just like we do for the path in our bash prompt.
+" (also see `LightlineDirPath` in the functions section)
+"
+" note: if components or separators change here, update the matching layout
+" in `s:LightlineOtherWidth` or the path will be sized wrong
+"
 let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'separator': { 'left': '', 'right': ''  },
       \ 'subseparator': { 'left': '❯', 'right': '‖'  },
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \             [ 'dirpath', 'readonly', 'filename', 'modified' ] ],
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead',
+      \   'dirpath': 'LightlineDirPath',
       \ },
       \ }
 
@@ -864,6 +873,7 @@ autocmd FocusLost * :wa
 "
 
 " trim git branch name for statusline
+" note: currently not used, the vim lightline plugin overrides this
 function! TrimName(str)
   let index = stridx(a:str, '/')
   if index >= 0
@@ -882,6 +892,88 @@ function! TrimName(str)
   else
     return 'FAIL'
   endif
+endfunction
+
+" shorten a directory path to fit in `max` columns
+"
+" vimscript port of step 3 of `format_prompt_dynamic()` in `.bashrc`
+"
+" - phase A: collapse dirs left-to-right to 1 char (2 for dot dirs)
+" - phase B: hard collapse ~/g/⋯/last-dir
+" - if still too wide return '' and let the window go without a path
+"
+function! ShortenPath(path, max) abort
+  let shortened_char = '⋯'
+  let path = fnamemodify(a:path, ':~')
+  if strdisplaywidth(path) <= a:max
+    return path
+  endif
+
+  let prefix = path =~# '^\~/' ? '~' : ''
+  let parts = split(path[len(prefix):], '/')
+  let n = len(parts)
+
+  " phase A
+  if n > 1
+    for i in range(n - 1)
+      let parts[i] = matchstr(parts[i], '^\.\=.')
+      let path = prefix . '/' . join(parts, '/')
+      if strdisplaywidth(path) <= a:max
+        return path
+      endif
+    endfor
+  endif
+
+  " phase B
+  " only shorter than the end of phase A when there are 4+ dirs
+  if n > 3
+    let path = prefix . '/' . parts[0] . '/' . shortened_char . '/' . parts[-1]
+  endif
+
+  return strdisplaywidth(path) <= a:max ? path : ''
+endfunction
+
+" width of everything on the statusline except the dir path, i.e. the vim
+" version of `fixed` plus the other segments in `format_prompt_dynamic()`
+"
+" the groups below must match `g:lightline.active`, right side is the
+" lightline default; lineinfo is sized for the last line and a 3 digit column
+" so the path doesn't change length as the cursor moves
+"
+function! s:LightlineOtherWidth() abort
+  let fname = expand('%:t')
+  let groups = [
+        \ [lightline#mode(), &paste ? 'PASTE' : ''],
+        \ [&readonly ? 'RO' : '',
+        \  fname !=# '' ? fname : '[No Name]',
+        \  &modified || !&modifiable ? '+' : ''],
+        \ [repeat('0', max([3, len(line('$'))])) . ':000'],
+        \ ['100%'],
+        \ [&fileformat,
+        \  &fileencoding !=# '' ? &fileencoding : &encoding,
+        \  &filetype !=# '' ? &filetype : 'no ft'],
+        \ ]
+  let width = 0
+  for group in groups
+    call filter(group, 'v:val !=# ""')
+    " lightline pads each component with a space on both sides, puts a
+    " subseparator (❯ or ‖) between components in the same group, and our
+    " separators between groups are empty
+    for text in group
+      let width += strdisplaywidth(text) + 2
+    endfor
+    let width += max([len(group) - 1, 0])
+  endfor
+  return width
+endfunction
+
+" lightline component: directory of the current file, shortened to fit
+" special buffers (nerdtree, help, fzf, etc.) fall back to vim's cwd
+"
+function! LightlineDirPath() abort
+  let dir = &buftype ==# '' && expand('%') !=# '' ? expand('%:p:h') : getcwd()
+  " path costs its own padding plus the ❯ before filename
+  return ShortenPath(dir, winwidth(0) - s:LightlineOtherWidth() - 3)
 endfunction
 
 " unwrap and reflow text, with proper bullet-list handling
