@@ -19,6 +19,26 @@
 #`
 
 #.
+# Cursor
+#
+# https://ghostty.org/docs/config/reference#cursor-style
+# https://ghostty.org/docs/config/reference#cursor-style-blink
+# https://ghostty.org/docs/config/reference#cursor-color
+#
+cursor-style = block
+cursor-style-blink = false
+cursor-color = #ffb929
+
+#.
+# Shell Integration
+#
+# https://ghostty.org/docs/config/reference#shell-integration
+# https://ghostty.org/docs/config/reference#shell-integration-features
+#
+shell-integration = detect
+shell-integration-features = no-cursor
+
+#.
 # Fonts
 #
 # https://ghostty.org/docs/config/reference#font-family
