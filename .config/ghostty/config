@@ -88,3 +88,12 @@ copy-on-select = clipboard
 # (see cursor and shader notes in comments at top of this file)
 #
 custom-shader = shaders/cursors/blaze.glsl
+
+#.
+# Fullscreen
+#
+# https://ghostty.org/docs/config/reference#macos-non-native-fullscreen
+#
+# (native disables fullscreen opacity so use non-native to get both)
+#
+macos-non-native-fullscreen = true
