@@ -10,9 +10,15 @@
 # - https://ghostty.zerebos.com/
 # - https://github.com/zerebos/ghostty-config
 #
-# On MacOS this file is synced to:
+# For the amazing animated cursor and other shader examples please visit:
+#
+# - https://github.com/hackrdotsh/ghostty-shaders
+# - https://github.com/hackrdotsh/ghostty-shaders/blob/main/cursor_blaze.glsl
+#
+# On MacOS this file and custom shaders are synced to:
 #
 # - $HOME/.config/ghostty/config
+# - $HOME/.config/ghostty/config/shaders
 #
 # See `../../configurationalize.sh`
 #._____________________________________________________________________________
@@ -24,6 +30,8 @@
 # https://ghostty.org/docs/config/reference#cursor-style
 # https://ghostty.org/docs/config/reference#cursor-style-blink
 # https://ghostty.org/docs/config/reference#cursor-color
+#
+# (note the animated cursor is actually the custom-shader; see Shaders section)
 #
 cursor-style = block
 cursor-style-blink = false
@@ -71,3 +79,12 @@ theme = Popping and Locking
 # https://ghostty.org/docs/config/reference#copy-on-select
 #
 copy-on-select = clipboard
+
+#.
+# Shaders
+#
+# https://ghostty.org/docs/config/reference#custom-shader
+#
+# (see cursor and shader notes in comments at top of this file)
+#
+custom-shader = shaders/cursors/blaze.glsl
