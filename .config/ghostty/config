@@ -65,7 +65,7 @@ background-opacity = 0.90
 background-blur = 16
 
 #.
-# Theme + colors
+# Theme
 #
 # `ghostty +list-themes`
 #
@@ -97,3 +97,12 @@ custom-shader = shaders/cursors/blaze.glsl
 # (native disables fullscreen opacity so use non-native to get both)
 #
 macos-non-native-fullscreen = true
+
+#.
+# Window Shadow
+#
+# https://ghostty.org/docs/config/reference#macos-window-shadow
+#
+# (shadow renders as a ~1px border in fullscreen so we disable that here)
+#
+macos-window-shadow = false
